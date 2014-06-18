@@ -6,7 +6,7 @@ var setMainProg = function() {
     $.each(totalPercents, function(i) { res += totalPercents[i]; num++; });
     var amt = res/num;
     $(".overview.progfill").css("background-color", getCol(amt));
-    $(".overview.progfill").css("box-shadow", "7px 7px 0px 0px " + getCol(progAmt));
+    $(".overview.progfill").css("box-shadow", "0px 7px 0px 0px " + getCol(progAmt));
     $(".overview.proglab").text(amt.toString() + "%");
     if (amt > 100) {
         amt = 100;
@@ -20,7 +20,7 @@ var setProg = function(elemClass, progAmt, descUp) {
     var label = $(elemClass + ".proglab");
     var desc = $(elemClass + ".progdesc");
     bar.css("background-color", getCol(progAmt));
-    bar.css("box-shadow", "7px 7px 0px 0px " + getCol(progAmt));
+    bar.css("box-shadow", "0px 7px 0px 0px " + getCol(progAmt));
     label.text(progAmt.toString() + "%");
     totalPercents[elemClass] = progAmt;
     if (progAmt > 100) {
