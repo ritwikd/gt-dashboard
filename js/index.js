@@ -6,8 +6,11 @@ var setMainProg = function() {
     $.each(totalPercents, function(i) { res += totalPercents[i]; num++; });
     var amt = res/num;
     $(".overview.progfill").css("background-color", getCol(amt));
-    $(".overview.progfill").css("width", amt.toString() + "%");
     $(".overview.proglab").text(amt.toString() + "%");
+    if (amt > 100) {
+        amt = 100;
+    }
+    $(".overview.progfill").css("width", amt.toString() + "%");
     console.log(amt);
 };
 
@@ -16,9 +19,12 @@ var setProg = function(elemClass, progAmt, descUp) {
     var label = $(elemClass + ".proglab");
     var desc = $(elemClass + ".progdesc");
     bar.css("background-color", getCol(progAmt));
-    bar.css("width", progAmt.toString() + "%");
     label.text(progAmt.toString() + "%");
     totalPercents[elemClass] = progAmt;
+    if (progAmt > 100) {
+        progAmt = 100;
+    }
+    bar.css("width", progAmt.toString() + "%");
     desc.text(descUp);
     setMainProg();
 };
