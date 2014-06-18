@@ -33,11 +33,5 @@ var getCol = function(progAmt) {
     return (progAmt < 50) ? "#F75E5E" : (progAmt < 80) ? "#F2EF4B" : "#5EE66E";
 };
 
-$(".progfill").hover(function() {
-    var cur = $(this);
-    cur.css("height", parseFloat(cur.css("height")) * 1.25); 
-}, function() {
-    var cur = $(this);
-    cur.css("height", parseFloat(cur.css("height")) * 0.80); 
-    });
+
 
