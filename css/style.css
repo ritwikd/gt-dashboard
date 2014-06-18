@@ -1,9 +1,20 @@
 body {
-    font-family: 'Open Sans';
+    font-family: 'Source Sans Pro';
+    font-weight: 400;
+}
+
+.sub-header {
+    font-weight: 400;
 }
 
 .page-header {
     text-align: right;
+    font-weight: 400;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size  : 150%;
 }
 
 .progbase {
@@ -60,7 +71,8 @@ body {
 .met.mettitle {
     font-size: 125%;
     padding-left: 0px;
-    padding-bottom: 2%
+    padding-bottom: 2%;
+    font-weight: 500;
 }
 
 .met.progbase {
