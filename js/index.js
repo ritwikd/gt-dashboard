@@ -34,7 +34,7 @@ var getCol = function(progAmt) {
 };
 
 $(".progfill").mouseover(function() {
-    this.css("width", this.css("width") * 1.25);
+    console.log(this);
 }, function() {
     this.css("width", this.css("width") * 0.75);
 });
