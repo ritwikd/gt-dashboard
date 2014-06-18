@@ -31,6 +31,7 @@ body {
 }
 
 .progfill {
+    position: relative;
     margin-top: -14px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
