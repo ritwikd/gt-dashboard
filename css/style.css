@@ -55,6 +55,10 @@ body {
 
 }
 
+.progdesc {
+    padding-top: 2%;
+}
+
 .overview.progbase {
     width: 90%;
 
@@ -109,5 +113,4 @@ body {
 
 .met.progdesc {
     font-size: 125%;
-    padding-top: 1%;
 }
