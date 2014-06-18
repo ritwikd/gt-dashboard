@@ -37,11 +37,14 @@ body {
     transition: all 200ms linear;
     -webkit-transition: all 200ms linear;
     background-color: #F5F5F5; 
+    -webkit-box-shadow: 7px 7px 0px 0px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow:    7px 7px 0px 0px rgba(0, 0, 0, 0.4);
+    box-shadow:         7px 7px 0px 0px rgba(0, 0, 0, 0.4); 
 }
 
 .progfill:hover {
-    -webkit-transform: scale(1, 1.15);
-    transform: scale(1, 1.15);
+    -webkit-transform: scale(1, 1.25);
+    transform: scale(1, 1.25);
 }
 
 .proglab {
