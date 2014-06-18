@@ -66,6 +66,7 @@ body {
 .overview.progfill {
     width: 00%;
     height: 50px;
+    margin-top: -57px;
 }
 
 .overview.proglab {
@@ -99,6 +100,7 @@ body {
 .met.progfill {
     width: 0%;
     height: 40px;
+    margin-top: -47px;
 }
 
 .met.proglab {
