@@ -38,6 +38,6 @@ $(".progfill").hover(function() {
     cur.css("height", parseFloat(cur.css("height")) * 1.25); 
 }, function() {
     var cur = $(this);
-    cur.css("height", parseFloat(cur.css("height")) * 0.75); 
+    cur.css("height", parseFloat(cur.css("height")) * 0.80); 
     });
 
