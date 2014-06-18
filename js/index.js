@@ -33,4 +33,9 @@ var getCol = function(progAmt) {
     return (progAmt < 50) ? "#F75E5E" : (progAmt < 80) ? "#F2EF4B" : "#5EE66E";
 };
 
+$(".progfill").mouseover(function() {
+    this.css("width", this.css("width") * 1.25);
+}, function() {
+    this.css("width", this.css("width") * 0.75);
+});
 
