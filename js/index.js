@@ -34,9 +34,10 @@ var getCol = function(progAmt) {
 };
 
 $(".progfill").hover(function() {
-    var x = this.css("height");
-    console.log(x);
+    var cur = $(this);
+    cur.css("height", parseFloat(cur.css("height")) * 1.25); 
 }, function() {
-    console.log("stuff");
+    var cur = $(this);
+    cur.css("height", parseFloat(cur.css("height")) * 0.75); 
     });
 
