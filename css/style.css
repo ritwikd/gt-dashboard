@@ -26,6 +26,10 @@ body {
     background-color: #F5F5F5;
 }
 
+.nav {
+    font-size: 125%;
+}
+
 .progfill {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
