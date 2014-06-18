@@ -34,8 +34,8 @@ var getCol = function(progAmt) {
 };
 
 $(".progfill").hover(function() {
-    console.log(this);
+    this.css("height", this.css("height") * 1.25);
 }, function() {
-    console.log("Eh");
+    this.css("height", this.css("height") * 0.75);
     });
 
