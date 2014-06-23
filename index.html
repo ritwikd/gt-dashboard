@@ -9,7 +9,6 @@
     <meta name="author" content="">
 
     <link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,500,700' rel='stylesheet' type='text/css'>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/dashboard.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -43,36 +42,25 @@
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Overall Progress</h1>
-          <div class = "overview progbase"></div>
-          <div class = "overview progfill"></div> 
-          <p class = "overview proglab" >0%</p>  
+          <div class = "header" id = "mainhead">
+              <h1 class="overview title">Overall Progress</h1>
+              <div class = "overview progbase"></div>
+              <div class = "overview progfill"></div> 
+              <p class = "overview proglab" >0%</p>  
+              <hr id = "divider">
+          </div>
 
           
-          <h2 class="sub-header">Metrics</h2>
 
           <div class = "metcol leftcol" id= "metrics">
-            <div class = "metcont">
-                <div class = "met step mettitle">Steps
-                </div> 
-                <div class = "met step progbase"></div>
-		  <div class = "met step progfill"></div> 
-		  <p class = "met step proglab" >0%</p>  
-		  <p class = "met step progdesc" ></p>
-            </div>
-	  
-	    <br>
-	    
-            <div class = "metcont">
-                <div class = "met sleep mettitle">Sleep
-                </div> 
-                <div class = "met sleep progbase"></div>
-		  <div class = "met sleep progfill"></div> 
-		  <p class = "met sleep proglab" >0%</p>  
-		  <p class = "met sleep progdesc" ></p>
-            </div>
+            <h2 class="sub-header">Metrics</h2>
+
 
           </div>
+
+        </div>
+      </div>
+
 
 
 
