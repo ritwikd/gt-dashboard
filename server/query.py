@@ -55,7 +55,7 @@ motion = db.motion
 def getMoves(username):
     for user in users.find():
     	if user['name'] == username:
-    		return user
+    		return str(user)
     return "Not found."
 
 if __name__ == '__main__':
