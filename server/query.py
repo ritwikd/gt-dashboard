@@ -48,13 +48,12 @@ app = Flask(__name__)
 
 db = MongoClient('localhost', 27017).data
 users = db.users
-
 motion = db.motion
 
 @app.route('/getuser=<username>')
 @crossdomain(origin='*')
 def getMoves(username):
-    for user in users:
+    for user in users.find():
     	if user['name'] == username:
     		return user['name']
     return "Not found."
