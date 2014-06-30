@@ -51,11 +51,11 @@ users = db.users
 
 motion = db.motion
 
-@app.route('/getuser=<name>')
+@app.route('/getuser=<username>')
 @crossdomain(origin='*')
-def getMoves(access_token):
+def getMoves(username):
     for user in users:
-    	if user['name'] == name:
+    	if user['name'] == username:
     		return user['name']
     return "Not found."
 
