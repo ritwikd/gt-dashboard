@@ -76,4 +76,3 @@ window.onscroll = function () {
     }
 };
 
-addMetric("sleep", "Sleep"); setProg("sleep", 78.9, "6.45 hours."); addMetric("motion", "Steps"); setProg("motion", 96.45, "234 steps.");
