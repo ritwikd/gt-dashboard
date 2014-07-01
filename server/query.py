@@ -51,6 +51,7 @@ db = MongoClient('localhost', 27017).data
 users = db.users
 motion = db.motion
 
+@app.errorhandler(404)
 @app.route('/getuser=<username>')
 @crossdomain(origin='*')
 def getMoves(username):
@@ -58,14 +59,18 @@ def getMoves(username):
     	if user['name'] == username:
 		del(user["_id"])
     		return json.dumps(user)
-    return "Not found."
+    return json.dumps({ "name" : "null" }), 404
 
-@app.route('/getmet=<metric>&user=<username>')
+@app.errorhandler(404)
+@app.route('/getmet=<metric>&user=<username>&date=<date>')
 @crossdomain(origin='*')
-def getMetricAMT(metric, username):
+def getMetricAMT(metric, username, date):
 	writeData(username)
-	print motion.find
-    return metric
+	data = motion.find_one({ "name" : username, "date": eval(date)})
+	if (data == None):
+		return json.dumps( { "name" : "null" }), 404
+	del(data["_id"])
+	return json.dumps(data)
 
 def writeData(username):	
     for user in users.find():
@@ -73,16 +78,15 @@ def writeData(username):
             auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
 	data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
 	days = json.loads(data.text)['data']['items']
-	dbData = {}
 	for day in days:
 		date =  day['date']
 		day = day['details']['hourly_totals']
 		steps = 0
 		for hour in day.keys():
 			steps += day[hour]['steps']
-		dbData[date]  = steps
-	for item in dbData:
-        motion.insert(item)
+		obj = { "name" : username, "date": date, "steps" : steps}
+		if motion.find_one(obj) == None:
+			motion.insert(obj)
 
 
 
