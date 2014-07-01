@@ -56,13 +56,13 @@ motion = db.motion
 @app.route('/<username>')
 @crossdomain(origin='*')
 def getDate(username):
-    if(request.args.get('type') == 'user'):
+    if request.args.get('type') == 'user':
         for user in users.find():
-        if user['name'] == username:
-        del(user['_id'])
-            return json.dumps(user)
+        	if user['name'] == username:
+        		del(user['_id'])
+		        return json.dumps(user)
         return json.dumps({ 'name' : 'null' }), 404
-    else:
+    elif request.args.get('type') == 'data':
         metric = request.args.get('metric')
         date = request.args.get('date')
         writeData(username, metric)
@@ -71,6 +71,8 @@ def getDate(username):
             return json.dumps( { 'name' : 'null' }), 404
         del(data['_id'])
         return json.dumps(data)
+    else:
+	return "error"
 
 
 def writeData(username, metric):	
