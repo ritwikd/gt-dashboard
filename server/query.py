@@ -65,7 +65,7 @@ def getDate(username):
     elif request.args.get('type') == 'data':
         metric = request.args.get('metric')
         date = request.args.get('date')
-        writeData(username, metric)
+        writeMotionData(username)
         data = motion.find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
         if (data == None):
             return json.dumps( { 'name' : 'null' }), 404
@@ -75,7 +75,7 @@ def getDate(username):
 	return "error"
 
 
-def writeData(username, metric):	
+def writeMotionData(username):	
     for user in users.find():
         if user['name'] == username:
             auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
@@ -87,7 +87,7 @@ def writeData(username, metric):
 		steps = 0
 		for hour in day.keys():
 			steps += day[hour]['steps']
-		obj = { 'metric': metric, 'name' : username, 'date': date, 'steps' : steps}
+		obj = { 'metric': 'motion', 'name' : username, 'date': date, 'steps' : steps}
 		if motion.find_one(obj) == None:
 			motion.insert(obj)
 
