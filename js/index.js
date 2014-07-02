@@ -1,5 +1,24 @@
 var print = function(inp) { console.log(inp); }
 
+Array.prototype.avs = function(){
+
+    if(this.length > 0) {
+        for(var i = 1; i < this.length; i++)
+        {
+            if(this[i] !== this[0])
+                return false;
+        }
+    } 
+    return true;
+}
+
+Date.prototype.gDate = function() {
+   var yyyy = this.getFullYear().toString();
+   var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+   var dd  = this.getDate().toString();
+   return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]); // padding
+  };
+
 var elemTemp = ['<div class = "metcont">' +
                 '<div class = "met ',' mettitle">',
                 '<p class = "met ',
@@ -54,16 +73,24 @@ var setProg = function(elemClass, progAmt, descUp) {
     var base = $("." + elemClass + ".progbase");
     var label = $("." + elemClass + ".proglab");
     var desc = $("." + elemClass + ".progdesc");
-    bar.css("background-color", getCol(progAmt));
-    bar.css("box-shadow", "0px 7px 0px 0px " + getShadCol(progAmt));
-    label.text(Math.round(progAmt).toString() + "%");
-    totalPercents[elemClass] = progAmt;
-    if (progAmt > 100) {
-        progAmt = 100;
+    if (progAmt != null) {
+        bar.css("background-color", getCol(progAmt));
+        bar.css("box-shadow", "0px 7px 0px 0px " + getShadCol(progAmt));
+        label.text(Math.round(progAmt).toString() + "%");
+        totalPercents[elemClass] = progAmt;
+        if (progAmt > 100) {
+            progAmt = 100;
+        }
+        bar.css("width", (progAmt / 100) * parseInt(base.css("width")));
     }
-    bar.css("width", (progAmt / 100) * parseInt(base.css("width")));
     desc.text(descUp);
     setMainProg();
+};
+
+
+var addProg = function(elemClass, progAmt, descUp) {
+    addMetric(elemClass, elemClass);
+    setProg(elemClass, progAmt, descUp);
 };
 
 var getCol = function(progAmt) {
@@ -84,13 +111,50 @@ window.onscroll = function () {
     }
 };
 
-var user = getJSON("http://vps.ritwikd.com:8081/getuser=Ritwik%20Dutta");
-var metdat  = [];
-$.each(user.metrics, function(item) {
-    print(item);
-    metdat.push(getJSON("http://vps.ritwikd.com:8081/getmet=" + item + "&user=" + user.name + "&date=20140613"));
+var getMet = function(usern, metric, date) {
+    var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
+    var data = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=data&metric=" + metric + "&date=" + date);
+    if (data.value == null) {
+        return null;
+    }
+    return [data.value, parseInt(user.metrics[metric][0]), user.metrics[metric][1]];
+}
+
+var getMets = function(usern) {
+    var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
+    return Object.keys(user.metrics);
+}
+
+var links = {};
+var dkey;
+var date = new Date();
+var curMet;
+var mets = getMets("RitwikDutta");
+var isvalid = false;
+
+for (var i = 0; i < 10; i++) {
+    dkey = date.toString().substring(4,10) + ',' + date.toString().substring(10,15);
+    links[dkey] = date.gDate();
+    $("#datebar").append('<li><a href="#' + date.gDate() + '">' + dkey + '</a></li>');
+    date.setDate(date.getDate() - 1);
+}
+
+$(window).on('hashchange', function() {
+    isvalid = false;
+    $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
+    for (var i = 0; i < mets.length; i++) {
+        curMet = getMet("RitwikDutta", mets[i], location.hash.substring(1));
+        if (curMet[0] == "null") {
+            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), null, "Data not available.");  
+        } else {
+            isvalid = true;
+            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), 100 * curMet[0]/curMet[1], curMet[0].toString() + " out of " + curMet[1].toString() + " " + curMet[2] + ".");    
+        }
+    }
+    if (isvalid == false) {
+        $(".overview.progfill").css("background-color", "#F5F5F5");
+        $(".overview.progfill").css("box-shadow", "0px 0px 0px 0px rgba(0, 0, 0, 0)");
+        $(".overview.proglab").text("0%");
+        $(".overview.progfill").css("width", "0%");
+    }
 });
-print(metdat);
-
-
-
