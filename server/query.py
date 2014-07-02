@@ -65,14 +65,14 @@ def getMoves(username):
 @app.route('/getmet=<metric>&user=<username>&date=<date>')
 @crossdomain(origin='*')
 def getMetricAMT(metric, username, date):
-	writeData(username)
-	data = motion.find_one({ "name" : username, "date": eval(date)})
+	writeData(username, metric)
+	data = motion.find_one({ "metric" : metric, "name" : username, "date": eval(date)})
 	if (data == None):
 		return json.dumps( { "name" : "null" }), 404
 	del(data["_id"])
 	return json.dumps(data)
 
-def writeData(username):	
+def writeData(username, metric):	
     for user in users.find():
         if user['name'] == username:
             auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
@@ -84,7 +84,7 @@ def writeData(username):
 		steps = 0
 		for hour in day.keys():
 			steps += day[hour]['steps']
-		obj = { "name" : username, "date": date, "steps" : steps}
+		obj = { "metric": metric, "name" : username, "date": date, "steps" : steps}
 		if motion.find_one(obj) == None:
 			motion.insert(obj)
 

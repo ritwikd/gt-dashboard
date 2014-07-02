@@ -1,3 +1,5 @@
+var print = function(inp) { console.log(inp); }
+
 var elemTemp = ['<div class = "metcont">' +
                 '<div class = "met ',' mettitle">',
                 '<p class = "met ',
@@ -36,9 +38,15 @@ var setMainProg = function() {
     if (amt > 100) {
         amt = 100;
     }
-    console.log
     $(".overview.progfill").css("width", (amt/100) * parseInt($(".overview.progbase").css("width")));
-    console.log(amt);
+    print(amt);
+};
+
+var getJSON = function(requestURL) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", requestURL, false );
+    xmlHttp.send( null );
+    return $.parseJSON(xmlHttp.responseText);
 };
 
 var setProg = function(elemClass, progAmt, descUp) {
@@ -61,7 +69,7 @@ var setProg = function(elemClass, progAmt, descUp) {
 var getCol = function(progAmt) {
     return (progAmt < 50) ? "#F75E5E" : (progAmt < 80) ? "#F59631" : "#5EE66E";
 };
-
+ 
 var getShadCol = function(progAmt) {
     return (progAmt < 50) ? "#CF3636" : (progAmt < 80) ? "#DE7C14" : "#22BF35";
 };
@@ -75,4 +83,14 @@ window.onscroll = function () {
         $("#divider").css("opacity", "0");
     }
 };
+
+var user = getJSON("http://vps.ritwikd.com:8081/getuser=Ritwik%20Dutta");
+var metdat  = [];
+$.each(user.metrics, function(item) {
+    print(item);
+    metdat.push(getJSON("http://vps.ritwikd.com:8081/getmet=" + item + "&user=" + user.name + "&date=20140613"));
+});
+print(metdat);
+
+
 
