@@ -50,27 +50,28 @@ app = Flask(__name__)
 db = MongoClient('localhost', 27017).data
 users = db.users
 motion = db.motion
+    
 
 @app.errorhandler(404)
-@app.route('/getuser=<username>')
+@app.route('/<username>')
 @crossdomain(origin='*')
-def getMoves(username):
-    for user in users.find():
-    	if user['name'] == username:
-		del(user["_id"])
-    		return json.dumps(user)
-    return json.dumps({ "name" : "null" }), 404
+def getDate(username):
+    if(request.args.get('type') == 'user'):
+        for user in users.find():
+        if user['name'] == username:
+        del(user['_id'])
+            return json.dumps(user)
+        return json.dumps({ 'name' : 'null' }), 404
+    else:
+        metric = request.args.get('metric')
+        date = request.args.get('date')
+        writeData(username, metric)
+        data = motion.find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
+        if (data == None):
+            return json.dumps( { 'name' : 'null' }), 404
+        del(data['_id'])
+        return json.dumps(data)
 
-@app.errorhandler(404)
-@app.route('/getmet=<metric>&user=<username>&date=<date>')
-@crossdomain(origin='*')
-def getMetricAMT(metric, username, date):
-	writeData(username, metric)
-	data = motion.find_one({ "metric" : metric, "name" : username, "date": eval(date)})
-	if (data == None):
-		return json.dumps( { "name" : "null" }), 404
-	del(data["_id"])
-	return json.dumps(data)
 
 def writeData(username, metric):	
     for user in users.find():
@@ -84,7 +85,7 @@ def writeData(username, metric):
 		steps = 0
 		for hour in day.keys():
 			steps += day[hour]['steps']
-		obj = { "metric": metric, "name" : username, "date": date, "steps" : steps}
+		obj = { 'metric': metric, 'name' : username, 'date': date, 'steps' : steps}
 		if motion.find_one(obj) == None:
 			motion.insert(obj)
 
