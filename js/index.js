@@ -1,3 +1,4 @@
+
 var print = function(inp) { console.log(inp); }
 
 Array.prototype.avs = function(){
@@ -125,22 +126,32 @@ var getMets = function(usern) {
     return Object.keys(user.metrics);
 }
 
-var links = {};
 var dkey;
 var date = new Date();
+location.hash = "#" + date.gDate();
 var curMet;
 var mets = getMets("RitwikDutta");
 var isvalid = false;
 
 for (var i = 0; i < 10; i++) {
     dkey = date.toString().substring(4,10) + ',' + date.toString().substring(10,15);
-    links[dkey] = date.gDate();
-    $("#datebar").append('<li><a href="#' + date.gDate() + '">' + dkey + '</a></li>');
+    $("#datebar").append('<li id="' + date.gDate() + '"><a href="#' + date.gDate() + '">' + dkey + '</a></li>');
     date.setDate(date.getDate() - 1);
 }
 
+$("#datebar a").css("color", "#444444");
+
+
+
 $(window).on('hashchange', function() {
     isvalid = false;
+    $("#datebar a").css("color", "#444444");
+    $("#datebar a").css("font-weight", "300");
+    $("#datebar a").css("font-size", "100%");
+    $(location.hash + " a").css("color", "#4093E6");
+    $(location.hash + " a").css("font-weight", "500");
+    $(location.hash + " a").css("font-size", "125%");
+    $(location.hash).className = "active";
     $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
     for (var i = 0; i < mets.length; i++) {
         curMet = getMet("RitwikDutta", mets[i], location.hash.substring(1));
@@ -158,3 +169,4 @@ $(window).on('hashchange', function() {
         $(".overview.progfill").css("width", "0%");
     }
 });
+

@@ -5,6 +5,15 @@ body {
     font-weight: 300;
 }
 
+a {
+    transition: all 200ms linear;
+    -webkit-transition: all 200ms linear;
+}
+
+a:hover {
+    color: #64AFFA !important;
+}
+
 .sub-header {
     font-weight: 300;
     font-size: 40px;
