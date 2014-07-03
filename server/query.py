@@ -59,16 +59,16 @@ def getDate(username):
     if request.args.get('type') == 'user':
         for user in users.find():
         	if user['name'] == username:
-        		del(user['_id'])
+			del(user['_id'])
 		        return json.dumps(user)
         return json.dumps({ 'name' : 'null' }), 404
     elif request.args.get('type') == 'data':
         metric = request.args.get('metric')
         date = request.args.get('date')
         writeMotionData(username)
-        data = motion.find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
+        data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
         if (data == None):
-            return json.dumps( { 'name' : 'null' }), 404
+            return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
         del(data['_id'])
         return json.dumps(data)
     else:
@@ -87,7 +87,7 @@ def writeMotionData(username):
 		steps = 0
 		for hour in day.keys():
 			steps += day[hour]['steps']
-		obj = { 'metric': 'motion', 'name' : username, 'date': date, 'steps' : steps}
+		obj = { 'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
 		if motion.find_one(obj) == None:
 			motion.insert(obj)
 
