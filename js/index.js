@@ -130,7 +130,7 @@ var dkey;
 var date = new Date();
 location.hash = "#" + date.gDate();
 var curMet;
-var mets = getMets("RitwikDutta");
+var mets = getMets("ritwikdutta");
 var isvalid = false;
 
 for (var i = 0; i < 10; i++) {
@@ -154,7 +154,7 @@ $(window).on('hashchange', function() {
     $(location.hash).className = "active";
     $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
     for (var i = 0; i < mets.length; i++) {
-        curMet = getMet("RitwikDutta", mets[i], location.hash.substring(1));
+        curMet = getMet("ritwikdutta", mets[i], location.hash.substring(1));
         if (curMet[0] == "null") {
             addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), null, "Data not available.");  
         } else {

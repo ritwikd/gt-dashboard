@@ -66,6 +66,7 @@ def getDate(username):
         metric = request.args.get('metric')
         date = request.args.get('date')
         writeMotionData(username)
+        writeWeatherData(username)
         data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
         if (data == None):
             return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
@@ -73,6 +74,22 @@ def getDate(username):
         return json.dumps(data)
     else:
 	return "error"
+
+
+
+def writeWeatherData(username):
+     for user in users.find():
+        if user['name'] == username:
+            print user['location']        
+    # requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
+    # weatherData = nltk.clean_html(requestData.text)
+    # weatherData = weatherData.split(" ")
+    # temps = []
+    # for term in weatherData:
+    #     if (len(term) == 5 and '/' in term):
+    #         temps.append(term.split("/")[0])
+
+    # return x
 
 
 def writeMotionData(username):	
