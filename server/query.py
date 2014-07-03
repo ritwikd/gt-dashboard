@@ -67,8 +67,7 @@ def getDate(username):
     elif request.args.get('type') == 'data':
         metric = request.args.get('metric')
         date = request.args.get('date')
-        writeMotionData(username)
-        writeWeatherData(username)
+        writeData(username)
         data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
         if (data == None):
             return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
@@ -77,42 +76,44 @@ def getDate(username):
     else:
 	return "error"
 
+def writeData(username):
+    writeWeatherData(username)
+    writeMotionData(username)
+
 
 
 def writeWeatherData(username):
-    	for user in users.find():
-        	if user['name'] == username:
-            		airport = user['stats']['weather']
-	requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
-	weatherData = nltk.clean_html(requestData.text)
-    	weatherData = weatherData.split(" ")
-	temps = []
-	for term in weatherData:
-        	if (len(term) == 5 and '/' in term):
-			temps.append(term.split("/")[0])
+    user = users.find({ 'name': 'username'})
+    if (user != None):
+        airport = user['stats']['weather']
+    	requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
+    	weatherData = nltk.clean_html(requestData.text)
+        	weatherData = weatherData.split(" ")
+    	temps = []
+    	for term in weatherData:
+            	if (len(term) == 5 and '/' in term):
+    			temps.append(term.split("/")[0])
 
-	obj = { 'metric' : 'weather', 'name' : username, 'date' : gtime('%Y%m%d'), 'temps' : temps }
-	if (weather.find_one(obj) == None):
-		weather.insert(obj)
+    	obj = { 'metric' : 'weather', 'name' : username, 'date' : gtime('%Y%m%d'), 'temps' : temps }
+    	if (weather.find_one(obj) == None):
+    		weather.insert(obj)
 
 
 def writeMotionData(username):	
-    for user in users.find():
-	print user
-        if user['name'] == username:
-	    print user['name']
-            auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
-	data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
-	days = json.loads(data.text)['data']['items']
-	for day in days:
-		date =  day['date']
-		day = day['details']['hourly_totals']
-		steps = 0
-		for hour in day.keys():
-			steps += day[hour]['steps']
-		obj = { 'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
-		if motion.find_one(obj) == None:
-			motion.insert(obj)
+    user = users.find({ 'name': 'username'})
+    if (user != None):
+        auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
+    	data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
+    	days = json.loads(data.text)['data']['items']
+    	for day in days:
+    		date =  day['date']
+    		day = day['details']['hourly_totals']
+    		steps = 0
+    		for hour in day.keys():
+    			steps += day[hour]['steps']
+    		obj = { 'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
+    		if motion.find_one(obj) == None:
+    			motion.insert(obj)
 
 
 
