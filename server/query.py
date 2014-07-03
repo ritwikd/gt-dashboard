@@ -4,6 +4,8 @@ from flask import Flask,make_response, request, current_app
 from functools import update_wrapper
 import requests
 import json
+import nltk
+from time import strftime as gtime
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -50,7 +52,7 @@ app = Flask(__name__)
 db = MongoClient('localhost', 27017).data
 users = db.users
 motion = db.motion
-    
+weather = db.weather
 
 @app.errorhandler(404)
 @app.route('/<username>')
@@ -78,23 +80,27 @@ def getDate(username):
 
 
 def writeWeatherData(username):
-     for user in users.find():
-        if user['name'] == username:
-            print user['location']        
-    # requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
-    # weatherData = nltk.clean_html(requestData.text)
-    # weatherData = weatherData.split(" ")
-    # temps = []
-    # for term in weatherData:
-    #     if (len(term) == 5 and '/' in term):
-    #         temps.append(term.split("/")[0])
+    	for user in users.find():
+        	if user['name'] == username:
+            		airport = user['stats']['weather']
+	requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
+	weatherData = nltk.clean_html(requestData.text)
+    	weatherData = weatherData.split(" ")
+	temps = []
+	for term in weatherData:
+        	if (len(term) == 5 and '/' in term):
+			temps.append(term.split("/")[0])
 
-    # return x
+	obj = { 'metric' : 'weather', 'name' : username, 'date' : gtime('%Y%m%d'), 'temps' : temps }
+	if (weather.find_one(obj) == None):
+		weather.insert(obj)
 
 
 def writeMotionData(username):	
     for user in users.find():
+	print user
         if user['name'] == username:
+	    print user['name']
             auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
 	data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
 	days = json.loads(data.text)['data']['items']
