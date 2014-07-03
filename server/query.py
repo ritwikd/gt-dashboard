@@ -69,6 +69,7 @@ def getDate(username):
         date = request.args.get('date')
         writeData(username)
         data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
+	print data
         if (data == None):
             return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
         del(data['_id'])
@@ -83,12 +84,12 @@ def writeData(username):
 
 
 def writeWeatherData(username):
-    user = users.find({ 'name': 'username'})
+    user = users.find_one({ 'name': username})
     if (user != None):
         airport = user['stats']['weather']
     	requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
-    	weatherData = nltk.clean_html(requestData.text)
-        	weatherData = weatherData.split(" ")
+	weatherData = nltk.clean_html(requestData.text)
+        weatherData = weatherData.split(" ")
     	temps = []
     	for term in weatherData:
             	if (len(term) == 5 and '/' in term):
@@ -100,8 +101,9 @@ def writeWeatherData(username):
 
 
 def writeMotionData(username):	
-    user = users.find({ 'name': 'username'})
+    user = users.find_one({ 'name': username})
     if (user != None):
+ 	print user	
         auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
     	data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
     	days = json.loads(data.text)['data']['items']
