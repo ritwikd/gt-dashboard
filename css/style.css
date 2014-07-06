@@ -165,7 +165,7 @@ a:hover {
 
 .met.progcont {
     position: relative;
-    margin-left: 13%;
+    margin-left: 20%;
     margin-top: -80px;
 }
 
@@ -173,3 +173,20 @@ a:hover {
     font-size: 16px;
 }
 
+.stat.mettitle {
+}
+
+.met.progcont.elem {
+    position: relative;
+    top: -10px;
+}
+
+.met.photos.img {
+    padding-left: 2%;
+    padding-right: 2%;
+    max-width: 30%;
+}
+
+.met.photos.progcont {
+    
+}

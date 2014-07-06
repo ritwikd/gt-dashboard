@@ -1,4 +1,3 @@
-
 var print = function(inp) { console.log(inp); }
 
 Array.prototype.avs = function(){
@@ -15,31 +14,38 @@ Array.prototype.avs = function(){
 
 Date.prototype.gDate = function() {
    var yyyy = this.getFullYear().toString();
-   var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+   var mm = (this.getMonth()+1).toString();
    var dd  = this.getDate().toString();
-   return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0]); // padding
+   return yyyy + (mm[1]?mm:"0"+mm[0]) + (dd[1]?dd:"0"+dd[0])
   };
 
-var elemTemp = ['<div class = "metcont">' +
+var metTemp = ['<div class = "metcont">' +
                 '<div class = "met ',' mettitle">',
-                '<p class = "met ',
-                ' progdesc"></div><div class = "met ', 
+                '<p class = "met '
+ ,               ' progdesc"></div><div class = "met ', 
                 ' progcont"><div class = "met ', ' progbase"></div>' 
                 +'<div class = "met ',
                 ' progfill"></div></div><p class = "met ', 
                 ' proglab" >0%</p></p></div>'];
 
+var wetTemp = '<div class="metcont" style="opacity: 1;"><div class="met stat Weather mettitle">Weather <p class="met stat Weather progdesc"> Hourly temps.(&deg;C)</p></div><div class = "met weather elem progcont"><canvas class = "met weather canvas"></canvas> </div> </div> </div>';
+var wetNotTemp = '<div class="metcont" style="opacity: 1;"><div class="met stat Weather mettitle">Weather <p class="met stat Weather progdesc">Data not available.</p></div><div class = "met weather elem progcont"><canvas class = "met weather canvas"></canvas> </div> </div> </div>';
+var imCT = '<div class="metcont" style="opacity: 1;"> <div class="met stat photos mettitle"> Pictures <p class="met stat photos progdesc"> Pictures.</p> </div> <div class="met photos progcont"> </div> </div>';
+var imNT = '<div class="met stat photos mettitle"> Pictures <p class="met stat photos progdesc"> Data not available.</p> </div>';
+var imT = ['<img class = "met photos img" src="data:image/png;base64,', '" alt="image" />'];
+
+
 var totalPercents = {};
 
 var addMetric = function(elemClass, metTitle) {
-    var div = elemTemp[0] + elemClass;
-    div += elemTemp[1] + metTitle;
-    div += elemTemp[2] + elemClass;
-    div += elemTemp[3] + elemClass;
-    div += elemTemp[4] + elemClass;
-    div += elemTemp[5] + elemClass;
-    div += elemTemp[6] + elemClass;
-    div += elemTemp[7];
+    var div = metTemp[0] + elemClass;
+    div += metTemp[1] + metTitle;
+    div += metTemp[2] + elemClass;
+    div += metTemp[3] + elemClass;
+    div += metTemp[4] + elemClass;
+    div += metTemp[5] + elemClass;
+    div += metTemp[6] + elemClass;
+    div += metTemp[7];
     $("#metrics").append(div);
     setTimeout( 
         function() {
@@ -59,7 +65,6 @@ var setMainProg = function() {
         amt = 100;
     }
     $(".overview.progfill").css("width", (amt/100) * parseInt($(".overview.progbase").css("width")));
-    print(amt);
 };
 
 var getJSON = function(requestURL) {
@@ -126,11 +131,73 @@ var getMets = function(usern) {
     return Object.keys(user.metrics);
 }
 
+var getStats = function(usern) {
+    var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
+    return Object.keys(user.stats);
+}
+
+function respChart(selector, data){
+
+    var option = {
+        scaleOverlay : false,
+        scaleOverride : false,
+        scaleSteps : null,
+        scaleStepWidth : null,
+        scaleStartValue : null,
+        scaleLineColor : "rgba(0,0,0,.1)",
+        scaleLineWidth : 1,
+        scaleShowLabels : true,
+        scaleLabel : "<%=value%>",
+        scaleFontFamily : "arial",
+        scaleFontSize : 10,
+        scaleFontStyle : "normal",
+        scaleFontColor : "#909090", 
+        scaleShowGridLines : true,
+        scaleGridLineColor : "rgba(0,0,0,.05)",
+        scaleGridLineWidth : 1, 
+        bezierCurve : true,
+        pointDot : true,
+        pointDotRadius : 3,
+        pointDotStrokeWidth : 1,
+        datasetStroke : true,
+        datasetStrokeWidth : 2,
+        datasetFill : true,
+        animation : true,
+        animationSteps : 60,
+        animationEasing : "easeOutQuart",
+        onAnimationComplete : null
+    }
+  
+    var ctx = selector.get(0).getContext("2d");
+  
+    var container = $(selector).parent();
+
+  
+    $(window).resize( generateChart );
+
+  
+    function generateChart(){
+      
+        var ww = selector.attr('width', $(container).width() );
+      
+        new Chart(ctx).Line(data, option);
+    };
+
+  
+    generateChart();
+
+}
+
+
+
 var dkey;
 var date = new Date();
+var username = location.hash.substring(1);
 location.hash = "#" + date.gDate();
 var curMet;
-var mets = getMets("ritwikdutta");
+var mets = getMets(username);
+var stats = getStats(username);
+print(stats.length);
 var isvalid = false;
 
 for (var i = 0; i < 10; i++) {
@@ -154,7 +221,7 @@ $(window).on('hashchange', function() {
     $(location.hash).className = "active";
     $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
     for (var i = 0; i < mets.length; i++) {
-        curMet = getMet("ritwikdutta", mets[i], location.hash.substring(1));
+        curMet = getMet(username, mets[i], location.hash.substring(1));
         if (curMet[0] == "null") {
             addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), null, "Data not available.");  
         } else {
@@ -168,5 +235,42 @@ $(window).on('hashchange', function() {
         $(".overview.proglab").text("0%");
         $(".overview.progfill").css("width", "0%");
     }
+    for(var i = 0; i < stats.length; i++) {
+        print(location.hash.substring(1));
+        print(stats[i]);
+        var data = getJSON("http://vps.ritwikd.com:8081/" + username + "?type=data&metric=" + stats[i] + "&date=" + location.hash.substring(1));
+            if (stats[i] == "weather") {
+                if (data.value == "null") {
+                    $("#metrics").append(wetNotTemp);    
+                } else {
+                    $("#metrics").append(wetTemp);
+                    respChart($(".met.canvas"), {
+                        "labels": ["", "", "", "", "", "", "", "", "", "", "",  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+                        datasets: [
+                            {
+                                label: "Temps",
+                                fillColor: " rgba(146, 255, 141, 1)",
+                                strokeColor: "rgba(220,220,220,0.8)",
+                                highlightFill: "rgba(220,220,220,0.75)",
+                                highlightStroke: "rgba(220,220,220,1)",
+                                data: data.temps
+                            }
+                        ]
+                    }); 
+                }
+                
+            } else if (stats[i] == "photos") {
+                if (data.value == "null") {
+                    $("#metrics").append(imNT);
+                } else {
+                    $("#metrics").append(imCT);
+                    for (var j = 0; j < data.value.length; j++) {
+                        $(".met.photos.progcont").append(imT[0] + data.value[j] + imT[1]);
+                    }
+                }
+                
+            } 
+    }
 });
+
 
