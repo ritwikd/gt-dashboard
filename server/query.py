@@ -5,7 +5,9 @@ from functools import update_wrapper
 import requests
 import json
 import nltk
+from random import randrange
 from time import strftime as gtime
+from os import listdir
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -52,6 +54,8 @@ app = Flask(__name__)
 db = MongoClient('localhost', 27017).data
 users = db.users
 motion = db.motion
+sleep = db.sleep
+photos = db.photos
 weather = db.weather
 
 @app.errorhandler(404)
@@ -69,7 +73,8 @@ def getDate(username):
         date = request.args.get('date')
         writeData(username)
         data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
-	print data
+        if (metric == 'sleep'):
+            print data
         if (data == None):
             return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
         del(data['_id'])
@@ -80,6 +85,8 @@ def getDate(username):
 def writeData(username):
     writeWeatherData(username)
     writeMotionData(username)
+    writePhotoData(username)
+    writeSleepData(username)
 
 
 
@@ -95,16 +102,17 @@ def writeWeatherData(username):
             	if (len(term) == 5 and '/' in term):
     			temps.append(term.split("/")[0])
 
-    	obj = { 'metric' : 'weather', 'name' : username, 'date' : gtime('%Y%m%d'), 'temps' : temps }
+    	obj = { 'metric' : 'weather', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
     	if (weather.find_one(obj) == None):
+                obj['temps'] = temps
+                print obj
     		weather.insert(obj)
 
 
 def writeMotionData(username):	
     user = users.find_one({ 'name': username})
     if (user != None):
- 	print user	
-        auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
+ 	auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
     	data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
     	days = json.loads(data.text)['data']['items']
     	for day in days:
@@ -113,13 +121,28 @@ def writeMotionData(username):
     		steps = 0
     		for hour in day.keys():
     			steps += day[hour]['steps']
-    		obj = { 'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
+    		obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')), 'value' : steps}
     		if motion.find_one(obj) == None:
     			motion.insert(obj)
 
+def writePhotoData(username):
+    user = users.find_one({ 'name' : username})
+    print listdir('pics')
 
+        
+        
+        
+def writeSleepData(username):
+    user = users.find_one({ 'name' : username})
+    if (user != None):
+        print user
+        obj = { 'metric' : 'sleep', 'name' : username, 'date':  eval(gtime('%Y%m%d'))}
+        if (sleep.find_one(obj)) == None:
+            print "Inserting", obj
+            obj['value'] = randrange(3) + 5
+            sleep.insert(obj)        
+        
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True)
-
 
