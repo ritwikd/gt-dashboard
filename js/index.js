@@ -8,7 +8,7 @@ Array.prototype.avs = function(){
             if(this[i] !== this[0])
                 return false;
         }
-    } 
+    }
     return true;
 }
 
@@ -21,11 +21,11 @@ Date.prototype.gDate = function() {
 
 var metTemp = ['<div class = "metcont">' +
                 '<div class = "met ',' mettitle">',
-                '<p class = "met '
- ,               ' progdesc"></div><div class = "met ', 
-                ' progcont"><div class = "met ', ' progbase"></div>' 
+                '<p class = "met ',
+                ' progdesc"></div><div class = "met ',
+                ' progcont"><div class = "met ', ' progbase"></div>'
                 +'<div class = "met ',
-                ' progfill"></div></div><p class = "met ', 
+                ' progfill"></div></div><p class = "met ',
                 ' proglab" >0%</p></p></div>'];
 
 var wetTemp = '<div class="metcont" style="opacity: 1;"><div class="met stat Weather mettitle">Weather <p class="met stat Weather progdesc"> Hourly temps.(&deg;C)</p></div><div class = "met weather elem progcont"><canvas class = "met weather canvas"></canvas> </div> </div> </div>';
@@ -47,7 +47,7 @@ var addMetric = function(elemClass, metTitle) {
     div += metTemp[6] + elemClass;
     div += metTemp[7];
     $("#metrics").append(div);
-    setTimeout( 
+    setTimeout(
         function() {
             $(".metcont").css("opacity", "1");
         }, 100);
@@ -56,7 +56,9 @@ var addMetric = function(elemClass, metTitle) {
 var setMainProg = function() {
     var res = 0;
     var num = 0;
-    $.each(totalPercents, function(i) { res += totalPercents[i]; num++; });
+    print(totalPercents);
+    $.each(totalPercents, function(i) {
+      res += totalPercents[i]; num++; });
     var amt = res/num;
     $(".overview.progfill").css("background-color", getCol(amt));
     $(".overview.progfill").css("box-shadow", "0px 7px 0px 0px " + getShadCol(amt));
@@ -102,7 +104,7 @@ var addProg = function(elemClass, progAmt, descUp) {
 var getCol = function(progAmt) {
     return (progAmt < 50) ? "#F75E5E" : (progAmt < 80) ? "#F59631" : "#5EE66E";
 };
- 
+
 var getShadCol = function(progAmt) {
     return (progAmt < 50) ? "#CF3636" : (progAmt < 80) ? "#DE7C14" : "#22BF35";
 };
@@ -151,10 +153,10 @@ function respChart(selector, data){
         scaleFontFamily : "arial",
         scaleFontSize : 10,
         scaleFontStyle : "normal",
-        scaleFontColor : "#909090", 
+        scaleFontColor : "#909090",
         scaleShowGridLines : true,
         scaleGridLineColor : "rgba(0,0,0,.05)",
-        scaleGridLineWidth : 1, 
+        scaleGridLineWidth : 1,
         bezierCurve : true,
         pointDot : true,
         pointDotRadius : 3,
@@ -167,23 +169,23 @@ function respChart(selector, data){
         animationEasing : "easeOutQuart",
         onAnimationComplete : null
     }
-  
+
     var ctx = selector.get(0).getContext("2d");
-  
+
     var container = $(selector).parent();
 
-  
+
     $(window).resize( generateChart );
 
-  
+
     function generateChart(){
-      
+
         var ww = selector.attr('width', $(container).width() );
-      
+
         new Chart(ctx).Line(data, option);
     };
 
-  
+
     generateChart();
 
 }
@@ -197,7 +199,6 @@ location.hash = "#" + date.gDate();
 var curMet;
 var mets = getMets(username);
 var stats = getStats(username);
-print(stats.length);
 var isvalid = false;
 
 for (var i = 0; i < 10; i++) {
@@ -220,13 +221,14 @@ $(window).on('hashchange', function() {
     $(location.hash + " a").css("font-size", "125%");
     $(location.hash).className = "active";
     $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
+    totalPercents = {};
     for (var i = 0; i < mets.length; i++) {
         curMet = getMet(username, mets[i], location.hash.substring(1));
         if (curMet[0] == "null") {
-            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), null, "Data not available.");  
+            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), null, "Data not available.");
         } else {
             isvalid = true;
-            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), 100 * curMet[0]/curMet[1], curMet[0].toString() + " out of " + curMet[1].toString() + " " + curMet[2] + ".");    
+            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), 100 * curMet[0]/curMet[1], curMet[0].toString() + " out of " + curMet[1].toString() + " " + curMet[2] + ".");
         }
     }
     if (isvalid == false) {
@@ -236,12 +238,10 @@ $(window).on('hashchange', function() {
         $(".overview.progfill").css("width", "0%");
     }
     for(var i = 0; i < stats.length; i++) {
-        print(location.hash.substring(1));
-        print(stats[i]);
         var data = getJSON("http://vps.ritwikd.com:8081/" + username + "?type=data&metric=" + stats[i] + "&date=" + location.hash.substring(1));
             if (stats[i] == "weather") {
                 if (data.value == "null") {
-                    $("#metrics").append(wetNotTemp);    
+                    $("#metrics").append(wetNotTemp);
                 } else {
                     $("#metrics").append(wetTemp);
                     respChart($(".met.canvas"), {
@@ -256,9 +256,9 @@ $(window).on('hashchange', function() {
                                 data: data.temps
                             }
                         ]
-                    }); 
+                    });
                 }
-                
+
             } else if (stats[i] == "photos") {
                 if (data.value == "null") {
                     $("#metrics").append(imNT);
@@ -268,9 +268,7 @@ $(window).on('hashchange', function() {
                         $(".met.photos.progcont").append(imT[0] + data.value[j] + imT[1]);
                     }
                 }
-                
-            } 
+
+            }
     }
 });
-
-
