@@ -127,8 +127,16 @@ def writeMotionData(username):
 
 def writePhotoData(username):
     user = users.find_one({ 'name' : username})
-    print listdir('pics')
-
+    if (user != None):
+        pics = listdir('pics')
+        picarr = []
+        obj = { 'metric' : 'photos', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
+        if (photos.find_one(obj) == None):
+            for i in range(3):
+                print pics[randrange(len(pics))]
+                picarr.append(open('pics/' + pics[randrange(len(pics))], "r").read().encode("base64"))
+            obj['value'] = picarr
+            photos.insert(obj)
         
         
         
