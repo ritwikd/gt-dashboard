@@ -212,6 +212,7 @@ $("#datebar a").css("color", "#444444");
 
 
 $(window).on('hashchange', function() {
+    NProgress.start()
     isvalid = false;
     $("#datebar a").css("color", "#444444");
     $("#datebar a").css("font-weight", "300");
@@ -271,4 +272,5 @@ $(window).on('hashchange', function() {
 
             }
     }
+    NProgress.done();
 });
