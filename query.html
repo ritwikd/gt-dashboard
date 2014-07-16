@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Queries</title>
+		<style type="text/css">
+			@import url('http://fonts.googleapis.com/css?family=Lato');
+
+			body {
+				padding: 0px;
+				margin: 0px;
+				font-family: 'Lato', sans-serif;
+				font-size: 
+			}
+			#left {
+				margin: 0px;
+				position: fixed;
+				padding: 50px;
+				padding-left: 0px;
+				padding-right: 0px;
+				left: 0%;
+				width: 400px;
+			}
+			#right {
+				position: absolute;
+				right: 0%;
+				padding: 50px;
+				width: 65%;
+			}
+
+			.menu {
+				left: 0px;
+				padding-left: 20px;
+				width: 100%;
+				padding-top: 20px;
+				margin-top: 80px;
+				max-height: 75%;
+			}
+
+			.item {
+				width: 80%;
+				font-size: 32px;
+				padding: 10px;
+				padding-left: 40px;
+				margin-bottom: 10px;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				background-color: rgb(245, 245, 245);
+			}
+
+			.item:hover {
+				color: rgb(72, 154, 247) !important;
+				-moz-transform: translateX(20px);
+				-webkit-transform: translateX(20px);
+				-o-transform: translateX(20px);
+				-ms-transform: translateX(20px);
+				transform: translateX(20px);
+			}
+
+			.buttonhold {
+				position: fixed;
+				bottom: 50px;
+				left: 0px;
+				height: 15%;
+				width: 420px;
+			}
+
+			.button {
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				margin: 30px;
+				padding: 10px;
+				padding-left: 20px;
+				padding-bottom: 30px;
+				background-color: rgb(245, 245, 245);
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+			}
+
+			.button:hover {
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+				background-color: rgb(149, 196, 230);
+			}
+
+			.icon {
+				height: 80px;
+			}
+
+			.label {
+				position: relative;
+				margin-left: 110px;
+				margin-top: -60px;
+				font-size: 42px;
+			}
+
+			.arrow {
+				position: relative;	
+				float: right;
+				margin-top: -40px;
+				margin-right: 40px;
+				width: 35px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="bar" id="left">
+			<div class="menu" id="me">
+			</div>
+			<div class="buttonhold">
+				<div class="button" id="graphbutton" onclick="javascript: getSel();">
+					<img class="icon" src="assets/graph.png">
+					<div class="label">Graph</div>
+					<img class="arrow" src="assets/arrow.png">
+				</div>
+			</div>
+		</div>
+		<div class="bar" id="right">
+		</div>
+
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="js/query.js"></script>
+	</body>
+</html>
