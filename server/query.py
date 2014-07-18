@@ -130,11 +130,15 @@ def writePhotoData(username):
     if (user != None):
         pics = listdir('pics')
         picarr = []
+        usedpics = [];
         obj = { 'metric' : 'photos', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
         if (photos.find_one(obj) == None):
             for i in range(3):
-                print pics[randrange(len(pics))]
-                picarr.append(open('pics/' + pics[randrange(len(pics))], "r").read().encode("base64"))
+                picn = randrange(len(pics))
+                while(picn in usedpics):
+                    picn = randrange(len(pics))
+                usedpics.insert(0, picn)
+                picarr.append(open('pics/' + pics[picn], "r").read().encode("base64"))
             obj['value'] = picarr
             photos.insert(obj)
         
