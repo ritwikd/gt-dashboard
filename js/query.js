@@ -8,12 +8,17 @@ var getJSON = function (requestURL) {
 			var getMets = function (usern) {
 				var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
 			    return Object.keys(user.metrics);
-			}
+			};
 
 			var getStats = function (usern) {
 			    var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
 			    return Object.keys(user.stats);
-			}
+			};
+
+			var getName = function (usern) {
+				var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
+			    return user.fullname;
+			};
 
 			function respChart(selector, data) {
 
@@ -93,18 +98,31 @@ var getJSON = function (requestURL) {
 				}
 			}
 
-			function function_name (argument) {
-				// body...
-			}
-
-
 			var menu = ['<div class="item" data-sel="false" data-metric="', '" onclick="javscript: selectItem(this);">', '</div>']
 			var date = new Date();
 			var username = location.hash.substring(1);
 			var mets = getMets(username);
 			var stats = getStats(username);
+			var name = getName(username);
 			var elem = '';
+			$(".name").text(name);
+			$(".overlink").attr("href", "dash.html#" + username);
+			$(".menu").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
 			for(var i = 0; i < mets.length; i++) {
 				elem = menu[0] + mets[i] + menu[1] + capFrstLet(mets[i]) + menu[2];
 				$(".menu").append(elem);
 			}
+			for(var i = 0; i < stats.length; i++) {
+				elem = menu[0] + stats[i] + menu[1] + capFrstLet(stats[i]) + menu[2];
+				$(".menu").append(elem);
+			}
+			$(".menu").append('<br><p class="inst">Choose date range:</p class="inst"><br>');
+			$(".menu").append('<input class="pickbox pickadate">');
+			$(".menu").append('<input class="pickbox pickadate">');
+			$(".pickadate").pickadate();
+			$(".pickadate").pickadate();
+			$(".menu").append('<br><p class="inst">Choose time range:</p class="inst"><br>');
+			$(".menu").append('<input class="pickbox pickatime">');
+			$(".menu").append('<input class="pickbox pickatime">');
+			$(".pickatime").pickatime();
+			$(".pickatime").pickatime();
