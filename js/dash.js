@@ -33,7 +33,7 @@ var wetTemp = '<div class="metcont" style="opacity: 1;"><div class="met stat Wea
 var wetNotTemp = '<div class="metcont" style="opacity: 1;"><div class="met stat Weather mettitle">Weather <p class="met stat Weather progdesc">Data not available.</p></div><div class = "met weather elem progcont"><canvas class = "met weather canvas"></canvas> </div> </div> </div>';
 var imCT = '<div class="metcont" style="opacity: 1;"> <div class="met stat photos mettitle"> Pictures <p class="met stat photos progdesc"> Pictures.</p> </div> <div class="met photos progcont"> </div> </div>';
 var imNT = '<div class="met stat photos mettitle"> Pictures <p class="met stat photos progdesc"> Data not available.</p> </div>';
-var imT = ['<img class = "met photos img" onclick="javascript:lightbox(this);" src="data:image/png;base64,', '" alt="image" />'];
+var imT = ['<a class="fancybox" rel="group" href="data:image/png;base64,','"><img class = "met photos img" src="data:image/png;base64,', '" alt="image" /></a>'];
 
 
 var totalPercents = {};
@@ -276,11 +276,15 @@ $(window).on('hashchange', function () {
             } else {
                 $("#metrics").append(imCT);
                 for (var j = 0; j < data.value.length; j++) {
-                    $(".met.photos.progcont").append(imT[0] + data.value[j] + imT[1]);
+                    $(".met.photos.progcont").append(imT[0] + data.value[j] + imT[1] + data.value[j] + imT[2]);
                 }
             }
 
         }
     }
 
+});
+
+$(document).ready(function() {
+    $(".fancybox").fancybox();
 });
