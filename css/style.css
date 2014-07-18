@@ -216,14 +216,32 @@ a:hover {
 }
 
 .met.photos.img {
-    border: solid 10px #DDD;
+    border: solid 10px #FFF;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     margin-left: 2%;
     margin-right: 2%;
     max-width: 25%;
-    -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.4);
-    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0px 0px 6px 6px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0px 0px 6px 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 6px 6px rgba(0, 0, 0, 0.4);
+    -webkit-transition: all 150ms ease-in-out;
+    -moz-transition: all 150ms ease-in-out;
+    -ms-transition: all 150ms ease-in-out;
+    -o-transition: all 150ms ease-in-out;
+    transition: all 150ms ease-in-out;
+}
+
+.met.photos.img:hover {
+    -moz-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+    -webkit-transition: all 150ms ease-in-out;
+    -moz-transition: all 150ms ease-in-out;
+    -ms-transition: all 150ms ease-in-out;
+    -o-transition: all 150ms ease-in-out;
+    transition: all 150ms ease-in-out;
 }
