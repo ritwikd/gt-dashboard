@@ -82,7 +82,7 @@ def getDate(username):
         return 'Error.'
 
 def writeData(username, date):
-    if date == (eval(gtime('%Y%m%d')) - 1):
+    if date == eval(gtime('%Y%m%d')):
         writeWeatherData(username, date)
         writeMotionData(username, date)
         writePhotoData(username, date)
