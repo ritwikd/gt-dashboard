@@ -188,11 +188,6 @@ function respChart(selector, data) {
 
 }
 
-
-function lightbox (image) {
-}
-
-
 var dkey;
 var date = new Date();
 var username = location.hash.substring(1);
@@ -214,7 +209,7 @@ for (var i = 0; i < 10; i++) {
 $("#datebar a").css("color", "#444444");
 
 $(window).on('hashchange', function () {
-    $.get('http://vps.ritwikdcom:8081/' + username + "?type=write&date=" + location.hash.substring(1), function(response) {
+    $.get('http://vps.ritwikd.com:8081/' + username + "?type=write&date=" + location.hash.substring(1), function(response) {
         console.log(response);
     });
     isvalid = false;

@@ -24,7 +24,6 @@ def crossdomain(origin=None, methods=None, headers=None,
     def get_methods():
         if methods is not None:
             return methods
-
         options_resp = current_app.make_default_options_response()
         return options_resp.headers['allow']
 
@@ -83,10 +82,11 @@ def getDate(username):
         return 'Error.'
 
 def writeData(username, date):
-    writeWeatherData(username, date)
-    writeMotionData(username, date)
-    writePhotoData(username, date)
-    writeSleepData(username, date)
+    if date == (eval(gtime('%Y%m%d')) - 1):
+        writeWeatherData(username, date)
+        writeMotionData(username, date)
+        writePhotoData(username, date)
+        writeSleepData(username, date)
     print("Data written.")
 
 def writeWeatherData(username, date):
@@ -118,6 +118,7 @@ def writeMotionData(username, date):
             auth = {'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
             data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
             day = json.loads(data.text)['data']['items'][0]
+            print day
             day = day['details']['hourly_totals']
             steps = 0
             for hour in day.keys():
