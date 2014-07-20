@@ -65,8 +65,8 @@ def getDate(username):
 	if request.args.get('type') == 'user':
 		for user in users.find():
 			if user['name'] == username:
-			del(user['_id'])
-				return json.dumps(user)
+				del(user['_id'])
+					return json.dumps(user)
 		return json.dumps({ 'name' : 'null' }), 404
 	elif request.args.get('type') == 'data':
 		metric = request.args.get('metric')
