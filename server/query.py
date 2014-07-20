@@ -110,7 +110,7 @@ def writeWeatherData(username, date):
             print(weather.find_one(obj))
             print("Weather already found.")
 
-def writeMotionData(username):, date  
+def writeMotionData(username, date):
     user = users.find_one({'name': username})
     if (user != None):
         obj = {'metric': 'motion', 'name' : username, 'date': date}
