@@ -79,6 +79,8 @@ def getDate(username):
     elif request.args.get('type') == 'write':
         writeData(username)
         return 'Data written.'
+    else:
+        return 'Error.'
 
 def writeData(username):
     writeWeatherData(username)
