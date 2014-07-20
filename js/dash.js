@@ -1,5 +1,4 @@
 var print = function (inp) {
-    console.log(inp);
 }
 
 Array.prototype.avs = function () {
@@ -191,7 +190,6 @@ function respChart(selector, data) {
 
 
 function lightbox (image) {
-    console.log(image);
 }
 
 
@@ -204,10 +202,6 @@ var user = getUser(username);
 var mets = user.metrics;
 var stats = user.stats;
 var name = user.fullname;
-console.log(user);
-console.log(mets);
-console.log(stats);
-
 $(".usertitle").text(name);
 var isvalid = false;
 
@@ -220,6 +214,7 @@ for (var i = 0; i < 10; i++) {
 $("#datebar a").css("color", "#444444");
 
 $(window).on('hashchange', function () {
+    $()
     isvalid = false;
     $("#datebar a").css("color", "#444444");
     $("#datebar a").css("font-weight", "300");
@@ -230,24 +225,24 @@ $(window).on('hashchange', function () {
     $(location.hash).className = "active";
     $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
     totalPercents = {};
-    for (var i = 0; i < mets.length; i++) {
-        curMet = getMet(username, mets[i], location.hash.substring(1));
+    $.each(mets, function(item) {
+        curMet = getMet(username, item, location.hash.substring(1));
         if (curMet[0] == "null") {
-            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), null, "Data not available.");
+            addProg(item.charAt(0).toUpperCase() + item.substring(1), null, "Data not available.");
         } else {
             isvalid = true;
-            addProg(mets[i].charAt(0).toUpperCase() + mets[i].substring(1), 100 * curMet[0] / curMet[1], curMet[0].toString() + " out of " + curMet[1].toString() + " " + curMet[2] + ".");
+            addProg(item.charAt(0).toUpperCase() + item.substring(1), 100 * curMet[0] / curMet[1], curMet[0].toString() + " out of " + curMet[1].toString() + " " + curMet[2] + ".");
         }
-    }
+    });
     if (isvalid == false) {
         $(".overview.progfill").css("background-color", "#F5F5F5");
         $(".overview.progfill").css("box-shadow", "0px 0px 0px 0px rgba(0, 0, 0, 0)");
         $(".overview.proglab").text("0%");
         $(".overview.progfill").css("width", "0%");
     }
-    for (var i = 0; i < stats.length; i++) {
-        var data = getJSON("http://vps.ritwikd.com:8081/" + username + "?type=data&metric=" + stats[i] + "&date=" + location.hash.substring(1));
-        if (stats[i] == "weather") {
+    $.each(stats, function(item) {
+        var data = getJSON("http://vps.ritwikd.com:8081/" + username + "?type=data&metric=" + item + "&date=" + location.hash.substring(1));
+        if (item == "weather") {
             if (data.value == "null") {
                 $("#metrics").append(wetNotTemp);
             } else {
@@ -265,7 +260,7 @@ $(window).on('hashchange', function () {
                 });
             }
 
-        } else if (stats[i] == "photos") {
+        } else if (item == "photos") {
             if (data.value == "null") {
                 $("#metrics").append(imNT);
             } else {
@@ -276,8 +271,7 @@ $(window).on('hashchange', function () {
             }
 
         }
-    }
-
+    });
 });
 
 $(document).ready(function() {

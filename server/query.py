@@ -77,19 +77,19 @@ def getDate(username):
         del(data['_id'])
         return json.dumps(data)
     elif request.args.get('type') == 'write':
-        writeData(username)
+        writeData(username, eval(request.args.get('date')))
         return 'Data written.'
     else:
         return 'Error.'
 
-def writeData(username):
-    writeWeatherData(username)
-    writeMotionData(username)
-    writePhotoData(username)
-    writeSleepData(username)
+def writeData(username, date):
+    writeWeatherData(username, date)
+    writeMotionData(username, date)
+    writePhotoData(username, date)
+    writeSleepData(username, date)
     print("Data written.")
 
-def writeWeatherData(username):
+def writeWeatherData(username, date):
     user = users.find_one({'name': username})
     if (user != None):
         airport = user['stats']['weather']
@@ -101,7 +101,7 @@ def writeWeatherData(username):
             if (len(term) == 5 and '/' in term):
                 temps.append(term.split("/")[0])
 
-        obj = {'metric' : 'weather', 'name' : username, 'date' : eval(gtime('%Y%m%d')) - 1}
+        obj = {'metric' : 'weather', 'name' : username, 'date' : date}
         if (weather.find_one(obj) == None):
                 obj['temps'] = temps
                 weather.insert(obj)
@@ -110,10 +110,10 @@ def writeWeatherData(username):
             print(weather.find_one(obj))
             print("Weather already found.")
 
-def writeMotionData(username):  
+def writeMotionData(username):, date  
     user = users.find_one({'name': username})
     if (user != None):
-        obj = {'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')) - 1}
+        obj = {'metric': 'motion', 'name' : username, 'date': date}
         if (motion.find(obj) == None):
             auth = {'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
             data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
@@ -122,17 +122,17 @@ def writeMotionData(username):
             steps = 0
             for hour in day.keys():
                 steps += day[hour]['steps'] 
-            obj = {'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')) - 1, 'value' : steps}
+            obj = {'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
             motion.insert(obj)
             print("Motion inserted.")
         else:
             print(motion.find_one(obj))
             print("Motion already found.")
 
-def writePhotoData(username):
+def writePhotoData(username, date):
     user = users.find_one({'name' : username})
     if (user != None):
-        obj = {'metric' : 'photos', 'name' : username, 'date' : eval(gtime('%Y%m%d')) - 1}
+        obj = {'metric' : 'photos', 'name' : username, 'date' : date}
         if (photos.find_one(obj) == None):
             pics = listdir('pics')
             picarr = []
@@ -150,10 +150,10 @@ def writePhotoData(username):
             print("Photos already found.")
         
         
-def writeSleepData(username):
+def writeSleepData(username, date):
     user = users.find_one({'name' : username})
     if (user != None):
-        obj = {'metric' : 'sleep', 'name' : username, 'date':  eval(gtime('%Y%m%d')) - 1}
+        obj = {'metric' : 'sleep', 'name' : username, 'date':  date}
         if (sleep.find_one(obj)) == None:
             obj['value'] = randrange(3) + 5
             sleep.insert(obj)       
@@ -164,4 +164,3 @@ def writeSleepData(username):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True)
-
