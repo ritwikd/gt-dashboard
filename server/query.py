@@ -73,8 +73,6 @@ def getDate(username):
         date = request.args.get('date')
         writeData(username)
         data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
-        if (metric == 'sleep'):
-            print data
         if (data == None):
             return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
         del(data['_id'])
@@ -87,8 +85,7 @@ def writeData(username):
     writeMotionData(username)
     writePhotoData(username)
     writeSleepData(username)
-
-
+    print("Data written.")
 
 def writeWeatherData(username):
     user = users.find_one({ 'name': username})
@@ -105,9 +102,10 @@ def writeWeatherData(username):
     	obj = { 'metric' : 'weather', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
     	if (weather.find_one(obj) == None):
                 obj['temps'] = temps
-                print obj
-    		weather.insert(obj)
-
+                weather.insert(obj)
+                print("Weather inserted.")
+        else:
+            print("Weather already found.")
 
 def writeMotionData(username):	
     user = users.find_one({ 'name': username})
@@ -124,6 +122,9 @@ def writeMotionData(username):
     		obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')), 'value' : steps}
     		if motion.find_one(obj) == None:
     			motion.insert(obj)
+                        print("Motion inserted.")
+                else:
+                    print("Motion already found.")
 
 def writePhotoData(username):
     user = users.find_one({ 'name' : username})
@@ -141,18 +142,21 @@ def writePhotoData(username):
                 picarr.append(open('pics/' + pics[picn], "r").read().encode("base64"))
             obj['value'] = picarr
             photos.insert(obj)
-        
+            print("Photos inserted.")
+        else:
+            print("Photos already found.")
         
         
 def writeSleepData(username):
     user = users.find_one({ 'name' : username})
     if (user != None):
-        print user
         obj = { 'metric' : 'sleep', 'name' : username, 'date':  eval(gtime('%Y%m%d'))}
         if (sleep.find_one(obj)) == None:
-            print "Inserting", obj
             obj['value'] = randrange(3) + 5
-            sleep.insert(obj)        
+            sleep.insert(obj)       
+            print("Sleep data inserted.")
+        else:
+            print("Sleep data already found.")
         
 
 if __name__ == '__main__':
