@@ -214,7 +214,9 @@ for (var i = 0; i < 10; i++) {
 $("#datebar a").css("color", "#444444");
 
 $(window).on('hashchange', function () {
-    $()
+    $.get('http://vps.ritwikdcom:8081/' + username + "?type=write&date=" + location.hash.substring(1), function(response) {
+        console.log(response);
+    });
     isvalid = false;
     $("#datebar a").css("color", "#444444");
     $("#datebar a").css("font-weight", "300");
