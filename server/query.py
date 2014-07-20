@@ -10,45 +10,45 @@ from time import strftime as gtime
 from os import listdir
 
 def crossdomain(origin=None, methods=None, headers=None,
-                max_age=21600, attach_to_all=True,
-                automatic_options=True):
-    if methods is not None:
-        methods = ', '.join(sorted(x.upper() for x in methods))
-    if headers is not None and not isinstance(headers, basestring):
-        headers = ', '.join(x.upper() for x in headers)
-    if not isinstance(origin, basestring):
-        origin = ', '.join(origin)
-    if isinstance(max_age, timedelta):
-        max_age = max_age.total_seconds()
+				max_age=21600, attach_to_all=True,
+				automatic_options=True):
+	if methods is not None:
+		methods = ', '.join(sorted(x.upper() for x in methods))
+	if headers is not None and not isinstance(headers, basestring):
+		headers = ', '.join(x.upper() for x in headers)
+	if not isinstance(origin, basestring):
+		origin = ', '.join(origin)
+	if isinstance(max_age, timedelta):
+		max_age = max_age.total_seconds()
 
-    def get_methods():
-        if methods is not None:
-            return methods
+	def get_methods():
+		if methods is not None:
+			return methods
 
-        options_resp = current_app.make_default_options_response()
-        return options_resp.headers['allow']
+		options_resp = current_app.make_default_options_response()
+		return options_resp.headers['allow']
 
-    def decorator(f):
-        def wrapped_function(*args, **kwargs):
-            if automatic_options and request.method == 'OPTIONS':
-                resp = current_app.make_default_options_response()
-            else:
-                resp = make_response(f(*args, **kwargs))
-            if not attach_to_all and request.method != 'OPTIONS':
-                return resp
+	def decorator(f):
+		def wrapped_function(*args, **kwargs):
+			if automatic_options and request.method == 'OPTIONS':
+				resp = current_app.make_default_options_response()
+			else:
+				resp = make_response(f(*args, **kwargs))
+			if not attach_to_all and request.method != 'OPTIONS':
+				return resp
 
-            h = resp.headers
+			h = resp.headers
 
-            h['Access-Control-Allow-Origin'] = origin
-            h['Access-Control-Allow-Methods'] = get_methods()
-            h['Access-Control-Max-Age'] = str(max_age)
-            if headers is not None:
-                h['Access-Control-Allow-Headers'] = headers
-            return resp
+			h['Access-Control-Allow-Origin'] = origin
+			h['Access-Control-Allow-Methods'] = get_methods()
+			h['Access-Control-Max-Age'] = str(max_age)
+			if headers is not None:
+				h['Access-Control-Allow-Headers'] = headers
+			return resp
 
-        f.provide_automatic_options = False
-        return update_wrapper(wrapped_function, f)
-    return decorator
+		f.provide_automatic_options = False
+		return update_wrapper(wrapped_function, f)
+	return decorator
 app = Flask(__name__)
 
 db = MongoClient('localhost', 27017).data
@@ -62,103 +62,103 @@ weather = db.weather
 @app.route('/<username>')
 @crossdomain(origin='*')
 def getDate(username):
-    if request.args.get('type') == 'user':
-        for user in users.find():
-            if user['name'] == username:
-            del(user['_id'])
-                return json.dumps(user)
-        return json.dumps({ 'name' : 'null' }), 404
-    elif request.args.get('type') == 'data':
-        metric = request.args.get('metric')
-        date = request.args.get('date')
-        data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
-        if (data == None):
-            return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
-        del(data['_id'])
-        return json.dumps(data)
-    elif request.args.get('type') == 'write':
-        writeData(username)
-        return 'Data written.'
+	if request.args.get('type') == 'user':
+		for user in users.find():
+			if user['name'] == username:
+			del(user['_id'])
+				return json.dumps(user)
+		return json.dumps({ 'name' : 'null' }), 404
+	elif request.args.get('type') == 'data':
+		metric = request.args.get('metric')
+		date = request.args.get('date')
+		data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
+		if (data == None):
+			return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
+		del(data['_id'])
+		return json.dumps(data)
+	elif request.args.get('type') == 'write':
+		writeData(username)
+		return 'Data written.'
 
 def writeData(username):
-    writeWeatherData(username)
-    writeMotionData(username)
-    writePhotoData(username)
-    writeSleepData(username)
-    print("Data written.")
+	writeWeatherData(username)
+	writeMotionData(username)
+	writePhotoData(username)
+	writeSleepData(username)
+	print("Data written.")
 
 def writeWeatherData(username):
-    user = users.find_one({ 'name': username})
-    if (user != None):
-        airport = user['stats']['weather']
-        requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
-        weatherData = nltk.clean_html(requestData.text)
-        weatherData = weatherData.split(" ")
-        temps = []
-        for term in weatherData:
-                if (len(term) == 5 and '/' in term):
-                temps.append(term.split("/")[0])
+	user = users.find_one({ 'name': username})
+	if (user != None):
+		airport = user['stats']['weather']
+		requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
+		weatherData = nltk.clean_html(requestData.text)
+		weatherData = weatherData.split(" ")
+		temps = []
+		for term in weatherData:
+				if (len(term) == 5 and '/' in term):
+				temps.append(term.split("/")[0])
 
-        obj = { 'metric' : 'weather', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
-        if (weather.find_one(obj) == None):
-                obj['temps'] = temps
-                weather.insert(obj)
-                print("Weather inserted.")
-        else:
-            print("Weather already found.")
+		obj = { 'metric' : 'weather', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
+		if (weather.find_one(obj) == None):
+				obj['temps'] = temps
+				weather.insert(obj)
+				print("Weather inserted.")
+		else:
+			print("Weather already found.")
 
-def writeMotionData(username):    
-    user = users.find_one({ 'name': username})
-    if (user != None):
-        obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d'))}
-        if (motion.find(obj) == None):
-             auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
-            data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
-            day = json.loads(data.text)['data']['items'][0]
-            date =  day['date']
-            day = day['details']['hourly_totals']
-            steps = 0
-            for hour in day.keys():
-                steps += day[hour]['steps'] 
-            obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')), 'value' : steps}
-            motion.insert(obj)
-            print("Motion inserted.")
-        else:
-            print("Motion already found.")
+def writeMotionData(username):  
+	user = users.find_one({ 'name': username})
+	if (user != None):
+		obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d'))}
+		if (motion.find(obj) == None):
+			auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
+			data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
+			day = json.loads(data.text)['data']['items'][0]
+			date =  day['date']
+			day = day['details']['hourly_totals']
+			steps = 0
+			for hour in day.keys():
+				steps += day[hour]['steps'] 
+			obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')), 'value' : steps}
+			motion.insert(obj)
+			print("Motion inserted.")
+		else:
+			print("Motion already found.")
 
 def writePhotoData(username):
-    user = users.find_one({ 'name' : username})
-    if (user != None):
-        obj = { 'metric' : 'photos', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
-        if (photos.find_one(obj) == None):
-            pics = listdir('pics')
-            picarr = []
-            usedpics = []
-            for i in range(3):
-                picn = randrange(len(pics))
-                while(picn in usedpics):
-                    picn = randrange(len(pics))
-                usedpics.insert(0, picn)
-                picarr.append(open('pics/' + pics[picn], "r").read().encode("base64"))
-            obj['value'] = picarr
-            photos.insert(obj)
-            print("Photos inserted.")
-        else:
-            print("Photos already found.")
-        
-        
+	user = users.find_one({ 'name' : username})
+	if (user != None):
+		obj = { 'metric' : 'photos', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
+		if (photos.find_one(obj) == None):
+			pics = listdir('pics')
+			picarr = []
+			usedpics = []
+			for i in range(3):
+				picn = randrange(len(pics))
+				while(picn in usedpics):
+					picn = randrange(len(pics))
+				usedpics.insert(0, picn)
+				picarr.append(open('pics/' + pics[picn], "r").read().encode("base64"))
+			obj['value'] = picarr
+			photos.insert(obj)
+			print("Photos inserted.")
+		else:
+			print("Photos already found.")
+		
+		
 def writeSleepData(username):
-    user = users.find_one({ 'name' : username})
-    if (user != None):
-        obj = { 'metric' : 'sleep', 'name' : username, 'date':  eval(gtime('%Y%m%d'))}
-        if (sleep.find_one(obj)) == None:
-            obj['value'] = randrange(3) + 5
-            sleep.insert(obj)       
-            print("Sleep data inserted.")
-        else:
-            print("Sleep data already found.")
-        
+	user = users.find_one({ 'name' : username})
+	if (user != None):
+		obj = { 'metric' : 'sleep', 'name' : username, 'date':  eval(gtime('%Y%m%d'))}
+		if (sleep.find_one(obj)) == None:
+			obj['value'] = randrange(3) + 5
+			sleep.insert(obj)       
+			print("Sleep data inserted.")
+		else:
+			print("Sleep data already found.")
+		
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8081, debug=True)
+	app.run(host='0.0.0.0', port=8081, debug=True)
 
