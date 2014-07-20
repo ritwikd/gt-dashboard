@@ -118,14 +118,14 @@ def writeMotionData(username, date):
             auth = {'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
             data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
             day = json.loads(data.text)['data']['items'][0]
-            print day
-            day = day['details']['hourly_totals']
-            steps = 0
-            for hour in day.keys():
-                steps += day[hour]['steps'] 
-            obj = {'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
-            motion.insert(obj)
-            print("Motion inserted.")
+            if (day['date'] == date):
+                day = day['details']['hourly_totals']
+                steps = 0
+                for hour in day.keys():
+                    steps += day[hour]['steps'] 
+                obj = {'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
+                motion.insert(obj)
+                print("Motion inserted.")
         else:
             print(motion.find_one(obj))
             print("Motion already found.")
