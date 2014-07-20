@@ -64,21 +64,21 @@ weather = db.weather
 def getDate(username):
     if request.args.get('type') == 'user':
         for user in users.find():
-        	if user['name'] == username:
-			del(user['_id'])
-		        return json.dumps(user)
+            if user['name'] == username:
+            del(user['_id'])
+                return json.dumps(user)
         return json.dumps({ 'name' : 'null' }), 404
     elif request.args.get('type') == 'data':
         metric = request.args.get('metric')
         date = request.args.get('date')
-        writeData(username)
         data = db[metric].find_one({ 'metric' : metric, 'name' : username, 'date': eval(date)})
         if (data == None):
             return json.dumps({ 'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
         del(data['_id'])
         return json.dumps(data)
-    else:
-	return "error"
+    elif request.args.get('type') == 'write':
+        writeData(username)
+        return 'Data written.'
 
 def writeData(username):
     writeWeatherData(username)
@@ -91,49 +91,49 @@ def writeWeatherData(username):
     user = users.find_one({ 'name': username})
     if (user != None):
         airport = user['stats']['weather']
-    	requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
-	weatherData = nltk.clean_html(requestData.text)
+        requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
+        weatherData = nltk.clean_html(requestData.text)
         weatherData = weatherData.split(" ")
-    	temps = []
-    	for term in weatherData:
-            	if (len(term) == 5 and '/' in term):
-    			temps.append(term.split("/")[0])
+        temps = []
+        for term in weatherData:
+                if (len(term) == 5 and '/' in term):
+                temps.append(term.split("/")[0])
 
-    	obj = { 'metric' : 'weather', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
-    	if (weather.find_one(obj) == None):
+        obj = { 'metric' : 'weather', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
+        if (weather.find_one(obj) == None):
                 obj['temps'] = temps
                 weather.insert(obj)
                 print("Weather inserted.")
         else:
             print("Weather already found.")
 
-def writeMotionData(username):	
+def writeMotionData(username):    
     user = users.find_one({ 'name': username})
     if (user != None):
- 	auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
-    	data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
-    	days = json.loads(data.text)['data']['items']
-    	for day in days:
-    		date =  day['date']
-    		day = day['details']['hourly_totals']
-    		steps = 0
-    		for hour in day.keys():
-    			steps += day[hour]['steps']
-    		obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')), 'value' : steps}
-    		if motion.find_one(obj) == None:
-    			motion.insert(obj)
-                        print("Motion inserted.")
-                else:
-                    print("Motion already found.")
+        obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d'))}
+        if (motion.find(obj) == None):
+             auth = { 'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
+            data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
+            day = json.loads(data.text)['data']['items'][0]
+            date =  day['date']
+            day = day['details']['hourly_totals']
+            steps = 0
+            for hour in day.keys():
+                steps += day[hour]['steps'] 
+            obj = { 'metric': 'motion', 'name' : username, 'date': eval(gtime('%Y%m%d')), 'value' : steps}
+            motion.insert(obj)
+            print("Motion inserted.")
+        else:
+            print("Motion already found.")
 
 def writePhotoData(username):
     user = users.find_one({ 'name' : username})
     if (user != None):
-        pics = listdir('pics')
-        picarr = []
-        usedpics = [];
         obj = { 'metric' : 'photos', 'name' : username, 'date' : eval(gtime('%Y%m%d'))}
         if (photos.find_one(obj) == None):
+            pics = listdir('pics')
+            picarr = []
+            usedpics = []
             for i in range(3):
                 picn = randrange(len(pics))
                 while(picn in usedpics):

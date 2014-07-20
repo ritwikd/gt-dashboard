@@ -131,20 +131,10 @@ var getMet = function (usern, metric, date) {
     return [data.value, parseInt(user.metrics[metric][0]), user.metrics[metric][1]];
 };
 
-var getMets = function (usern) {
-    var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return Object.keys(user.metrics);
-};
 
-var getStats = function (usern) {
+var getUser = function (usern) {
     var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return Object.keys(user.stats);
-};
-
-var getName = function (usern) {
-    var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return user.fullname;
-};
+}
 
 function respChart(selector, data) {
 
@@ -209,9 +199,10 @@ var date = new Date();
 var username = location.hash.substring(1);
 location.hash = "#" + date.gDate();
 var curMet;
-var mets = getMets(username);
-var stats = getStats(username);
-var name = getName(username);
+var user = getUser(username)
+var mets = user.metrics;
+var stats = user.stats;
+var name = user.fullname;
 
 $(".usertitle").text(name);
 var isvalid = false;
