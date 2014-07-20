@@ -114,7 +114,7 @@ def writeMotionData(username, date):
     user = users.find_one({'name': username})
     if (user != None):
         obj = {'metric': 'motion', 'name' : username, 'date': date}
-        if (motion.find(obj) == None):
+        if (motion.find_one(obj) == None):
             auth = {'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
             data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
             day = json.loads(data.text)['data']['items'][0]
