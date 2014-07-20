@@ -136,7 +136,8 @@ a:hover {
 
 .overview.proglab {
     position: fixed;
-    right: 5%;
+    right: 0px;
+    padding-right: 3%;
     margin-top: -45px;
     font-size: 30px;
 }
