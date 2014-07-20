@@ -126,6 +126,8 @@ def writeMotionData(username, date):
                 obj = {'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
                 motion.insert(obj)
                 print("Motion inserted.")
+            else:
+                print("Latest data not available.")
         else:
             print(motion.find_one(obj))
             print("Motion already found.")
