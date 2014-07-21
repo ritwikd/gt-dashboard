@@ -68,7 +68,7 @@ var setMainProg = function () {
     if (amt > 100) {
         amt = 100;
     }
-    $(".overview.progfill").css("width", (amt / 100) * parseInt($(".overview.progbase").css("width")));
+    $(".overview.progfill").css("width", amt.toString() + "%");
 };
 
 var getJSON = function (requestURL) {
@@ -91,7 +91,7 @@ var setProg = function (elemClass, progAmt, descUp) {
         if (progAmt > 100) {
             progAmt = 100;
         }
-        bar.css("width", (progAmt / 100) * parseInt(base.css("width")));
+        bar.css("width", progAmt.toString() + "%");
     }
     desc.text(descUp);
     setMainProg();
@@ -110,8 +110,6 @@ var getCol = function (progAmt) {
 var getShadCol = function (progAmt) {
     return (progAmt < 50) ? "#CF3636" : (progAmt < 80) ? "#DE7C14" : "#22BF35";
 };
-
-$("#metrics").css("margin-top", parseInt($("#mainhead").css("height")) - 75);
 
 window.onscroll = function () {
     if ($("body").scrollTop() > 10) {
@@ -190,7 +188,7 @@ function respChart(selector, data) {
 
 var dkey;
 var date = new Date();
-var username = location.hash.substring(1);
+var username = sessionStorage.getItem('username');
 location.hash = "#" + date.gDate();
 var curMet;
 var user = getUser(username);

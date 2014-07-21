@@ -100,13 +100,12 @@ var getJSON = function (requestURL) {
 
 			var menu = ['<div class="item" data-sel="false" data-metric="', '" onclick="javscript: selectItem(this);">', '</div>']
 			var date = new Date();
-			var username = location.hash.substring(1);
+			var username = sessionStorage.getItem('username');
 			var mets = getMets(username);
 			var stats = getStats(username);
 			var name = getName(username);
 			var elem = '';
 			$(".name").text(name);
-			$(".overlink").attr("href", "dash.html#" + username);
 			$(".menu").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
 			for(var i = 0; i < mets.length; i++) {
 				elem = menu[0] + mets[i] + menu[1] + capFrstLet(mets[i]) + menu[2];

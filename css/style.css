@@ -59,15 +59,17 @@ a:hover {
 }
 
 .usertitle {
-    position: fixed;
     padding: 10px;
     right: 5px;
     font-size: 28px;
     color: #FFF;
 }
 
-.nav {
-    font-size: 125%;
+.navlink {
+    margin-top: 3px;
+    right: 5px;
+    font-size: 28px;
+    color: #FFF;
 }
 
 .progfill {
@@ -105,7 +107,6 @@ a:hover {
 }
 
 #mainhead {
-    position: fixed;
     width: 100%;
     padding: 3%;
     padding-bottom: 2%;
@@ -185,7 +186,7 @@ a:hover {
 
 .met.progbase {
     height: 40px;
-    width: 90%;
+    width: 80%;
 }
 
 .met.progfill {
