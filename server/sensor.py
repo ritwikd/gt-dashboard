@@ -1,5 +1,4 @@
 from time import strftime as gtime
-from datetime import timedelta
 from random import randrange
 from os import listdir
 import threading
@@ -7,7 +6,7 @@ import requests
 import json
 import nltk
 
-def writeData(username, date):
+def writeData(username, date, users):
     if date == eval(gtime('%Y%m%d')):
         writeWeatherData(username, date)
         writeMotionData(username, date)
@@ -15,7 +14,7 @@ def writeData(username, date):
         writeSleepData(username, date)
     print("Data written.")
 
-def writeWeatherData(username, date):
+def writeWeatherData(username, date, users):
     user = users.find_one({'name': username})
     if (user != None):
         airport = user['stats']['weather']

@@ -1,8 +1,10 @@
-from pymongo import MongoClient
 from flask import Flask, make_response, request, current_app
 from functools import update_wrapper
+from pymongo import MongoClient
+from datetime import timedelta
 import requests
 import sensor
+import json
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -47,6 +49,7 @@ app = Flask(__name__)
 
 db = MongoClient('localhost', 27017).data
 users = db.users
+print users
 motion = db.motion
 sleep = db.sleep
 photos = db.photos
@@ -71,7 +74,7 @@ def getDate(username):
         del(data['_id'])
         return json.dumps(data)
     elif request.args.get('type') == 'write':
-        sensor.writeData(username, eval(request.args.get('date')))
+        sensor.writeData(username, eval(request.args.get('date')), users)
         return 'Data written.'
     else:
         return 'Error.'
