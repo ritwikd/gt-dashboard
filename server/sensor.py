@@ -90,8 +90,8 @@ def writeSleepData(username, date):
         else:
             print("Sleep data already found.")
 
-def runAutoWrite():
-    threading.Timer(300, runAutoWrite).start()
-    writeData()
+# def runAutoWrite():
+#     threading.Timer(300, runAutoWrite).start()
+#     writeData()
 
-runAutoWrite()
+# runAutoWrite()
