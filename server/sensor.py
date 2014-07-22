@@ -6,15 +6,15 @@ import requests
 import json
 import nltk
 
-def writeData(username, date, users):
+def writeData(username, date, users, col):
     if date == eval(gtime('%Y%m%d')):
-        writeWeatherData(username, date, users)
-        writeMotionData(username, date, users)
-        writePhotoData(username, date, users)
-        writeSleepData(username, date, users)
+        writeWeatherData(username, date, users, col[0])
+        writeMotionData(username, date, users, col[1])
+        writePhotoData(username, date, users, col[2])
+        writeSleepData(username, date, users, col[3])
     print("Data written.")
 
-def writeWeatherData(username, date, users):
+def writeWeatherData(username, date, users, weather):
     user = users.find_one({'name': username})
     if (user != None):
         airport = user['stats']['weather']
@@ -35,7 +35,7 @@ def writeWeatherData(username, date, users):
             print(weather.find_one(obj))
             print("Weather already found.")
 
-def writeMotionData(username, date, users):
+def writeMotionData(username, date, users, motion):
     user = users.find_one({'name': username})
     if (user != None):
         obj = {'metric': 'motion', 'name' : username, 'date': date}
@@ -57,7 +57,7 @@ def writeMotionData(username, date, users):
             print(motion.find_one(obj))
             print("Motion already found.")
 
-def writePhotoData(username, date, users):
+def writePhotoData(username, date, users, photos):
     user = users.find_one({'name' : username})
     if (user != None):
         obj = {'metric' : 'photos', 'name' : username, 'date' : date}
@@ -78,7 +78,7 @@ def writePhotoData(username, date, users):
             print("Photos already found.")
         
         
-def writeSleepData(username, date, users):
+def writeSleepData(username, date, users, sleep):
     user = users.find_one({'name' : username})
     if (user != None):
         obj = {'metric' : 'sleep', 'name' : username, 'date':  date}

@@ -50,10 +50,10 @@ app = Flask(__name__)
 db = MongoClient('localhost', 27017).data
 users = db.users
 print users
-motion = db.motion
-sleep = db.sleep
-photos = db.photos
-weather = db.weather
+weather 	= db.weather
+motion 		= db.motion
+photos 		= db.photos
+sleep 		= db.sleep
 
 @app.errorhandler(404)
 @app.route('/<username>')
@@ -74,7 +74,7 @@ def getDate(username):
         del(data['_id'])
         return json.dumps(data)
     elif request.args.get('type') == 'write':
-        sensor.writeData(username, eval(request.args.get('date')), users)
+        sensor.writeData(username, eval(request.args.get('date')), users, [weather, motion, photos, sleep])
         return 'Data written.'
     else:
         return 'Error.'
