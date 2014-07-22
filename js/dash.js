@@ -260,17 +260,19 @@ var name = user.fullname;
 $(".usertitle").text(name);
 var isvalid = false;
 
+if (location.hash.length == 9) {
+    setDate(location.hash.substring(1));
+} else {
+    location.hash = "#" + date.gDate();
+}
+
 for (var i = 0; i < 10; i++) {
     dkey = date.toString().substring(4, 10) + ',' + date.toString().substring(10, 15);
     $("#datebar").append('<li id="' + date.gDate() + '"><a href="#' + date.gDate() + '">' + dkey + '</a></li>');
     date.setDate(date.getDate() - 1);
 }
 
-if (location.hash.length == 9) {
-    setDate(location.hash.substring(1));
-} else {
-    location.hash = "#" + date.gDate();
-}
+
 
 $("#datebar a").css("color", "#444444");
 
