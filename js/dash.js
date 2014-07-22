@@ -282,5 +282,8 @@ $(window).on('hashchange', function () {
 
 $(document).ready(function() {
     $(".fancybox").fancybox();
+    $(location.hash + " a").css("color", "#4093E6");
+    $(location.hash + " a").css("font-weight", "500");
+    $(location.hash + " a").css("font-size", "125%");
 });
 
