@@ -1,0 +1,12 @@
+case "$1" in
+	start) 
+		nohup python server/server.py&
+		./nginx/nginx-portable start 
+		nohup ./mongo/bin/mongod --dbpath mongo/data/db/&
+		;;
+	stop)
+		pkill python
+		pkill nginx
+		pkill mongod
+		;;
+esac
