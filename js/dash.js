@@ -186,28 +186,8 @@ function respChart(selector, data) {
 
 }
 
-var dkey;
-var date = new Date();
-var username = sessionStorage.getItem('username');
-location.hash = "#" + date.gDate();
-var curMet;
-var user = getUser(username);
-var mets = user.metrics;
-var stats = user.stats;
-var name = user.fullname;
-$(".usertitle").text(name);
-var isvalid = false;
-
-for (var i = 0; i < 10; i++) {
-    dkey = date.toString().substring(4, 10) + ',' + date.toString().substring(10, 15);
-    $("#datebar").append('<li id="' + date.gDate() + '"><a href="#' + date.gDate() + '">' + dkey + '</a></li>');
-    date.setDate(date.getDate() - 1);
-}
-
-$("#datebar a").css("color", "#444444");
-
-$(window).on('hashchange', function () {
-    $.get('http://vps.ritwikd.com:8081/' + username + "?type=write&date=" + location.hash.substring(1), function(response) {
+function setDate (date) {
+    $.get('http://vps.ritwikd.com:8081/' + username + "?type=write&date=" + date, function(response) {
         console.log(response);
     });
     isvalid = false;
@@ -221,7 +201,7 @@ $(window).on('hashchange', function () {
     $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
     totalPercents = {};
     $.each(mets, function(item) {
-        curMet = getMet(username, item, location.hash.substring(1));
+        curMet = getMet(username, item, date);
         if (curMet[0] == "null") {
             addProg(item.charAt(0).toUpperCase() + item.substring(1), null, "Data not available.");
         } else {
@@ -236,7 +216,7 @@ $(window).on('hashchange', function () {
         $(".overview.progfill").css("width", "0%");
     }
     $.each(stats, function(item) {
-        var data = getJSON("http://vps.ritwikd.com:8081/" + username + "?type=data&metric=" + item + "&date=" + location.hash.substring(1));
+        var data = getJSON("http://vps.ritwikd.com:8081/" + username + "?type=data&metric=" + item + "&date=" + date);
         if (item == "weather") {
             if (data.value == "null") {
                 $("#metrics").append(wetNotTemp);
@@ -267,8 +247,36 @@ $(window).on('hashchange', function () {
 
         }
     });
+}
+
+var dkey;
+var date = new Date();
+var username = sessionStorage.getItem('username');
+location.hash = "#" + date.gDate();
+var curMet;
+var user = getUser(username);
+var mets = user.metrics;
+var stats = user.stats;
+var name = user.fullname;
+$(".usertitle").text(name);
+var isvalid = false;
+
+for (var i = 0; i < 10; i++) {
+    dkey = date.toString().substring(4, 10) + ',' + date.toString().substring(10, 15);
+    $("#datebar").append('<li id="' + date.gDate() + '"><a href="#' + date.gDate() + '">' + dkey + '</a></li>');
+    date.setDate(date.getDate() - 1);
+}
+
+$("#datebar a").css("color", "#444444");
+
+$(window).on('hashchange', function () {
+    setDate(location.hash.substring(1));
 });
 
 $(document).ready(function() {
     $(".fancybox").fancybox();
 });
+
+if (location.hash.length == 8) {
+    setDate(location.hash.substring(1));
+}
