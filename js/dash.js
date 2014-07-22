@@ -252,7 +252,6 @@ function setDate (date) {
 var dkey;
 var date = new Date();
 var username = sessionStorage.getItem('username');
-location.hash = "#" + date.gDate();
 var curMet;
 var user = getUser(username);
 var mets = user.metrics;
@@ -267,6 +266,12 @@ for (var i = 0; i < 10; i++) {
     date.setDate(date.getDate() - 1);
 }
 
+if (location.hash.length == 9) {
+    setDate(location.hash.substring(1));
+} else {
+    location.hash = "#" + date.gDate();
+}
+
 $("#datebar a").css("color", "#444444");
 
 $(window).on('hashchange', function () {
@@ -277,6 +282,3 @@ $(document).ready(function() {
     $(".fancybox").fancybox();
 });
 
-if (location.hash.length == 8) {
-    setDate(location.hash.substring(1));
-}
