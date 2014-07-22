@@ -106,22 +106,22 @@ var getJSON = function (requestURL) {
 			var name = getName(username);
 			var elem = '';
 			$(".name").text(name);
-			$(".menu").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
+			$(".mentop").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
 			for(var i = 0; i < mets.length; i++) {
 				elem = menu[0] + mets[i] + menu[1] + capFrstLet(mets[i]) + menu[2];
-				$(".menu").append(elem);
+				$(".mentop").append(elem);
 			}
 			for(var i = 0; i < stats.length; i++) {
 				elem = menu[0] + stats[i] + menu[1] + capFrstLet(stats[i]) + menu[2];
-				$(".menu").append(elem);
+				$(".mentop").append(elem);
 			}
-			$(".menu").append('<br><p class="inst">Choose date range:</p class="inst"><br>');
-			$(".menu").append('<input class="pickbox pickadate">');
-			$(".menu").append('<input class="pickbox pickadate">');
+			$(".mentop").append('<br><p class="inst">Choose date range:</p class="inst"><br>');
+			$(".mentop").append('<input class="pickbox pickadate">');
+			$(".mentop").append('<input class="pickbox pickadate">');
 			$(".pickadate").pickadate();
 			$(".pickadate").pickadate();
-			$(".menu").append('<br><p class="inst">Choose time range:</p class="inst"><br>');
-			$(".menu").append('<input class="pickbox pickatime">');
-			$(".menu").append('<input class="pickbox pickatime">');
+			$(".mentop").append('<br><p class="inst">Choose time range:</p class="inst"><br>');
+			$(".mentop").append('<input class="pickbox pickatime">');
+			$(".mentop").append('<input class="pickbox pickatime">');
 			$(".pickatime").pickatime();
 			$(".pickatime").pickatime();

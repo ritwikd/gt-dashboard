@@ -14,10 +14,13 @@
 			#left {
 				margin: 0px;
 				position: fixed;
+				overflow-y: scroll;
+				height: 99%;
 				padding-left: 0px;
 				padding-right: 0px;
 				left: 0%;
-				width: 400px;
+				width: 27%;
+				margin-top: 60px;
 			}
 			
 			#right {
@@ -30,8 +33,6 @@
 			.menu {
 				left: 0px;
 				padding-left: 20px;
-				width: 100%;
-				margin-top: 75px;
 				max-height: 75%;
 			}
 
@@ -77,9 +78,11 @@
 				-moz-border-radius: 5px;
 				border-radius: 5px;
 				margin: 30px;
+				margin-top: 0px;
+				margin-left: 0px;
 				padding: 10px;
 				padding-left: 20px;
-				padding-bottom: 30px;
+				padding-bottom: 20px;
 				background-color: rgb(235, 235, 235);
 				-webkit-transition: all 150ms ease-in-out;
 				-moz-transition: all 150ms ease-in-out;
@@ -118,7 +121,8 @@
 
 			input {
 				font-family: 'Lato';
-				width: 90%;
+				color: rgb(72, 154, 247) !important;
+				width: 85%;
 				height: 34px;
 				border: 3px solid #CCC; 
 				-webkit-border-radius: 5px;
@@ -130,6 +134,15 @@
 				margin-bottom: 20px;
 			}
 
+			.topbar {
+				background-color: #222;
+				position: fixed;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 60px;
+			}
+
 			.inst {
 				font-size: 30px;
 				font-weight: 100;
@@ -138,19 +151,18 @@
 			}
 
 			.name {
-				position: fixed;
-				right: 30px;
-				top: 20px;
+				float: right;
+				margin-right: 20px;
 				font-size: 36px;
+				color: #FFF;
 			}
 
 			.overlink {
-				position: fixed;
-				top: 20px;
-				left: 30px;
+				
+				margin-left: 20px;
 				font-size: 36px;
 				z-index: 1;
-				color: #000;
+				color: #FFF;
 				-webkit-transition: all 150ms ease-in-out;
 				-moz-transition: all 150ms ease-in-out;
 				-ms-transition: all 150ms ease-in-out;
@@ -166,22 +178,32 @@
 				-o-transition: all 150ms ease-in-out;
 				transition: all 150ms ease-in-out;
 			}
+
+			.menbot {
+				margin-bottom: 20px;
+			}
 		</style>
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/themes/classic.css">
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/themes/classic.time.css">
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/themes/classic.date.css">
 	</head>
 	<body>
-		<div class="name"></div>
-		<a href="dash.html" class="overlink"> &larr; Overview</a>
+		<div class="topbar">
+			<a href="dash.html" class="overlink"> &larr; Overview</a>
+			<div class="name"></div>
+		</div>
 		<div class="bar" id="left">
 			<div class="menu" id="me">
-			</div>
-			<div class="buttonhold">
-				<div class="button" id="graphbutton" onclick="javascript: getSel();">
-					<img class="icon" src="assets/graph.png">
-					<div class="label">Go</div>
-					<img class="arrow" src="assets/arrow.png">
+				<div class="mentop">
+				</div>
+				<div class="menbot">
+					<div class="buttonhold">
+					<div class="button" id="graphbutton" onclick="javascript: getSel();">
+							<img class="icon" src="assets/graph.png">
+							<div class="label">Go</div>
+							<img class="arrow" src="assets/arrow.png">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
