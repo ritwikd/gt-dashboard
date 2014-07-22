@@ -31,7 +31,7 @@ var metTemp = ['<div class = "metcont">' +
 var wetTemp = '<div class="metcont" style="opacity: 1;"><div class="met stat Weather mettitle">Weather <p class="met stat Weather progdesc"> Hourly temperature(&deg;C)</p></div><div class = "met weather elem progcont"><canvas class = "met weather canvas"></canvas> </div> </div> </div>';
 var wetNotTemp = '<div class="metcont" style="opacity: 1;"><div class="met stat Weather mettitle">Weather <p class="met stat Weather progdesc">Data not available</p></div><div class = "met weather elem progcont"><canvas class = "met weather canvas"></canvas> </div> </div> </div>';
 var imCT = '<div class="metcont" style="opacity: 1;"> <div class="met stat photos mettitle"> Pictures <p class="met stat photos progdesc"> Hourly photos</p> </div> <div class="met photos progcont"> </div> </div>';
-var imNT = '<div class="met stat photos mettitle"> Pictures <p class="met stat photos progdesc"> Data not available.</p> </div>';
+var imNT = '<div class="met stat photos mettitle"> Pictures <p class="met stat photos progdesc"> Data not available</p> </div>';
 var imT = ['<a class="fancybox" rel="group" href="data:image/png;base64,','"><img class = "met photos img" src="data:image/png;base64,', '" alt="image" /></a>'];
 
 
