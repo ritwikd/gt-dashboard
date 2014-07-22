@@ -26,7 +26,7 @@ a:hover {
 .navbar-brand {
     padding: 15px;
     font-size: 28px;
-    color: #FFF !important;
+    color: #AAA !important;
     -webkit-transition: all 150ms ease-in-out;
     -moz-transition: all 150ms ease-in-out;
     -ms-transition: all 150ms ease-in-out;
@@ -62,15 +62,18 @@ a:hover {
     padding: 10px;
     right: 5px;
     font-size: 28px;
-    color: #FFF;
+    color: #AAA;
 }
 
 .navlink {
-    margin-top: 3px;
+    margin-top: 4px;
     right: 5px;
-    font-size: 28px;
-    color: #FFF;
+    font-size: 24px;
+    color: #FFF !important;
+    text-decoration: underline;
 }
+
+
 
 .progfill {
     position: relative;
@@ -136,9 +139,9 @@ a:hover {
 }
 
 .overview.proglab {
-    position: fixed;
+    position: absolute;
     right: 0px;
-    padding-right: 3%;
+    padding-right: 4%;
     margin-top: -45px;
     font-size: 30px;
 }
@@ -246,4 +249,9 @@ a:hover {
     -ms-transition: all 150ms ease-in-out;
     -o-transition: all 150ms ease-in-out;
     transition: all 150ms ease-in-out;
+}
+
+.div {
+    border-color: #888;
+    border-width: 2px;
 }

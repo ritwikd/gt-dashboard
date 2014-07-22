@@ -198,7 +198,7 @@ function setDate (date) {
     $(location.hash + " a").css("font-weight", "500");
     $(location.hash + " a").css("font-size", "125%");
     $(location.hash).className = "active";
-    $("#metrics").html('<h2 class="sub-header">Metrics</h2>');
+    $("#metrics").html('<h2 class="sub-header">Individual Metrics</h2><hr class="div">');
     totalPercents = {};
     $.each(mets, function(item) {
         curMet = getMet(username, item, date);
