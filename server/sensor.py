@@ -8,10 +8,10 @@ import nltk
 
 def writeData(username, date, users):
     if date == eval(gtime('%Y%m%d')):
-        writeWeatherData(username, date)
-        writeMotionData(username, date)
-        writePhotoData(username, date)
-        writeSleepData(username, date)
+        writeWeatherData(username, date, users)
+        writeMotionData(username, date, users)
+        writePhotoData(username, date, users)
+        writeSleepData(username, date, users)
     print("Data written.")
 
 def writeWeatherData(username, date, users):
@@ -35,7 +35,7 @@ def writeWeatherData(username, date, users):
             print(weather.find_one(obj))
             print("Weather already found.")
 
-def writeMotionData(username, date):
+def writeMotionData(username, date, users):
     user = users.find_one({'name': username})
     if (user != None):
         obj = {'metric': 'motion', 'name' : username, 'date': date}
@@ -57,7 +57,7 @@ def writeMotionData(username, date):
             print(motion.find_one(obj))
             print("Motion already found.")
 
-def writePhotoData(username, date):
+def writePhotoData(username, date, users):
     user = users.find_one({'name' : username})
     if (user != None):
         obj = {'metric' : 'photos', 'name' : username, 'date' : date}
@@ -78,7 +78,7 @@ def writePhotoData(username, date):
             print("Photos already found.")
         
         
-def writeSleepData(username, date):
+def writeSleepData(username, date, users):
     user = users.find_one({'name' : username})
     if (user != None):
         obj = {'metric' : 'sleep', 'name' : username, 'date':  date}
@@ -88,9 +88,3 @@ def writeSleepData(username, date):
             print("Sleep data inserted.")
         else:
             print("Sleep data already found.")
-
-# def runAutoWrite():
-#     threading.Timer(300, runAutoWrite).start()
-#     writeData()
-
-# runAutoWrite()
