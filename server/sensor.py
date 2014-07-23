@@ -69,3 +69,12 @@ def writeSleepData(date, user, sleep):
             sleep.remove(obj)
         obj['value'] = randrange(3) + 5
         sleep.insert(obj)
+
+def autoWriteData(users, date, db):
+    threading.Timer(1200, autoWriteData).start()
+    logHandler = open("auto.log", "a")
+    logHandler.write("Logged date on " + gtime("%Y%m%d") + " at " + gtime("%H%M%s") + ".\n")
+    for user in users.find():
+        writeData(user, date, db)
+        logHandler.write("Wrote data for " + user['fullname'] + " under the username " + user['name'] + ".\n")
+    logHandler.close()
