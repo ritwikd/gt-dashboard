@@ -2,9 +2,7 @@ from flask import Flask, make_response, request, current_app
 from functools import update_wrapper
 from pymongo import MongoClient
 from datetime import timedelta
-import requests
-import sensor
-import json
+import requests, sensor, json
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,

@@ -1,18 +1,17 @@
+import threading, requests, json, nltk
 from time import strftime as gtime
+from datetime import datetime
 from random import randrange
-from os import listdir
-import threading
-import requests
-import json
-import nltk
+from os import listdir, remove
+
 
 def writeData(user, date, db):
     if (user != None):
         if date == eval(gtime('%Y%m%d')):
             writeWeatherData(user['name'], date, user, db.weather)
-            writeMotionData(user['name'], date, user, db.)
-            writePhotoData(user['name'], date, user, db.)
-            writeSleepData(user['name'], date, user, db.)
+            writeMotionData(user['name'], date, user, db.motion)
+            writePhotoData(user['name'], date, user, db.photos)
+            writeSleepData(user['name'], date, user, db.sleep)
 
 def writeWeatherData(date, user, weather):
     if (user != None):
@@ -57,10 +56,11 @@ def writePhotoData(date, user, photos):
         usedpics = []
         for i in range(len(pics)):
             picarr.append(open('pics/' + pics[i], "r").read().encode("base64"))
+            now = datetime.now()
+            if (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds() <= 1200:
+                remove(pics[i])
         obj['value'] = picarr
-        photos.insert(obj)
-        
-
+        photos.insert(obj)      
 
 def writeSleepData(date, user, sleep):
     if (user != None):
