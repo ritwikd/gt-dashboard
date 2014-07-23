@@ -112,8 +112,10 @@ var getJSON = function (requestURL) {
 				$(".mentop").append(elem);
 			}
 			for(var i = 0; i < stats.length; i++) {
-				elem = menu[0] + stats[i] + menu[1] + capFrstLet(stats[i]) + menu[2];
-				$(".mentop").append(elem);
+				if (stats[i] != photos) {
+					elem = menu[0] + stats[i] + menu[1] + capFrstLet(stats[i]) + menu[2];
+					$(".mentop").append(elem);
+				}
 			}
 			$(".mentop").append('<br><p class="inst">Choose date range:</p class="inst"><br>');
 			$(".mentop").append('<input class="pickbox pickadate">');

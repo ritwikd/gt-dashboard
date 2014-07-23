@@ -50,21 +50,18 @@ app = Flask(__name__)
 db = MongoClient('localhost', 27017).data
 users = db.users
 print users
-weather 	= db.weather
-motion 		= db.motion
-photos 		= db.photos
-sleep 		= db.sleep
 
 @app.errorhandler(404)
 @app.route('/<username>')
 @crossdomain(origin='*')
 def getDate(username):
+    user = users.find_one({'name' : username})
     if request.args.get('type') == 'user':
-        for user in users.find():
-            if user['name'] == username:
-                del(user['_id'])
-                return json.dumps(user)
-        return json.dumps({'name' : 'null' }), 404
+        if (user == None):
+            return json.dumps({'name' : 'null' }), 404
+        else:
+            del(user['_id'])
+            return json.dumps(user)
     elif request.args.get('type') == 'data':
         metric = request.args.get('metric')
         date = request.args.get('date')
@@ -74,7 +71,8 @@ def getDate(username):
         del(data['_id'])
         return json.dumps(data)
     elif request.args.get('type') == 'write':
-        sensor.writeData(username, eval(request.args.get('date')), users, [weather, motion, photos, sleep])
+        if (user != None):
+            sensor.writeData(user, eval(request.args.get('date')), db)
         return 'Data written.'
     else:
         return 'Error.'

@@ -6,16 +6,15 @@ import requests
 import json
 import nltk
 
-def writeData(username, date, users, col):
-    if date == eval(gtime('%Y%m%d')):
-        writeWeatherData(username, date, users, col[0])
-        writeMotionData(username, date, users, col[1])
-        writePhotoData(username, date, users, col[2])
-        writeSleepData(username, date, users, col[3])
-    print("Data written.")
+def writeData(user, date, db):
+    if (user != None):
+        if date == eval(gtime('%Y%m%d')):
+            writeWeatherData(user['name'], date, user, db.weather)
+            writeMotionData(user['name'], date, user, db.)
+            writePhotoData(user['name'], date, user, db.)
+            writeSleepData(user['name'], date, user, db.)
 
-def writeWeatherData(username, date, users, weather):
-    user = users.find_one({'name': username})
+def writeWeatherData(date, user, weather):
     if (user != None):
         airport = user['stats']['weather']
         requestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + airport + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
@@ -26,65 +25,47 @@ def writeWeatherData(username, date, users, weather):
             if (len(term) == 5 and '/' in term):
                 temps.append(term.split("/")[0])
 
-        obj = {'metric' : 'weather', 'name' : username, 'date' : date}
-        if (weather.find_one(obj) == None):
-                obj['temps'] = temps
-                weather.insert(obj)
-                print("Weather inserted.")
-        else:
-            print(weather.find_one(obj))
-            print("Weather already found.")
+        obj = {'metric' : 'weather', 'name' : user['name'], 'date' : date}
+        if (weather.find_one(obj) != None):
+            weather.remove(obj)
+        obj['temps'] = temps
+        weather.insert(obj)
 
-def writeMotionData(username, date, users, motion):
-    user = users.find_one({'name': username})
-    if (user != None):
-        obj = {'metric': 'motion', 'name' : username, 'date': date}
-        if (motion.find_one(obj) == None):
-            auth = {'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
-            data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
-            day = json.loads(data.text)['data']['items'][0]
-            if (day['date'] == date):
-                day = day['details']['hourly_totals']
-                steps = 0
-                for hour in day.keys():
-                    steps += day[hour]['steps'] 
-                obj = {'metric': 'motion', 'name' : username, 'date': date, 'value' : steps}
-                motion.insert(obj)
-                print("Motion inserted.")
-            else:
-                print("Latest data not available.")
-        else:
-            print(motion.find_one(obj))
-            print("Motion already found.")
+def writeMotionData(date, user, motion):
+    obj = {'metric': 'motion', 'name' : user['name'], 'date': date}
+    auth = {'Authorization' : 'Bearer ' +  user['auth'].encode('ascii', 'ignore') }        
+    data = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = auth)
+    day = json.loads(data.text)['data']['items'][0]
+    if (day['date'] == date):
+        if (motion.find_one(obj) != None):
+            motion.remove(obj)
+        day = day['details']['hourly_totals']
+        steps = 0
+        for hour in day.keys():
+            steps += day[hour]['steps'] 
+        obj = {'metric': 'motion', 'name' : user['name'], 'date': date, 'value' : steps}
+        motion.insert(obj)
+        
 
-def writePhotoData(username, date, users, photos):
-    user = users.find_one({'name' : username})
+def writePhotoData(date, user, photos):
     if (user != None):
-        obj = {'metric' : 'photos', 'name' : username, 'date' : date}
-        if (photos.find_one(obj) == None):
-            pics = listdir('pics')
-            picarr = []
-            usedpics = []
-            for i in range(3):
-                picn = randrange(len(pics))
-                while(picn in usedpics):
-                    picn = randrange(len(pics))
-                usedpics.insert(0, picn)
-                picarr.append(open('pics/' + pics[picn], "r").read().encode("base64"))
-            obj['value'] = picarr
-            photos.insert(obj)
-            print("Photos inserted.")
-        else:
-            print("Photos already found.")
+        obj = {'metric' : 'photos', 'name' : user['name'], 'date' : date}
+        if (photos.find_one(obj) != None):
+            photos.remove(obj)
+        pics = listdir('pics')
+        picarr = []
+        usedpics = []
+        for i in range(len(pics)):
+            picarr.append(open('pics/' + pics[i], "r").read().encode("base64"))
+        obj['value'] = picarr
+        photos.insert(obj)
         
-        
-def writeSleepData(username, date, users, sleep):
-    user = users.find_one({'name' : username})
+
+
+def writeSleepData(date, user, sleep):
     if (user != None):
-        obj = {'metric' : 'sleep', 'name' : username, 'date':  date}
-        if (sleep.find_one(obj)) == None:
-            obj['value'] = randrange(3) + 5
-            sleep.insert(obj)       
-            print("Sleep data inserted.")
-        else:
-            print("Sleep data already found.")
+        obj = {'metric' : 'sleep', 'name' : user['name'], 'date':  date}
+        if (sleep.find_one(obj)) != None:
+            sleep.remove(obj)
+        obj['value'] = randrange(3) + 5
+        sleep.insert(obj)
