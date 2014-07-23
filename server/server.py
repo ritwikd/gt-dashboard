@@ -1,5 +1,6 @@
 from flask import Flask, make_response, request, current_app
 from functools import update_wrapper
+from time import strftime as gtime
 from pymongo import MongoClient
 from datetime import timedelta
 import requests, sensor, json
@@ -76,5 +77,5 @@ def getDate(username):
         return 'Error.'
 
 if __name__ == '__main__':
-    autoWriteData(users, data, db)
+    sensor.autoWriteData(users, eval(gtime("%Y%m%d")), db)
     app.run(host='0.0.0.0', port=8081, debug=True)
