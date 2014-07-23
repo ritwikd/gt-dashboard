@@ -8,10 +8,10 @@ from os import listdir, remove
 def writeData(user, date, db):
     if (user != None):
         if date == eval(gtime('%Y%m%d')):
-            writeWeatherData(user['name'], date, user, db.weather)
-            writeMotionData(user['name'], date, user, db.motion)
-            writePhotoData(user['name'], date, user, db.photos)
-            writeSleepData(user['name'], date, user, db.sleep)
+            writeWeatherData(date, user, db.weather)
+            writeMotionData(date, user, db.motion)
+            writePhotoData(date, user, db.photos)
+            writeSleepData(date, user, db.sleep)
 
 def writeWeatherData(date, user, weather):
     if (user != None):
