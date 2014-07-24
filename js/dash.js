@@ -236,7 +236,8 @@ function setDate (date) {
             }
 
         } else if (item == "photos") {
-            if (data.value == "null") {
+            console.log(data.value.length == 0);
+            if (data.value == "null" || data.value.length == 0) {
                 $("#metrics").append(imNT);
             } else {
                 $("#metrics").append(imCT);
