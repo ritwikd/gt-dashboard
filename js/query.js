@@ -112,18 +112,46 @@ var getJSON = function (requestURL) {
 				$(".mentop").append(elem);
 			}
 			for(var i = 0; i < stats.length; i++) {
-				if (stats[i] != photos) {
+				if (stats[i] != 'photos') {
 					elem = menu[0] + stats[i] + menu[1] + capFrstLet(stats[i]) + menu[2];
 					$(".mentop").append(elem);
 				}
 			}
 			$(".mentop").append('<br><p class="inst">Choose date range:</p class="inst"><br>');
-			$(".mentop").append('<input class="pickbox pickadate">');
-			$(".mentop").append('<input class="pickbox pickadate">');
-			$(".pickadate").pickadate();
-			$(".pickadate").pickadate();
+			$(".mentop").append('<input id="beforeDate" class="pickbox pickadate">');
+			$(".mentop").append('<input id="afterDate" class="pickbox pickadate">');
+			var beforeDate = $("#beforeDate").pickadate();
+			var afterDate = $("#afterDate").pickadate();
+			beforeDate.pickadate('picker').on('set', function(event) {
+				if (event.select) {
+					afterDate.pickadate('picker').set('min', this.get('select'));
+				} else if ('clear' in event) {
+					afterDate.pickadate('picker').set('min', false);
+				}
+			});
+			afterDate.pickadate('picker').on('set', function(event) {
+				if (event.select) {
+					beforeDate.pickadate('picker').set('max', this.get('select'));
+				} else if ('clear' in event) {
+					beforeDate.pickadate('picker').set('max', false);
+				}
+			});
 			$(".mentop").append('<br><p class="inst">Choose time range:</p class="inst"><br>');
-			$(".mentop").append('<input class="pickbox pickatime">');
-			$(".mentop").append('<input class="pickbox pickatime">');
-			$(".pickatime").pickatime();
-			$(".pickatime").pickatime();
+			$(".mentop").append('<input id="beforeTime" class="pickbox time">');
+			$(".mentop").append('<input id="afterTime" class="pickbox time">');
+			var beforeTime = $("#beforeTime").pickatime();
+			var afterTime = $("#afterTime").pickatime();
+			beforeTime.pickatime('picker').on('set', function(event) {
+				if (event.select) {
+					afterTime.pickatime('picker').set('min', this.get('select'));
+				} else if ('clear' in event) {
+					afterTime.pickatime('picker').set('min', false);
+				}
+			});
+			afterTime.pickatime('picker').on('set', function(event) {
+				if (event.select) {
+					beforeTime.pickatime('picker').set('max', this.get('select'));
+				} else if ('clear' in event) {
+					beforeTime.pickatime('picker').set('max', false);
+				}
+			});
