@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>Queries</title>
+		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 		<style type="text/css">
 			@import url('http://fonts.googleapis.com/css?family=Lato:300,400,700');
 
@@ -19,15 +20,20 @@
 				padding-left: 0px;
 				padding-right: 0px;
 				left: 0%;
-				width: 27%;
+				width: 30%;
 				margin-top: 60px;
 			}
 			
 			#right {
-				position: absolute;
+				background-color: #F5F5F5;
+				margin: 0px;
+				position: fixed;
+				height: 99%;
+				padding-left: 0px;
+				padding-right: 0px;
 				right: 0%;
-				padding: 50px;
-				width: 65%;
+				width: 70%;
+				margin-top: 60px;
 			}
 
 			.menu {
@@ -56,48 +62,17 @@
 				-webkit-border-radius: 5px;
 				-moz-border-radius: 5px;
 				border-radius: 5px;
+				border: 3px solid #CCC;
 				background-color: rgb(245, 245, 245);
 			}
 
 			.item:hover {
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
 				color: rgb(72, 154, 247) !important;
-				-moz-transform: translateX(20px);
-				-webkit-transform: translateX(20px);
-				-o-transform: translateX(20px);
-				-ms-transform: translateX(20px);
-				transform: translateX(20px);
-			}
-
-			.buttonhold {
-				height: 10%;
-				width: 420px;
-			}
-
-			.button {
-				-webkit-border-radius: 5px;
-				-moz-border-radius: 5px;
-				border-radius: 5px;
-				margin: 30px;
-				margin-top: 0px;
-				margin-left: 0px;
-				padding: 10px;
-				padding-left: 20px;
-				padding-bottom: 20px;
-				background-color: rgb(235, 235, 235);
-				-webkit-transition: all 150ms ease-in-out;
-				-moz-transition: all 150ms ease-in-out;
-				-ms-transition: all 150ms ease-in-out;
-				-o-transition: all 150ms ease-in-out;
-				transition: all 150ms ease-in-out;
-			}
-
-			.button:hover {
-				-webkit-transition: all 150ms ease-in-out;
-				-moz-transition: all 150ms ease-in-out;
-				-ms-transition: all 150ms ease-in-out;
-				-o-transition: all 150ms ease-in-out;
-				transition: all 150ms ease-in-out;
-				background-color: rgb(149, 196, 230);
 			}
 
 			.icon {
@@ -122,16 +97,34 @@
 			input {
 				font-family: 'Lato';
 				color: rgb(72, 154, 247) !important;
-				width: 85%;
+				width: 80%;
 				height: 34px;
-				border: 3px solid #CCC; 
 				-webkit-border-radius: 5px;
 				-moz-border-radius: 5px;
 				border-radius: 5px;
 				font-size: 24px;
 				padding: 10px;
-				padding-left: 20px;
-				margin-bottom: 20px;
+				padding-left: 40px;
+				margin-bottom: 10px;
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				border: 3px solid #CCC;
+				background-color: rgb(245, 245, 245);
+			}
+
+			input:hover {
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+				border: 3px solid rgb(72, 154, 247) !important;
 			}
 
 			.topbar {
@@ -182,6 +175,55 @@
 			.menbot {
 				margin-bottom: 20px;
 			}
+
+			.button {
+				font-family: 'Lato';
+				color: rgb(72, 154, 247) !important;
+				text-align: center;
+				font-size: 42px;
+				width: 80%;
+				height: 54px;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				padding: 10px;
+				padding-left: 40px;
+				margin-bottom: 10px;
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				border: 3px solid #CCC;
+				background-color: rgb(245, 245, 245);
+			}
+
+			.button:hover {
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+				border: 3px solid rgb(72, 154, 247) !important;
+			}
+
+			.graph-container{
+				width: 95%;
+				height: 90%;
+				margin-left: 2.5%;
+				margin-top: 2.5%;
+			}
+
+			.metchart {
+				width: 100%;
+				height: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+
 		</style>
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/themes/classic.css">
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/themes/classic.time.css">
@@ -195,25 +237,33 @@
 		<div class="bar" id="left">
 			<div class="menu" id="me">
 				<div class="mentop">
-				</div>
-				<div class="menbot">
-					<div class="buttonhold">
-					<div class="button" id="graphbutton" onclick="javascript: getSel();">
-							<img class="icon" src="assets/graph.png">
-							<div class="label">Go</div>
-							<img class="arrow" src="assets/arrow.png">
+					<div class="menbot">
+
+					</div>
+					<div class="button" onclick="javascript: getSel();">
+						<div class="button-text">
+							Go &rarr; 
 						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 		<div class="bar" id="right">
+			<div class="graph-container">
+				<canvas class="metchart">
+					
+				</canvas>
+			</div>
 		</div>
 
 		<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/picker.js"></script>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/picker.time.js"></script>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/picker.date.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js"></script>
+		
 		<script src="js/query.js"></script>
 	</body>
 </html>
