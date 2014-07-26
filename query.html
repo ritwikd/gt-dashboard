@@ -224,6 +224,29 @@
 				margin: 0px;
 			}
 
+			.graph-legend {
+				position: absolute;
+				z-index: 99999;
+				background-color: #FFF;
+				float: right;
+				right: 20px;
+				width: 200px;
+			}
+
+			.legend-color {
+				width: 15px;
+				height: 15px;
+				margin-right: 5px;
+				-webkit-border-radius: 25px;
+				-moz-border-radius: 25px;
+				border-radius: 25px;
+			}
+
+			.legend-text {
+				padding-left: 5px;
+				text-transform: capitalize;
+			}
+
 		</style>
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/themes/classic.css">
 		<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.3/compressed/themes/classic.time.css">
@@ -251,6 +274,7 @@
 		</div>
 		<div class="bar" id="right">
 			<div class="graph-container">
+				<div class="graph-legend-container"></div>
 				<canvas class="metchart">
 					
 				</canvas>
