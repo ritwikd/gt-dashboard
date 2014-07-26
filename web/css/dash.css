@@ -1,0 +1,214 @@
+@import url(http://fonts.googleapis.com/css?family=Cabin);
+
+body {
+    font-family: 'Cabin';
+    padding: 0px;
+    margin: 0px;
+}
+
+.left {
+    position: fixed;
+    width: 25%;
+    height: 100%;
+    background-color: #FFF;
+}
+
+.right {
+    overflow-y: scroll;
+    position: fixed;
+    right: 0px;
+    width: 75%;
+    height: 100%;
+    background-color: #F3F3F3;
+}
+
+.container {
+    margin-top: 60px;
+}
+
+.nav {
+    position: fixed;
+    top: 0px;
+    height: 60px;
+    width: 100%;
+    background-color: #333;
+    color: #FFF;
+}
+
+.text {
+    font-size: 24px;
+    padding: 15px;
+}
+
+.name {
+    float: right;
+    font-size: 24px;
+}
+
+.query {
+    float: right;
+    padding-right: 20px;
+}
+
+.query.link {
+    color: #FFF;
+    -webkit-transition: all 150ms linear;
+    -moz-transition: all 150ms linear;
+    -ms-transition: all 150ms linear;
+    -o-transition: all 150ms linear;
+    transition: all 150ms linear;
+}
+
+.query.link:hover {
+    color: #0099FF;
+    -webkit-transition: all 150ms linear;
+    -moz-transition: all 150ms linear;
+    -ms-transition: all 150ms linear;
+    -o-transition: all 150ms linear;
+    transition: all 150ms linear;
+}
+
+.date.container {
+    padding-left: 0px;
+}
+
+.date.item {
+    padding: 15px;
+    padding-left: 20px;
+    list-style: none;
+    font-size: 24px;
+    -webkit-transition: all 150ms linear;
+    -moz-transition: all 150ms linear;
+    -ms-transition: all 150ms linear;
+    -o-transition: all 150ms linear;
+    transition: all 150ms linear;
+}
+
+.date.item:hover {
+    color: #0099FF;
+    background-color: #F3F3F3;
+    -webkit-transition: all 150ms linear;
+    -moz-transition: all 150ms linear;
+    -ms-transition: all 150ms linear;
+    -o-transition: all 150ms linear;
+    transition: all 150ms linear;
+}
+
+.date.item.selected {
+    color: #0099FF;
+    background-color: #F3F3F3;
+    -webkit-transition: all 150ms linear;
+    -moz-transition: all 150ms linear;
+    -ms-transition: all 150ms linear;
+    -o-transition: all 150ms linear;
+    transition: all 150ms linear;
+}
+
+.data.container {
+    margin: 0px;
+    padding: 50px;
+}
+
+.overview.table {
+    width: 100%;
+}
+
+.overview.title.container {
+    font-size: 48px;
+    padding-bottom: 30px;
+}
+
+.overview.progress.container {
+    width: 90%;
+}
+
+.overview.title {
+    margin-bottom: 25px;
+}
+
+.overview.progress.number {
+    padding-left: 30px;
+    font-size: 32px;
+    width: 30%;
+}
+
+.overview.progress.base {
+    background-color: #DDD;
+    width: 100%;
+    height: 25px;
+}
+
+.overview.progress.fill {
+    background-color: #0099FF;
+    width: 60%;
+    height: 100%;
+    -webkit-transition: all 150ms linear;
+    -moz-transition: all 150ms linear;
+    -ms-transition: all 150ms linear;
+    -o-transition: all 150ms linear;
+    transition: all 150ms linear;
+}
+
+.metrics.table {
+    width: 100%;
+    margin-top: 60px;
+}
+
+.metrics.section.title {
+    font-size: 48px;
+    padding-bottom: 30px;
+}
+
+.metrics.item.info {
+    width: 25%;
+}
+
+.metrics.item.description {
+    font-size: 20px;
+    padding-right: 10px;
+}
+
+.metrics.item.progress {
+    padding-left: 20px;
+    width: 75%;
+}
+
+.metrics.item.number {
+    width: 10%;
+}
+
+.metrics.item.title {
+    font-size: 32px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    text-transform: capitalize;
+}
+
+.metrics.item.base {
+    width: 90%;
+    height: 25px;
+    background-color: #DDD;
+}
+
+.metrics.item.fill {
+    background-color: #0099FF;
+    width: 0%;
+    height: 100%;
+    -webkit-transition: all 150ms linear;
+    -moz-transition: all 150ms linear;
+    -ms-transition: all 150ms linear;
+    -o-transition: all 150ms linear;
+    transition: all 150ms linear;
+}
+
+.metrics.item.percent {
+    font-size: 32px;
+}
+
+.metrics.item.image {
+    padding: 20px;
+}
+
+.metrics.item.pics {
+    opacity: 0;
+}
