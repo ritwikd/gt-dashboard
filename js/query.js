@@ -12,12 +12,12 @@ var getJSON = function (requestURL) {
 
 var getMets = function (usern) {
 	var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return Object.keys(user.metrics);
+    return user.metrics;
 };
 
 var getStats = function (usern) {
     var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return Object.keys(user.stats);
+    return user.stats;
 };
 
 var getName = function (usern) {
@@ -79,9 +79,6 @@ function capFrstLet(string)
 {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
-
-var chosencolors = {};
-var usedcolors = [];
 
 function getSel () {
 	var items = $(".item");
@@ -177,12 +174,13 @@ function getSel () {
 			console.log(chartData);
 			var template = ['<tr><td><div class="legend-color" style="background-color: ',
 			 '"></div></td><td><div class="legend-text">',
-			 '</div></td></tr>'];
+			 ')</div></td></tr>'];
 			$(".graph-legend-container").append('<div class="graph-legend"> <table class="graph-table"> </table> </div>');
 			var legendItem = "";
 			$(".graph-table").html('<table class="graph-table"> </table>');
 			$.each(chosencolors, function(met) {
-				legendItem = template[0] + "rgb(" + chosencolors[met].split("(")[1].slice(0, -6)  + ")" + template[1] + met + template[2];
+				legendItem = template[0] + "rgb(" + chosencolors[met].split("(")[1].slice(0, -6) 
+					+ ")" + template[1] + met + " (" + dictObj[met][1] + template[2];
 				$(".graph-table").append(legendItem);
 			})
 			
@@ -196,30 +194,29 @@ function getSel () {
 var menu = ['<div class="item" data-sel="false" data-metric="', '">', '</div>']
 var date = new Date();
 var username = sessionStorage.getItem('username');
-var mets = getMets(username);
-var stats = getStats(username);
+var metObj = getMets(username);
+var statObj = getStats(username);
+var dictObj = $.extend(true, {}, metObj, statObj);
+var mets = Object.keys(metObj);
+mets = mets.concat(Object.keys(statObj));
 var name = getName(username);
 var elem = '';
+var chosencolors = {};
+var usedcolors = [];
+var first = true;
 $(".name").text(name);
 $(".menbot").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
 for(var i = 0; i < mets.length; i++) {
-	elem = menu[0] + mets[i] + menu[1] + capFrstLet(mets[i]) + menu[2];
-	$(".menbot").append(elem);
-}
-for(var i = 0; i < stats.length; i++) {
-	if (stats[i] != 'photos') {
-		elem = menu[0] + stats[i] + menu[1] + capFrstLet(stats[i]) + menu[2];
+	if (mets[i] != 'photos') {
+		elem = menu[0] + mets[i] + menu[1] + capFrstLet(mets[i]) + menu[2];
 		$(".menbot").append(elem);
 	}
 }
 
-var date = new Date();
-var first = true;
 
 $(".menbot").append('<br><p class="inst">Choose a starting date:</p class="inst"><br>');
 $(".menbot").append('<input id="beforeDate" class="pickbox pickadate">');
 var afterDate = $("#afterDate");
-
 var beforeDate = $("#beforeDate").pickadate(  {
 	max : date,
 	onSet : function() {
@@ -238,38 +235,13 @@ var beforeDate = $("#beforeDate").pickadate(  {
 	}
 });
 
-			// $(".menbot").append('<br><p class="inst">Choose time range:</p class="inst"><br>');
-			// $(".menbot").append('<input id="beforeTime" class="pickbox time">');
-			// $(".menbot").append('<input id="afterTime" class="pickbox time">');
-			// var beforeTime = $("#beforeTime").pickatime();
-			// var afterTime = $("#afterTime").pickatime();
-			// beforeTime.pickatime('picker').on('set', function(event) {
-			// 	if (event.select) {
-			// 		beforeTime.css("border", "3px solid rgb(72, 154, 247)");
-			// 		afterTime.pickatime('picker').set('min', this.get('select'));
-			// 	} else if ('clear' in event) {
-			// 		before.css("border", "3px solid #CCC");
-			// 		afterTime.pickatime('picker').set('min', false);
-			// 	}
-			// });
-			// afterTime.pickatime('picker').on('set', function(event) {
-			// 	if (event.select) {
-			// 		afterTime.css("border", "3px solid rgb(72, 154, 247)");
-			// 		beforeTime.pickatime('picker').set('max', this.get('select'));
-			// 	} else if ('clear' in event) {
-			// 		afterTime.css("border", "3px solid #CCC");
-			// 		beforeTime.pickatime('picker').set('max', false);
-			// 	}
-			// });
-
-			$(".item").on('click', function() {
-				var item = $(this);
-				if (item.attr("data-sel") == "false") {
-					item.attr("data-sel", "true");
-					$(item).css("border", "3px solid rgb(72, 154, 247)");
-				} else {
-					item.attr("data-sel", "false");
-					$(item).css("border", "3px solid #CCC");
-				}
-			});
-
+$(".item").on('click', function() {
+	var item = $(this);
+	if (item.attr("data-sel") == "false") {
+		item.attr("data-sel", "true");
+		$(item).css("border", "3px solid rgb(72, 154, 247)");
+	} else {
+		item.attr("data-sel", "false");
+		$(item).css("border", "3px solid #CCC");
+	}
+});
