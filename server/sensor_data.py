@@ -64,15 +64,22 @@ def writeData(user, date, db):
 	print "Data inserted."
 
 
-class autoWriteDataObject(threading.Thread):
-	def __init__(self, databaseUserCollection, currentDate, userDataBase):
+class autoWriteDataObject():
+	def __init__(self, databaseUserCollection, currentDate, userDataBase, threadRefreshInterval):
 		self.databaseUserCollection = databaseUserCollection
 		self.currentDate = currentDate
 		self.userDataBase = userDataBase
+		self.thread = Timer(threadRefreshInterval, self.callWriteDataFunction)
 
 	def callWriteDataFunction(self):
 		autoWriteDataLogHandler = open("server/auto.log", "a")
 		for currentUser in self.databaseUserCollection:
-			autoWriteDataLogHandler.write("Logging data for " + currentUser['username'] + " on " + getFormattedTime("%Y%m%d") + " at " + getFormattedTime("%H%M%S") + ".\n"))
+			autoWriteDataLogHandler.write("Logging data for " + currentUser['username'] + " on " + getFormattedTime("%Y%m%d") + " at " + getFormattedTime("%H%M%S") + ".\n")
 			writeData(databaseUserCollection, currentDate, userDataBase)
 		autoWriteDataLogHandler.close()
+	
+	def startAutoDataLogging(self):
+		self.thread.start()
+
+	def stopAutoDataLoggin(self):
+		self.thread.cancel()
