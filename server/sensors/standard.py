@@ -35,7 +35,7 @@ class pictureLib:
 	def __init__(self, userFileDirectory):
 		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getPictures():
+	def getPictures(self):
 		userPicturePaths = listdir(self.userFileDirectory)
 		userPictureData = []
 		userPictureFileHandler = None;
