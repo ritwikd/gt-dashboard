@@ -4,7 +4,7 @@ class rawFileLib():
 	def __init__(self, userFileDirectory):
 		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getFileData():
+	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = ""
 		userFileData = open(userFilePath, "r").read()
@@ -14,7 +14,7 @@ class singleNumberLib:
 	def __init__(self, userFileDirectory):
 		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getFileData():
+	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = ""; 
 		userFileData = eval(open(userFilePath, "r").read().strip())
@@ -24,7 +24,7 @@ class multipleNumberLib:
 	def __init__(self, userFileDirectory):
 		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getFileData():
+	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = open(userFilePath, "r").read()
 		userFileDataPoints = []
