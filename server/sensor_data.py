@@ -14,7 +14,8 @@ def writeData(user, date, db):
 
     for metric in metrics:
     	dbInsertObject = { "date" : eval(gtime("%Y%m%d")), "username" : username, "metric" : metric}
-	dbMetricCollection = db[metric]
+		dbMetricCollection = db[metric]
+		dbMetricCollection.remove(dbInsertObject)
 
 	if metrics[metric]['source'] == 'file':
 		filePath = metrics[metric]['path'][0] + username + '/' + metrics[metric]['path'][1]
