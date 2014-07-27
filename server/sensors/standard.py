@@ -7,7 +7,7 @@ class rawFileLib():
 	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = ""
-		userFileData = open(self.userFileDirectory + "" + userFilePath, "r").read()
+		userFileData = open(self.userFileDirectory + "/" + userFilePath, "r").read()
 		return userFileData
 
 class singleNumberLib:
@@ -17,7 +17,7 @@ class singleNumberLib:
 	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = ""; 
-		userFileData = eval(open(self.userFileDirectory + "" + userFilePath, "r").read().strip())
+		userFileData = eval(open(self.userFileDirectory + "/" + userFilePath, "r").read().strip())
 		return userFileData
 
 class multipleNumberLib:
@@ -26,7 +26,7 @@ class multipleNumberLib:
 
 	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
-		userFileData = open(self.userFileDirectory + "" + userFilePath, "r").read()
+		userFileData = open(self.userFileDirectory + "/" + userFilePath, "r").read()
 		userFileDataPoints = []
 		userFileDataPoints = [eval(number.strip()) for number in userFileData.splitlines()]
 		return userFileDataPoints
@@ -40,7 +40,7 @@ class pictureLib:
 		userPictureData = []
 		userPictureFileHandler = None;
 		for userPicturePath in userPicturePaths:
-			userPictureFileHandler = open(self.userFileDirectory + userPicturePath, "r")
+			userPictureFileHandler = open(self.userFileDirectory + "/" + userPicturePath, "r")
 			userPictureData.append(userPictureFileHandler.read().encode("base64"))
 		return userPictureData
 
