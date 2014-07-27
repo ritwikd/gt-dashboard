@@ -75,4 +75,5 @@ def getDate(userRequestUsername):
         return 'Request type not recognized.'
 
 if __name__ == '__main__':
+    autoWriteDataInstance = autoWriteDataLib(databaseUserCollection, userDataBase, 1200)
     app.run(host='0.0.0.0', port=8081, debug=True)

@@ -8,35 +8,35 @@ modules.append('sensors')
 from sensors import standard, custom
 
 
-def writeData(user, date, db):
-    metrics = user['metrics']
-    username = user['username']
+def writeData(givenUser, userDataBase):
+    userMetricsList = givenUser['metrics']
+    givenUserName = givenUser['username']
 
-    for metric in metrics:
-    	dbInsertObject = { "date" : eval(getFormattedTime("%Y%m%d")), "username" : username, "metric" : metric}
-	dbMetricCollection = db[metric]
+    for metric in userMetricsList:
+    	dbInsertObject = { "date" : eval(getFormattedTime("%Y%m%d")), "username" : givenUserName, "metric" : metric}
+	dbMetricCollection = userDataBase[metric]
 	dbMetricCollection.remove(dbInsertObject)
 
-	if metrics[metric]['source'] == 'file':
-		filePath = metrics[metric]['path'][0] + username + '/' + metrics[metric]['path'][1]
+	if userMetricsList[metric]['source'] == 'file':
+		filePath = userMetricsList[metric]['path'][0] + givenUserName + '/' + userMetricsList[metric]['path'][1]
 		fileData = ""
 
-		if metrics[metric]['format'][0] == 'percentage':
+		if userMetricsList[metric]['format'][0] == 'percentage':
 			print "Inserting percentage."
 			fileDataObject = standard.singleNumberLib(filePath)
 			fileData = fileDataObject.getFileData()				
 
-		elif metrics[metric]['format'][0] == 'graph':
+		elif userMetricsList[metric]['format'][0] == 'graph':
 			print "Inserting graph."
 			fileDataObject = standard.multipleNumberLib(filePath)
 			fileData = fileDataObject.getFileData()				
 
-		elif metrics[metric]['format'][0] == 'raw':
+		elif userMetricsList[metric]['format'][0] == 'raw':
 			print "Inserting raw."
 			fileDataObject = standard.rawFileLib(filePath)
 			fileData = fileDataObject.getFileData()				
 
-		elif metrics[metric]['format'][0] == 'picture':
+		elif userMetricsList[metric]['format'][0] == 'picture':
 			print "Inserting pictures."
 			fileDataObject = standard.pictureFileLib(filePath)
 			fileData = fileDataObject.getFileData()				
@@ -64,8 +64,8 @@ def writeData(user, date, db):
 	print "Data inserted."
 
 
-class autoWriteDataObject():
-	def __init__(self, databaseUserCollection, currentDate, userDataBase, threadRefreshInterval):
+class autoWriteDataLib():
+	def __init__(self, databaseUserCollection, userDataBase, threadRefreshInterval):
 		self.databaseUserCollection = databaseUserCollection
 		self.currentDate = currentDate
 		self.userDataBase = userDataBase
