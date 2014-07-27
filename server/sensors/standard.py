@@ -7,7 +7,7 @@ class rawFileLib():
 	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = ""
-		userFileData = open(self.userFileDirectory + "/" + userFilePath, "r").read()
+		userFileData = open(self.userFileDirectory + "/" + userFilePath, "r").read().strip().replace("'", '"')
 		return userFileData
 
 class singleNumberLib:
@@ -31,7 +31,7 @@ class multipleNumberLib:
 		userFileDataPoints = [eval(number.strip()) for number in userFileData.splitlines()]
 		return userFileDataPoints
 
-class pictureLib:
+class pictureFileLib:
 	def __init__(self, userFileDirectory):
 		self.userFileDirectory = "../" + userFileDirectory
 
