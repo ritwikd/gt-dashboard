@@ -3,7 +3,7 @@ from functools import update_wrapper
 from time import strftime as gtime
 from pymongo import MongoClient
 from datetime import timedelta
-import requests, sensor, json
+import requests, sensor_data, json
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -62,7 +62,7 @@ def getDate(username):
             del(user['_id'])
             return json.dumps(user)
     elif request.args.get('type') == 'data':
-	sensor.writeData(user, eval(request.args.get('date')))
+	sensor_data.writeData(user, eval(request.args.get('date')), db)
         metric = request.args.get('metric')
         date = request.args.get('date')
         data = db[metric].find_one({'metric' : metric, 'name' : username, 'date': eval(date)})
@@ -72,7 +72,7 @@ def getDate(username):
         return json.dumps(data)
     elif request.args.get('type') == 'write':
         if (user != None):
-            sensor.writeData(user, eval(request.args.get('date')))
+            sensor_data.writeData(user, eval(request.args.get('date')), db)
         return 'Data written.'
     else:
         return 'Error.'
