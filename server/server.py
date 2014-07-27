@@ -65,9 +65,9 @@ def getDate(username):
 	sensor_data.writeData(user, eval(request.args.get('date')), db)
         metric = request.args.get('metric')
         date = request.args.get('date')
-        data = db[metric].find_one({'metric' : metric, 'name' : username, 'date': eval(date)})
+        data = db[metric].find_one({'metric' : metric, 'username' : username, 'date': eval(date)})
         if (data == None):
-            return json.dumps({'metric' : metric, 'name' : username, 'date' : eval(date), 'value' : 'null'})
+            return json.dumps({'metric' : metric, 'username' : username, 'date' : eval(date), 'value' : 'null'})
         del(data['_id'])
         return json.dumps(data)
     elif request.args.get('type') == 'write':
