@@ -46,30 +46,33 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 app = Flask(__name__)
 
-userDataBase = MongoClient('localhost', 27017).data
-users = db.users
+userDataBase = MongoClient('localhost', 27017)['data']
+databaseUserCollection = userDataBase['users']
 
 @app.errorhandler(404)
-@app.route('/<username>')
+@app.route('/<userRequestUsername>')
 @crossdomain(origin='*')
-def getDate(username):
-    user = users.find_one({'username' : username})
+def getDate(userRequestUsername):
+    userRequestUser = databaseUserCollection.find_one({'username' : userRequestUsername})
+
     if request.args.get('type') == 'user':
-        if (user == None):
+        if (userRequestUser == None):
             return json.dumps({'name' : 'null' }), 404
         else:
-            del(user['_id'])
-            return json.dumps(user)
+            del(userRequestUser['_id'])
+            return json.dumps(userRequestUser)
+
     elif request.args.get('type') == 'data':
-        metric = request.args.get('metric')
-        date = request.args.get('date')
-        data = db[metric].find_one({'metric' : metric, 'username' : username, 'date': eval(date)})
-        if (data == None):
-            return json.dumps({'metric' : metric, 'username' : username, 'date' : eval(date), 'value' : 'null'})
-        del(data['_id'])
-        return json.dumps(data)
+        userRequestMetric = request.args.get('metric')
+        currentServerDate = request.args.get('date')
+        userRequestData = userDataBase[userRequestMetric].find_one({'metric' : userRequestMetric, 'username' : userRequestUsername, 'date': eval(currentServerDate)})
+        if (userRequestData == None):
+            return json.dumps({'metric' : userRequestMetric, 'username' : userRequestUsername, 'date' : eval(currentServerDate), 'value' : 'null'})
+        del(userRequestData['_id'])
+        return json.dumps(userRequestData)
+
     else:
-        return 'Error.'
+        return 'Request type not recognized.'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True)

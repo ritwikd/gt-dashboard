@@ -1,5 +1,5 @@
 import threading, requests, json, nltk
-from time import strftime as gtime
+from time import strftime as getFormattedTime
 from datetime import datetime
 from os import listdir
 
@@ -13,13 +13,13 @@ def writeData(user, date, db):
     username = user['username']
 
     for metric in metrics:
-    	dbInsertObject = { "date" : eval(gtime("%Y%m%d")), "username" : username, "metric" : metric}
+    	dbInsertObject = { "date" : eval(getFormattedTime("%Y%m%d")), "username" : username, "metric" : metric}
 	dbMetricCollection = db[metric]
 	dbMetricCollection.remove(dbInsertObject)
 
 	if metrics[metric]['source'] == 'file':
 		filePath = metrics[metric]['path'][0] + username + '/' + metrics[metric]['path'][1]
-		fileData = "";
+		fileData = ""
 
 		if metrics[metric]['format'][0] == 'percentage':
 			print "Inserting percentage."
@@ -47,28 +47,32 @@ def writeData(user, date, db):
 		dbInsertObject['value'] = fileData
 
 	elif metrics[metric]['source'] == 'custom':
-		customData = "";
+		customData = ""
+		
 		if metrics[metric]['type'] == 'jawbone':
 			customDataObject = custom.jawboneLib(metrics[metric]['auth'])
-			customData = customDataObject.getMetricData();
+			customData = customDataObject.getMetricData()
 		elif metrics[metric]['type'] == 'weather':
-			customDataObject = custom.jawboneLib(metrics[metric]['location'])
-			customData = customDataObject.getMetricData();
+			customDataObject = custom.weatherLib(metrics[metric]['location'])
+			customData = customDataObject.getMetricData()
 			
-
 		if customDataObject == None:
 			customData = ""
-
 		dbInsertObject['value'] = customDataObject
 
 	dbMetricCollection.insert(dbInsertObject)
 	print "Data inserted."
 
 
-def autoWriteData(users, date, db):
-	autoDataLogging = threading.Timer(1200, autoWriteData)
-	autoDataLogFile = open("server/auto.log", "a")
-	for user in users:
-		autoDataLogFile.write("Logging data for " + user['username'] + " on " + gtime("%Y%m%d") + " at " + gtime("%H%M%S") + ".\n"))
-		writeData(user, date, db)
-	autoDataLogFile.close()
+class autoWriteDataObject(threading.Thread):
+	def __init__(self, databaseUserCollection, currentDate, userDataBase):
+		self.databaseUserCollection = databaseUserCollection
+		self.currentDate = currentDate
+		self.userDataBase = userDataBase
+
+	def callWriteDataFunction(self):
+		autoWriteDataLogHandler = open("server/auto.log", "a")
+		for currentUser in self.databaseUserCollection:
+			autoWriteDataLogHandler.write("Logging data for " + currentUser['username'] + " on " + getFormattedTime("%Y%m%d") + " at " + getFormattedTime("%H%M%S") + ".\n"))
+			writeData(databaseUserCollection, currentDate, userDataBase)
+		autoWriteDataLogHandler.close()
