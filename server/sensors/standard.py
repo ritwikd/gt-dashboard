@@ -2,9 +2,9 @@ from os import listdir
 
 class rawFileLib():
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = userFileDirectory
+		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getFileData(self):
+	def getFileData():
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = ""
 		userFileData = open(userFilePath, "r").read()
@@ -12,20 +12,19 @@ class rawFileLib():
 
 class singleNumberLib:
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = userFileDirectory
+		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getFileData(self):
+	def getFileData():
 		userFilePath = listdir(self.userFileDirectory)[0]
-		print userFilePath
 		userFileData = ""; 
 		userFileData = eval(open(userFilePath, "r").read().strip())
 		return userFileData
 
 class multipleNumberLib:
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = userFileDirectory
+		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getFileData(self):
+	def getFileData():
 		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = open(userFilePath, "r").read()
 		userFileDataPoints = []
@@ -34,9 +33,9 @@ class multipleNumberLib:
 
 class pictureLib:
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = userFileDirectory
+		self.userFileDirectory = "../../" + userFileDirectory
 
-	def getPictures(self):
+	def getPictures():
 		userPicturePaths = listdir(self.userFileDirectory)
 		userPictureData = []
 		userPictureFileHandler = None;
