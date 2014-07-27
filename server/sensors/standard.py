@@ -15,8 +15,11 @@ class singleNumberLib:
 		self.userFileDirectory = "../" + userFileDirectory
 
 	def getFileData(self):
-		userFilePath = listdir(self.userFileDirectory)[0]
 		userFileData = ""; 
+		userFilePaths = listdir(self.userFileDirectory)
+		if len(userFilePaths) == 0:
+			return userFileData
+		userFilePath = userFilePaths[0]
 		userFileData = eval(open(self.userFileDirectory + "/" + userFilePath, "r").read().strip())
 		return userFileData
 
@@ -25,9 +28,12 @@ class multipleNumberLib:
 		self.userFileDirectory = "../" + userFileDirectory
 
 	def getFileData(self):
-		userFilePath = listdir(self.userFileDirectory)[0]
-		userFileData = open(self.userFileDirectory + "/" + userFilePath, "r").read()
 		userFileDataPoints = []
+		userFilePaths = listdir(self.userFileDirectory)
+		if len(userFilePaths) == 0:
+			return userFileDataPoints
+		userFilePath = userFilePaths[0]
+		userFileData = open(self.userFileDirectory + "/" + userFilePath, "r").read()
 		userFileDataPoints = [eval(number.strip()) for number in userFileData.splitlines()]
 		return userFileDataPoints
 
@@ -36,11 +42,11 @@ class pictureFileLib:
 		self.userFileDirectory = "../" + userFileDirectory
 
 	def getPictures(self):
-		userPicturePaths = listdir(self.userFileDirectory)
-		userPictureData = []
-		userPictureFileHandler = None;
-		for userPicturePath in userPicturePaths:
-			userPictureFileHandler = open(self.userFileDirectory + "/" + userPicturePath, "r")
-			userPictureData.append(userPictureFileHandler.read().encode("base64"))
-		return userPictureData
+		userFilePaths = listdir(self.userFileDirectory)
+		userFileData = []
+		userFileFileHandler = None;
+		for userFilePath in userFilePaths:
+			userFileFileHandler = open(self.userFileDirectory + "/" + userFilePath, "r")
+			userFileData.append(userFileFileHandler.read().encode("base64"))
+		return userFileData
 

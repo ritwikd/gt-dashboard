@@ -18,35 +18,36 @@ def writeData(user, date, db):
 			dbMetricCollection = db[metric]
 
 			if metrics[metric]['format'][0] == 'percentage':
-				percentageDataObject = standard.singleNumberLib(filePath)
-				percentageData = "";
-				percentageData = percentageDataObject.getFileData()				
-				if percentageData == None:
-					percentageData = ""
-				dbInsertObject['value'] = eval(percentageData)
+				fileDataObject = standard.singleNumberLib(filePath)
+				fileData = "";
+				fileData = fileDataObject.getFileData()				
+				if fileData == None:
+					fileData = ""
+				dbInsertObject['value'] = eval(fileData)
 
 			elif metrics[metric]['format'][0] == 'graph':
-				graphDataObject = standard.multipleNumberLib(filePath)
-				graphData = "";
-				graphData = graphDataObject.getFileData()				
-				if graphData == None:
-					graphData = ""
-				dbInsertObject['value'] = graphData
+				fileDataObject = standard.multipleNumberLib(filePath)
+				fileData = "";
+				fileData = fileDataObject.getFileData()				
+				if fileData == None:
+					fileData = ""
+				dbInsertObject['value'] = fileData
 
 			elif metrics[metric]['format'] == 'raw':
-				rawDataObject = standard.rawFileLib(filePath)
-				rawData = "";
-				rawData = rawDataObject.getFileData()				
-				if rawData == None:
-					rawData = ""
-				dbInsertObject['value'] = rawData
+				fileDataObject = standard.rawFileLib(filePath)
+				fileData = "";
+				fileData = fileDataObject.getFileData()				
+				if fileData == None:
+					fileData = ""
+				dbInsertObject['value'] = fileData
 
 			else metrics[metrics]['format'] == 'picture':
-				pictureDataObject = standard.pictureFileLib(filePath)
-				pictureData = "";
-				pictureData = pictureDataObject.getFileData()				
-				if pictureData == None:
-					pictureData = ""
-				dbInsertObject['value'] = pictureData
-		# dbMetricCollection.insert(dbInsertObject)
+				fileDataObject = standard.pictureFileLib(filePath)
+				fileData = "";
+				fileData = fileDataObject.getFileData()				
+				if fileData == None:
+					fileData = ""
+				dbInsertObject['value'] = fileData
+
+		dbMetricCollection.insert(dbInsertObject)
 
