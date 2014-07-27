@@ -46,9 +46,8 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 app = Flask(__name__)
 
-db = MongoClient('localhost', 27017).data
+userDataBase = MongoClient('localhost', 27017).data
 users = db.users
-print users
 
 @app.errorhandler(404)
 @app.route('/<username>')
@@ -62,7 +61,6 @@ def getDate(username):
             del(user['_id'])
             return json.dumps(user)
     elif request.args.get('type') == 'data':
-	sensor_data.writeData(user, eval(request.args.get('date')), db)
         metric = request.args.get('metric')
         date = request.args.get('date')
         data = db[metric].find_one({'metric' : metric, 'username' : username, 'date': eval(date)})
@@ -70,10 +68,6 @@ def getDate(username):
             return json.dumps({'metric' : metric, 'username' : username, 'date' : eval(date), 'value' : 'null'})
         del(data['_id'])
         return json.dumps(data)
-    elif request.args.get('type') == 'write':
-        if (user != None):
-            sensor_data.writeData(user, eval(request.args.get('date')), db)
-        return 'Data written.'
     else:
         return 'Error.'
 
