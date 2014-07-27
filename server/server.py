@@ -54,7 +54,7 @@ print users
 @app.route('/<username>')
 @crossdomain(origin='*')
 def getDate(username):
-    user = users.find_one({'name' : username})
+    user = users.find_one({'username' : username})
     if request.args.get('type') == 'user':
         if (user == None):
             return json.dumps({'name' : 'null' }), 404
@@ -62,6 +62,7 @@ def getDate(username):
             del(user['_id'])
             return json.dumps(user)
     elif request.args.get('type') == 'data':
+	sensor.writeData(user, eval(request.args.get('date')))
         metric = request.args.get('metric')
         date = request.args.get('date')
         data = db[metric].find_one({'metric' : metric, 'name' : username, 'date': eval(date)})
@@ -71,11 +72,10 @@ def getDate(username):
         return json.dumps(data)
     elif request.args.get('type') == 'write':
         if (user != None):
-            sensor.writeData(user, eval(request.args.get('date')), db)
+            sensor.writeData(user, eval(request.args.get('date')))
         return 'Data written.'
     else:
         return 'Error.'
 
 if __name__ == '__main__':
-    sensor.autoWriteData(users, eval(gtime("%Y%m%d")), db)
     app.run(host='0.0.0.0', port=8081, debug=True)
