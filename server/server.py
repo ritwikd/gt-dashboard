@@ -70,7 +70,11 @@ def getDate(userRequestUsername):
             return json.dumps({'metric' : userRequestMetric, 'username' : userRequestUsername, 'date' : eval(currentServerDate), 'value' : 'null'})
         del(userRequestData['_id'])
         return json.dumps(userRequestData)
-
+    elif request.args.get('type') == 'users':
+	userReturnInfo = { }
+	for userRequestItem in databaseUserCollection.find():
+		userReturnInfo[userRequestItem['username']] = userRequestItem['name']
+        return json.dumps(userReturnInfo)
     else:
         return 'Request type not recognized.'
 
