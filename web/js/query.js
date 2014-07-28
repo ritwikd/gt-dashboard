@@ -219,6 +219,7 @@ function drawGraph (graphUserData) {
 		);
 	});
 
+	//Add legend info 
 	$(".graph-legend-container").append('<div class="graph-legend"> <table class="graph-table"> </table> </div>');
 	$(".graph-table").html('<table class="graph-table"> </table>');
 
@@ -233,6 +234,7 @@ function drawGraph (graphUserData) {
 				break;
 		}
 
+		//Add item to legen
 		currentLegendColor = currentlySelectedColors[legendKeyMetric].split("(")[1].slice(0, -6);
 		legendItem = legendTemplate[0] + "rgb(" + currentLegendColor +
 			")" + legendTemplate[1] + legendKeyMetric + 
@@ -241,11 +243,13 @@ function drawGraph (graphUserData) {
 		$(".graph-table").append(legendItem);
 	})
 
+	//Render chart
 	respChart($(".metchart"), chartData);
 }
 
 
 function getQuery() {
+	//Run all components
 	selectionInformation = getSelection();
 	if (selectionInformation != null) {
 		graphUserData = getGraphData(selectionInformation);
@@ -294,16 +298,19 @@ var selectionInformation = [];
 
 var colorIndex = 0;
 
+var notAllowed = ['picture', 'raw'];
+
+//Get list of options
 $(".menbot").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
 $.each(requestedUserMetrics, function(requestedUserMetric) {
 	tempMetricObject = requestedUserMetrics[requestedUserMetric];
-	if (tempMetricObject['format'][0] != 'picture') {
+	if (notAllowed.indexOf(tempMetricObject['format'][0])== -1) {
 		$(".menbot").append(metricMenuTemplate[0] + requestedUserMetric + metricMenuTemplate[1] + requestedUserMetric + metricMenuTemplate[2]);
-		
 	}
 });
 
 
+//Add datepickers 
 $(".menbot").append('<br><p class="inst">Choose a starting date:</p class="inst"><br>');
 $(".menbot").append('<input id="beforeDate" class="pickbox pickadate">');
 var afterDate = $("#afterDate");
@@ -311,6 +318,7 @@ var beforeDate = $("#beforeDate").pickadate(  {
 	max : currentDateObject,
 	onSet : function() {
 		if (firstSelection) {
+			//Create second datepicker on selection
 			$(".menbot").append('<br><p class="inst">Choose an ending date:</p class="inst"><br>');
 			$(".menbot").append('<input id="afterDate" class="pickbox pickadate">');
 			afterDate = $("#afterDate").pickadate({
@@ -325,6 +333,8 @@ var beforeDate = $("#beforeDate").pickadate(  {
 	}
 });
 
+
+//Cool colors
 $(".item").on('click', function() {
 	var item = $(this);
 	if (item.attr("data-sel") == "false") {
