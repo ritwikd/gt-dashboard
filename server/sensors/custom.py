@@ -15,7 +15,6 @@ class weatherLib:
         for userWeatherItem in userWeatherData:
             if (len(userWeatherItem) == 5 and '/' in userWeatherItem):
                 userWeatherTemperatures.append(userWeatherItem.split("/")[0])
-	print userWeatherTemperatures
         return userWeatherTemperatures
 
 class jawboneLib:
@@ -31,4 +30,8 @@ class jawboneLib:
             userJawboneDay = userJawboneDay['details']['hourly_totals']
             for userJawboneHour in userJawboneDay.keys():
                 userJawboneDaySteps += userJawboneDay[userJawboneHour]['steps'] 
+	logFile = open('jaw.log', 'a')
+	logFile.write(getFormattedTime("%Y%m%d") + "\n")
+	logFile.write(str(userJawboneDaySteps) + "\n")
+	logFile.close()
         return userJawboneDaySteps
