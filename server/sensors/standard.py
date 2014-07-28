@@ -1,4 +1,5 @@
 from os import listdir
+import requests
 
 class rawFileLib():
 	def __init__(self, userFileDirectory):

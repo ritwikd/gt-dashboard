@@ -1,10 +1,12 @@
-from time import strftime as gtime
+from time import strftime as getFormattedTime
+import requests
+import json
 
 class weatherLib:
     def __init__(self, userLocation):
         self.userLocation = userLocation;
 
-    def getMetricData():
+    def getMetricData(self):
         userWeatherRequestData = requests.get("http://aviationweather.gov/adds/metars/?station_ids=" + self.userLocation + "&std_trans=standard&chk_metars=on&hoursStr=past+24+hours&submitmet=Submit");
         userWeatherData = nltk.clean_html(userWeatherRequestData.text)
         userWeatherData = userWeatherData.split(" ")
@@ -18,13 +20,13 @@ class jawboneLib:
     def __init__(self, userAuthorizationToken):
         self.userAuthorizationToken = userAuthorizationToken
 
-    def getMetricData():
+    def getMetricData(self):
         apiAuthorizationHeaders = {'Authorization' : 'Bearer ' +  self.userAuthorizationToken.encode('ascii', 'ignore') }        
         userJawboneData = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = apiAuthorizationHeaders)
-        userJawboneCurrentDay = json.loads(data.text)['data']['items'][0]
-        userJawboneCurrentDaySteps = 0
-        if (userJawboneDay['date'] == gtime("%Y%m%d")):
+        userJawboneDay = json.loads(userJawboneData.text)['data']['items'][0]
+        userJawboneDaySteps = 0
+        if (userJawboneDay['date'] == getFormattedTime("%Y%m%d")):
             userJawboneDay = userJawboneDay['details']['hourly_totals']
             for userJawboneHour in userJawboneDay.keys():
-                userJawboneDaySteps += userJawboneCurrentDay[userJawboneHour]['steps'] 
-        return userJawboneCurrentDaySteps
+                userJawboneDaySteps += userJawboneDay[userJawboneHour]['steps'] 
+        return userJawboneDaySteps

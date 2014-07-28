@@ -46,14 +46,14 @@ def writeData(givenUser, userDataBase):
 				fileData = ""
 		dbInsertObject['value'] = fileData
 
-	elif metrics[metric]['source'] == 'custom':
+	elif userMetricsList[metric]['source'] == 'custom':
 		customData = ""
 		
-		if metrics[metric]['type'] == 'jawbone':
-			customDataObject = custom.jawboneLib(metrics[metric]['auth'])
+		if userMetricsList[metric]['type'] == 'jawbone':
+			customDataObject = custom.jawboneLib(userMetricsList[metric]['auth'])
 			customData = customDataObject.getMetricData()
-		elif metrics[metric]['type'] == 'weather':
-			customDataObject = custom.weatherLib(metrics[metric]['location'])
+		elif userMetricsList[metric]['type'] == 'weather':
+			customDataObject = custom.weatherLib(userMetricsList[metric]['location'])
 			customData = customDataObject.getMetricData()
 			
 		if customDataObject == None:
@@ -64,22 +64,19 @@ def writeData(givenUser, userDataBase):
 	print "Data inserted."
 
 
+def writeAllUserData(databaseUserCollection, userDataBase):
+	autoWriteDataLogHandler = open("auto.log", "a")
+	for currentUser in databaseUserCollection.find():
+		autoWriteDataLogHandler.write("Logging data for " + currentUser['username'] + " on " + getFormattedTime("%Y%m%d") + " at " + getFormattedTime("%H%M%S") + ".\n")
+		writeData(currentUser, userDataBase)
+	autoWriteDataLogHandler.close()
+
+
 class autoWriteDataLib():
-	def __init__(self, databaseUserCollection, userDataBase, threadRefreshInterval):
+	def __init__(self, databaseUserCollection, userDataBase):
 		self.databaseUserCollection = databaseUserCollection
-		self.currentDate = currentDate
 		self.userDataBase = userDataBase
-		self.thread = Timer(threadRefreshInterval, self.callWriteDataFunction)
 
-	def callWriteDataFunction(self):
-		autoWriteDataLogHandler = open("server/auto.log", "a")
-		for currentUser in self.databaseUserCollection:
-			autoWriteDataLogHandler.write("Logging data for " + currentUser['username'] + " on " + getFormattedTime("%Y%m%d") + " at " + getFormattedTime("%H%M%S") + ".\n")
-			writeData(databaseUserCollection, currentDate, userDataBase)
-		autoWriteDataLogHandler.close()
-	
-	def startAutoDataLogging(self):
-		self.thread.start()
-
-	def stopAutoDataLoggin(self):
-		self.thread.cancel()
+	def runAutoLog(self):
+		threading.Timer(5.0, self.runAutoLog).start()
+		writeAllUserData(self.databaseUserCollection, self.userDataBase)
