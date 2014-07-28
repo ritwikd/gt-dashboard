@@ -1,6 +1,7 @@
 from time import strftime as getFormattedTime
 import requests
 import json
+import nltk
 
 class weatherLib:
     def __init__(self, userLocation):
@@ -14,7 +15,8 @@ class weatherLib:
         for userWeatherItem in userWeatherData:
             if (len(userWeatherItem) == 5 and '/' in userWeatherItem):
                 userWeatherTemperatures.append(userWeatherItem.split("/")[0])
-        return userWeatherTemperatures;
+	print userWeatherTemperatures
+        return userWeatherTemperatures
 
 class jawboneLib:
     def __init__(self, userAuthorizationToken):

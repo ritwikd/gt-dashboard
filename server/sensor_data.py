@@ -58,7 +58,7 @@ def writeData(givenUser, userDataBase):
 			
 		if customDataObject == None:
 			customData = ""
-		dbInsertObject['value'] = customDataObject
+		dbInsertObject['value'] = customData
 
 	dbMetricCollection.insert(dbInsertObject)
 	print "Data inserted."
