@@ -82,52 +82,70 @@ function getSel () {
 
 		error = false;
 		if (afterPickedDate == undefined) {
+
 			error = true;
 			afterDate.css("border", "3px solid rgb(255, 0, 0)");
 		} 
 		if (beforePickedDate == undefined) {
+
 			error = true;
 			beforeDate.css("border", "3px solid rgb(255, 0, 0)");	
 		}
 		if (selectedMetrics.length == 0) {
+
 			error = true;
 			$(".item").css("border", "3px solid rgb(255, 0, 0)");
 		}
 		if (error == true) {
+
 			toastr.error('Please fill out all required options.', 'Error');
 		} else {
+
 			toastr.success("Generating graph.", "Success")
-			var dates = [];
-			dates.push(beforePickedDate);
-			var data = {};
-			var tempurl = "";
+			requestedDates = [];
+
+			requestedDates.push(beforePickedDate);
+			graphUserData = {};
+			dataRequestTempURL = "";
+
 			for (var i = 1; i < (afterPickedDate - beforePickedDate + 1); i++) {
-				dates.push(beforePickedDate + i);
+				requestedDates.push(beforePickedDate + i);
 				chartData.labels.push((beforePickedDate + i).toString());
 			}
+
 			for (var i = 0; i < selectedMetrics.length; i++) {
-				data[selectedMetrics[i]] = [];
-				for (var j = 0; j < dates.length; j++) {
-					tempurl = returnedDataTemplate[0] + selectedMetrics[i] + returnedDataTemplate[1] + dates[j];
-					metData = getJSON(tempurl);
-					if (metData.value == "null") {
-						metData["value"] = 0;
-					} else {
-						if (metData.metric == 'weather') {
-							var totalTemp = 0;
-							var temps = metData.temps;
-							for (var k = 0; k < temps.length; k++) {
-								totalTemp += eval(temps[k]);
-							}
-							metData["value"] = (totalTemp) / temps.length;
+
+				finalGraphValue = 0;
+				graphUserData[selectedMetrics[i]] = [];
+
+				for (var j = 0; j < requestedDates.length; j++) {
+
+					dataRequestTempURL = returnedDataTemplate[0] + selectedMetrics[i] + returnedDataTemplate[1] + requestedDates[j];
+					userMetricData = getJSON(dataRequestTempURL);
+					if (userMetricData['value'] != "null") {
+						
+						switch (requestedUser['metrics'][selectedMetrics[i]]['format'][0]) {
+							case 'percentage' :
+								finalGraphValue = userMetricData['value'];
+								break;
+							case 'graph':
+								for (var k = 0; k < userMetricData['value'].length; k++) {
+									finalGraphValue += eval(userMetricData['value'][k]);
+								}
+								finalGraphValue /= userMetricData['value'].length;
+
 						}
+					} else {
+						finalGraphValue = 0;
 					}
+
 					
-					data[selectedMetrics[i]].push(metData.value);
+					graphUserData[selectedMetrics[i]].push(finalGraphValue);
+
 				}
 			}
 
-			$.each(data, function(tempUserMetric) {
+			$.each(graphUserData, function(tempUserMetric) {
 				var colors = ['rgba(72, 154, 247, 0.2)', 'rgba(215, 107, 44, 0.2)', 'rgba(215, 45, 204, 0.2)', ' rgba(101, 255, 105, 0.2)'];
 				color = colors[Math.floor(Math.random()*colors.length)];
 				if (currentlyUsedColors.indexOf(color) != -1) {
@@ -139,7 +157,6 @@ function getSel () {
 				currentlySelectedColors[tempUserMetric] = color;
 				chartData.datasets.push(
 					{
-						data: Array[7],
 						fillColor: color,
 						label: "My First dataset",
 						pointColor: color,
@@ -147,17 +164,29 @@ function getSel () {
 						pointHighlightStroke: color,
 						pointStrokeColor: "#fff",
 						strokeColor: "rgba(220,220,220,1)",
-						data : data[tempUserMetric]
+						data : graphUserData[tempUserMetric]
 					}
 				);
 			});
+
 
 			$(".graph-legend-container").append('<div class="graph-legend"> <table class="graph-table"> </table> </div>');
 			$(".graph-table").html('<table class="graph-table"> </table>');
 			
 			$.each(currentlySelectedColors, function(legendKeyMetric) {
-				legendItem = legendTemplate[0] + "rgb(" + currentlySelectedColors[legendKeyMetric].split("(")[1].slice(0, -6) 
-					+ ")" + legendTemplate[1] + legendKeyMetric + " (" + requestedUserMetrics[legendKeyMetric]['unit'] + legendTemplate[2];
+				switch (requestedUserMetrics[legendKeyMetric]['format'][0]) {
+					case 'percentage' : 
+						legendUnit = requestedUserMetrics[legendKeyMetric]['format'][2];
+						break;
+					case 'graph' :
+						legendUnit = requestedUserMetrics[legendKeyMetric]['format'][1];
+						break;
+				}
+				currentLegendColor = currentlySelectedColors[legendKeyMetric].split("(")[1].slice(0, -6);
+				legendItem = legendTemplate[0] + "rgb(" + currentLegendColor +
+					")" + legendTemplate[1] + legendKeyMetric + 
+					" (" + legendUnit + legendTemplate[2];
+
 				$(".graph-table").append(legendItem);
 			})
 			
@@ -196,7 +225,15 @@ var error = false;
 var beforePickedDate = null;
 var afterPickedDate = null;
 
-var returnedDataTemplate = [ "http://vps.ritwikd.com:8081/" + requestedUser + "?type=data&metric=", "&date=" ];
+var returnedDataTemplate = [ "http://vps.ritwikd.com:8081/" + requestedUserName + "?type=data&metric=", "&date=" ];
+var requestedDates = [];
+var graphUserData = {};
+var dataRequestTempURL = "";
+
+var finalGraphValue = 0;
+
+var legendUnit = "";
+var currentLegendColor = "";
 
 $(".menbot").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
 $.each(requestedUserMetrics, function(requestedUserMetric) {
