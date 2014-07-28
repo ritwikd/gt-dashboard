@@ -3,28 +3,6 @@ toastr.options.showMethod = 'slideDown';
 toastr.options.hideMethod = 'slideUp'; 
 toastr.options.positionClass = 'toast-bottom-left'
 
-var getJSON = function (requestURL) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", requestURL, false);
-    xmlHttp.send(null);
-    return $.parseJSON(xmlHttp.responseText);
-};
-
-var getMets = function (usern) {
-	var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return user.metrics;
-};
-
-var getStats = function (usern) {
-    var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return user.stats;
-};
-
-var getName = function (usern) {
-	var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
-    return user.fullname;
-};
-
 function respChart(selector, data) {
 
     var option = {
@@ -75,40 +53,43 @@ function respChart(selector, data) {
     generateChart();
 }
 
-function capFrstLet(string)
-{
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
 function getSel () {
-	var items = $(".item");
-	var item = null;
-	var chartData = { labels: [], datasets: []};
-	var metrics = [];
-	for(var i = 0; i < items.length; i++) {
-		item = $(items[i]);
-		if (item.attr('data-sel') == "true") {
-			metrics.push(item.attr('data-metric'));
+
+	userMetricItems = $(".item");
+	tempUserMetric = null;
+	chartData = { labels: [], datasets: []};
+	selectedMetrics = [];
+	currentlyUsedColors = [];
+
+
+	for(var i = 0; i < userMetricItems.length; i++) {
+		tempUserMetric = $(userMetricItems[i]);
+		if (tempUserMetric.attr('data-sel') == "true") {
+			selectedMetrics.push(tempUserMetric.attr('data-metric'));
 		}
 	}
-	if (first) {
+
+	if (firstSelection) {
+
 		error = true;
 		beforeDate.css("border", "3px solid rgb(255, 0, 0)");
 		toastr.error('Please fill out all required options.', 'Error');
 	} else {
-		var bef = eval(beforeDate.pickadate('picker').get('select', 'yyyymmdd'));
-		var aft = eval(afterDate.pickadate('picker').get('select', 'yyyymmdd'));
-		var ret = [ "http://vps.ritwikd.com:8081/" + sessionStorage.getItem('username') + "?type=data&metric=", "&date=" ];
-		var error = false;
-		if (aft == undefined) {
+
+		beforePickedDate = eval(beforeDate.pickadate('picker').get('select', 'yyyymmdd'));
+		afterPickedDate = eval(afterDate.pickadate('picker').get('select', 'yyyymmdd'));
+
+
+		error = false;
+		if (afterPickedDate == undefined) {
 			error = true;
 			afterDate.css("border", "3px solid rgb(255, 0, 0)");
 		} 
-		if (bef == undefined) {
+		if (beforePickedDate == undefined) {
 			error = true;
 			beforeDate.css("border", "3px solid rgb(255, 0, 0)");	
 		}
-		if (metrics.length == 0) {
+		if (selectedMetrics.length == 0) {
 			error = true;
 			$(".item").css("border", "3px solid rgb(255, 0, 0)");
 		}
@@ -117,17 +98,17 @@ function getSel () {
 		} else {
 			toastr.success("Generating graph.", "Success")
 			var dates = [];
-			dates.push(bef);
+			dates.push(beforePickedDate);
 			var data = {};
 			var tempurl = "";
-			for (var i = 1; i < (aft - bef + 1); i++) {
-				dates.push(bef + i);
-				chartData.labels.push((bef + i).toString());
+			for (var i = 1; i < (afterPickedDate - beforePickedDate + 1); i++) {
+				dates.push(beforePickedDate + i);
+				chartData.labels.push((beforePickedDate + i).toString());
 			}
-			for (var i = 0; i < metrics.length; i++) {
-				data[metrics[i]] = [];
+			for (var i = 0; i < selectedMetrics.length; i++) {
+				data[selectedMetrics[i]] = [];
 				for (var j = 0; j < dates.length; j++) {
-					tempurl = ret[0] + metrics[i] + ret[1] + dates[j];
+					tempurl = returnedDataTemplate[0] + selectedMetrics[i] + returnedDataTemplate[1] + dates[j];
 					metData = getJSON(tempurl);
 					if (metData.value == "null") {
 						metData["value"] = 0;
@@ -142,21 +123,20 @@ function getSel () {
 						}
 					}
 					
-					data[metrics[i]].push(metData.value);
+					data[selectedMetrics[i]].push(metData.value);
 				}
 			}
-			usedcolors = [];
-			$.each(data, function(item) {
-				
+
+			$.each(data, function(tempUserMetric) {
 				var colors = ['rgba(72, 154, 247, 0.2)', 'rgba(215, 107, 44, 0.2)', 'rgba(215, 45, 204, 0.2)', ' rgba(101, 255, 105, 0.2)'];
 				color = colors[Math.floor(Math.random()*colors.length)];
-				if (usedcolors.indexOf(color) != -1) {
-					while(usedcolors.indexOf(color) != -1) {
+				if (currentlyUsedColors.indexOf(color) != -1) {
+					while(currentlyUsedColors.indexOf(color) != -1) {
 						color = colors[Math.floor(Math.random()*colors.length)];
 					}
 				} 
-				usedcolors.push(color);
-				chosencolors[item] = color;
+				currentlyUsedColors.push(color);
+				currentlySelectedColors[tempUserMetric] = color;
 				chartData.datasets.push(
 					{
 						data: Array[7],
@@ -167,20 +147,17 @@ function getSel () {
 						pointHighlightStroke: color,
 						pointStrokeColor: "#fff",
 						strokeColor: "rgba(220,220,220,1)",
-						data : data[item]
+						data : data[tempUserMetric]
 					}
 				);
 			});
-			console.log(chartData);
-			var template = ['<tr><td><div class="legend-color" style="background-color: ',
-			 '"></div></td><td><div class="legend-text">',
-			 ')</div></td></tr>'];
+
 			$(".graph-legend-container").append('<div class="graph-legend"> <table class="graph-table"> </table> </div>');
-			var legendItem = "";
 			$(".graph-table").html('<table class="graph-table"> </table>');
-			$.each(chosencolors, function(met) {
-				legendItem = template[0] + "rgb(" + chosencolors[met].split("(")[1].slice(0, -6) 
-					+ ")" + template[1] + met + " (" + dictObj[met][1] + template[2];
+			
+			$.each(currentlySelectedColors, function(legendKeyMetric) {
+				legendItem = legendTemplate[0] + "rgb(" + currentlySelectedColors[legendKeyMetric].split("(")[1].slice(0, -6) 
+					+ ")" + legendTemplate[1] + legendKeyMetric + " (" + requestedUserMetrics[legendKeyMetric]['unit'] + legendTemplate[2];
 				$(".graph-table").append(legendItem);
 			})
 			
@@ -191,43 +168,60 @@ function getSel () {
 	}
 }
 
-var menu = ['<div class="item" data-sel="false" data-metric="', '">', '</div>']
-var date = new Date();
-var username = sessionStorage.getItem('username');
-var metObj = getMets(username);
-var statObj = getStats(username);
-var dictObj = $.extend(true, {}, metObj, statObj);
-var mets = Object.keys(metObj);
-mets = mets.concat(Object.keys(statObj));
-var name = getName(username);
-var elem = '';
-var chosencolors = {};
-var usedcolors = [];
-var first = true;
-$(".name").text(name);
+
+var metricMenuTemplate = ['<div class="item" data-sel="false" data-metric="', '">', '</div>']
+
+var requestedUserName = localStorage.getItem('username');
+var requestedUser = getUser(requestedUserName);
+var requestedUserMetrics = requestedUser['metrics']
+
+var tempMetricObject = {};
+var tempUserMetric = null;
+var currentDateObject = new Date();
+var firstSelection = true;
+var currentlySelectedColors = {};
+
+var legendTemplate = ['<tr><td><div class="legend-color" style="background-color: ',
+			 '"></div></td><td><div class="legend-text">',
+			 ')</div></td></tr>'];
+var legendItem = "";
+
+var userMetricItems = $(".item");
+
+var chartData = { labels: [], datasets: []};
+var selectedMetrics = [];
+var currentlyUsedColors = [];
+
+var error = false;
+var beforePickedDate = null;
+var afterPickedDate = null;
+
+var returnedDataTemplate = [ "http://vps.ritwikd.com:8081/" + requestedUser + "?type=data&metric=", "&date=" ];
+
 $(".menbot").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
-for(var i = 0; i < mets.length; i++) {
-	if (mets[i] != 'photos') {
-		elem = menu[0] + mets[i] + menu[1] + capFrstLet(mets[i]) + menu[2];
-		$(".menbot").append(elem);
+$.each(requestedUserMetrics, function(requestedUserMetric) {
+	tempMetricObject = requestedUserMetrics[requestedUserMetric];
+	if (tempMetricObject['format'][0] != 'picture') {
+		$(".menbot").append(metricMenuTemplate[0] + requestedUserMetric + metricMenuTemplate[1] + requestedUserMetric + metricMenuTemplate[2]);
+		
 	}
-}
+});
 
 
 $(".menbot").append('<br><p class="inst">Choose a starting date:</p class="inst"><br>');
 $(".menbot").append('<input id="beforeDate" class="pickbox pickadate">');
 var afterDate = $("#afterDate");
 var beforeDate = $("#beforeDate").pickadate(  {
-	max : date,
+	max : currentDateObject,
 	onSet : function() {
-		if (first) {
+		if (firstSelection) {
 			$(".menbot").append('<br><p class="inst">Choose an ending date:</p class="inst"><br>');
 			$(".menbot").append('<input id="afterDate" class="pickbox pickadate">');
 			afterDate = $("#afterDate").pickadate({
 				min : this.get('select'),
-				max : date
+				max : currentDateObject
 			});
-			first = false;
+			firstSelection = false;
 		} else {
 			afterDate.pickadate('picker').set('min', this.get('select'), { muted : true});
 		}
