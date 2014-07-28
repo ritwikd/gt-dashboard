@@ -73,10 +73,11 @@ def writeAllUserData(databaseUserCollection, userDataBase):
 
 
 class autoWriteDataLib():
-	def __init__(self, databaseUserCollection, userDataBase):
+	def __init__(self, databaseUserCollection, userDataBase, dataLogInterval):
 		self.databaseUserCollection = databaseUserCollection
 		self.userDataBase = userDataBase
+		self.dataLogInterval = dataLogInterval
 
 	def runAutoLog(self):
-		threading.Timer(5.0, self.runAutoLog).start()
+		threading.Timer(self.dataLogInterval, self.runAutoLog).start()
 		writeAllUserData(self.databaseUserCollection, self.userDataBase)

@@ -75,7 +75,7 @@ def getDate(userRequestUsername):
         return 'Request type not recognized.'
 
 if __name__ == '__main__':
-    autoWriteDataInstance = sensor_data.autoWriteDataLib(databaseUserCollection, userDataBase)
+    autoWriteDataInstance = sensor_data.autoWriteDataLib(databaseUserCollection, userDataBase, 300)
     autoWriteDataInstance.runAutoLog()
     print "Started automated data logging." 
     app.run(host='0.0.0.0', port=8081, debug=True)
