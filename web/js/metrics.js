@@ -1,11 +1,12 @@
 function addPercentMetric(metricName, metricDescription, metricPercent) {
+
     function genPercentMarkup(metricName, metricDescription) {
-        var metricMarkupTemplate = ['<tr class="metrics item container" data-metric="',
-            '"><td class="metrics item info"> <div class="metrics item title">',
-            '</div> <div class="metrics item description">',
-            '</div></td><td class="metrics item progress"><div class="metrics item base"><div class="metrics item fill ',
-            '  "></div></div></td><td class="metrics item number ',
-            '"><div class="metrics item percent ',
+        var metricMarkupTemplate = ['<tr class="metrics element container" data-metric="',
+            '"><td class="metrics element info"> <div class="metrics element title">',
+            '</div> <div class="metrics element description">',
+            '</div></td><td class="metrics element progress"><div class="metrics element base"><div class="metrics element fill ',
+            '  "></div></div></td><td class="metrics element number ',
+            '"><div class="metrics element percent ',
             '"></div></td></tr>'
         ];
         var metString = metricMarkupTemplate[0] +
@@ -19,8 +20,8 @@ function addPercentMetric(metricName, metricDescription, metricPercent) {
     };
 
     function setPercent(metricName, metricPercent) {
-        $(".metrics.item.percent." + metricName).text(metricPercent.toString() + "%");
-        $(".metrics.item.fill." + metricName).animate({
+        $(".metrics.element.percent." + metricName).text(metricPercent.toString() + "%");
+        $(".metrics.element.fill." + metricName).animate({
             "width": metricPercent.toString() + "%"
         }, 250);
     }
@@ -33,10 +34,10 @@ function addPercentMetric(metricName, metricDescription, metricPercent) {
 function addPhotoMetric(metricName, metricDescription, metricPhotos) {
 
     function genPhotoMarkup(metricName, metricDescription) {
-        var metricMarkupTemplate = ['<tr class="metrics item container" data-metric="',
-            '"><td class="metrics item info"> <div class="metrics item title">',
-            '</div> <div class="metrics item description">',
-            '</div></td><td class="metrics item photos"><div class="metrics item pics ',
+        var metricMarkupTemplate = ['<tr class="metrics element container" data-metric="',
+            '"><td class="metrics element info"><div class="metrics element title">',
+            '</div> <div class="metrics element description">',
+            '</div></td><td class="metrics element photos"><div class="metrics element pics ',
             '"></div></td></tr>'
         ];
         var metString = metricMarkupTemplate[0] + metricName +
@@ -47,8 +48,8 @@ function addPhotoMetric(metricName, metricDescription, metricPhotos) {
     };
 
     function setImages(metricName, metricPhotos) {
-        var imageMarkupTemplate = ['<a class="fancybox" rel="group" href="data:image/png;base64,',
-            '"><img class = "metrics item image" src="data:image/png;base64,',
+        var imageMarkupTemplate = ['<a class="element fancybox" rel="group" href="data:image/png;base64,',
+            '"><img class = "metrics element image" src="data:image/png;base64,',
             '" alt="image" /></a>'
         ];
         var temporaryImageString = "";
@@ -56,10 +57,10 @@ function addPhotoMetric(metricName, metricDescription, metricPhotos) {
             temporaryImageString = imageMarkupTemplate[0] +
                 metricPhotos[i] + imageMarkupTemplate[1] +
                 metricPhotos[i] + imageMarkupTemplate[2];
-            $(".metrics.item.pics." + metricName).append(temporaryImageString);
+            $(".metrics.element.pics." + metricName).append(temporaryImageString);
         }
 
-        $(".metrics.item.pics." + metricName).animate({
+        $(".metrics.element.pics." + metricName).animate({
             "opacity": "1"
         }, 250);
 
@@ -73,11 +74,12 @@ function addPhotoMetric(metricName, metricDescription, metricPhotos) {
 }
 
 function addRawMetric(metricName, metricDescription, metricData) {
+
     function genRawMarkup(metricName, metricDescription, metricData) {
-        var metricMarkupTemplate = ['<tr class="metrics item container" data-metric="',
-            '"><td class="metrics item info"> <div class="metrics item title">',
-            '</div> <div class="metrics item description">',
-            '</div></td><td class="metrics item text"><div class="metrics item raw ',
+        var metricMarkupTemplate = ['<tr class="metrics element container" data-metric="',
+            '"><td class="metrics element info"> <div class="metrics element title">',
+            '</div> <div class="metrics element description">',
+            '</div></td><td class="metrics element text"><div class="metrics element raw ',
             '">',
             '</div></td></tr>'
         ];

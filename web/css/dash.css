@@ -72,7 +72,7 @@ body {
     padding-left: 0px;
 }
 
-.date.item {
+.date.element {
     padding: 15px;
     padding-left: 20px;
     list-style: none;
@@ -84,7 +84,7 @@ body {
     transition: all 150ms linear;
 }
 
-.date.item:hover {
+.date.element:hover {
     color: #0099FF;
     background-color: #F3F3F3;
     -webkit-transition: all 150ms linear;
@@ -94,7 +94,7 @@ body {
     transition: all 150ms linear;
 }
 
-.date.item.selected {
+.date.element.selected {
     color: #0099FF;
     background-color: #F3F3F3;
     -webkit-transition: all 150ms linear;
@@ -140,7 +140,7 @@ body {
 
 .overview.progress.fill {
     background-color: #0099FF;
-    width: 60%;
+    width: 0%;
     height: 100%;
     -webkit-transition: all 150ms linear;
     -moz-transition: all 150ms linear;
@@ -159,38 +159,38 @@ body {
     padding-bottom: 30px;
 }
 
-.metrics.item.info {
+.metrics.element.info {
     width: 25%;
 }
 
-.metrics.item.description {
+.metrics.element.description {
     font-size: 20px;
     padding-right: 10px;
 }
 
-.metrics.item.progress {
+.metrics.element.progress {
     padding-left: 20px;
     width: 75%;
 }
 
-.metrics.item.number {
+.metrics.element.number {
     width: 10%;
 }
 
-.metrics.item.title {
+.metrics.element.title {
     font-size: 32px;
     padding-top: 20px;
     padding-bottom: 10px;
     text-transform: capitalize;
 }
 
-.metrics.item.base {
+.metrics.element.base {
     width: 90%;
     height: 25px;
     background-color: #DDD;
 }
 
-.metrics.item.fill {
+.metrics.element.fill {
     background-color: #0099FF;
     width: 0%;
     height: 100%;
@@ -201,14 +201,15 @@ body {
     transition: all 150ms linear;
 }
 
-.metrics.item.percent {
+.metrics.element.percent {
     font-size: 32px;
 }
 
-.metrics.item.image {
+.metrics.element.image {
     padding: 20px;
+    max-width: 200px;
 }
 
-.metrics.item.pics {
+.metrics.element.pics {
     opacity: 0;
 }

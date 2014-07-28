@@ -1,5 +1,3 @@
-var print = function(inp) {}
-
 Date.prototype.codeDate = function() {
     var yyyy = this.getFullYear().toString();
     var mm = (this.getMonth() + 1).toString();
@@ -17,16 +15,26 @@ Date.prototype.readDate = function() {
     return m_names[curr_month] + " " + curr_date + ", " + curr_year
 }
 
-var getJSON = function(requestURL) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", requestURL, false);
-    xmlHttp.send(null);
-    return $.parseJSON(xmlHttp.responseText);
+function getJSON(dataRequestURL) {
+    return $.parseJSON($.ajax({
+        type: "GET", 
+        url : dataRequestURL, 
+        async : false
+    }).responseText);
 };
 
-var getUser = function(usern) {
+function getUser(usern) {
     var user = getJSON("http://vps.ritwikd.com:8081/" + usern + "?type=user");
     return user;
+}
+
+function arrayAverage(array) {
+    var sum = 0;
+    for(var i = 0; i < array.length; i++){
+        sum += array[i];
+    }
+
+    return sum/array.length;
 }
 
 function respChart(selector, data) {
@@ -85,21 +93,45 @@ function overviewPercent(percent) {
     $(".overview.progress.fill").css("width", percent.toString() + "%");
 }
 
-function fillDates() {
-    var date = new Date();
+function fillDates(currentDate) {
     var dateNum = 10;
-    var dateTemplate = ['<li class="date item" data-date="', '">', '</li>'];
+    var dateTemplate = ['<li class="date element" data-date="', '">', '</li>'];
     var dates = [];
     var tempDateString = "";
     var tempDate = 0;
 
     for (var i = 0; i < dateNum; i++) {
         tempDate = new Date();
-        tempDate.setDate(date.getDate() - i);
+        tempDate.setDate(currentDate.getDate() - i);
         tempDateString = dateTemplate[0] +
             tempDate.codeDate() + dateTemplate[1] +
             tempDate.readDate() + dateTemplate[2];
         dates.push(tempDateString);
         $(".date.container").append(dates[i]);
     }
+}
+
+function getSingleUserMetric(userName, requestedMetric, requestedDate) {
+    var userDataRequestTemplate = [
+        'http://vps.ritwikd.com:8081/',
+        '?type=data&metric=',
+        '&date='];
+
+    var userData = getJSON(userDataRequestTemplate[0] +
+        userName + userDataRequestTemplate[1] +
+        requestedMetric + userDataRequestTemplate[2] + 
+        requestedDate);
+
+    return userData;
+}
+
+function getUserData(userName, userMetrics, requestedDate) {
+    var userMetricData = {};
+    var temporaryMetricData = {};
+    $.each(userMetrics, function (requestedMetric) {
+        temporaryMetricData = getSingleUserMetric(userName,
+            requestedMetric, requestedDate);
+        userMetricData[requestedMetric] = temporaryMetricData['value'];
+    });
+    return userMetricData;
 }
