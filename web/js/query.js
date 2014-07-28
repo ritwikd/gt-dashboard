@@ -1,8 +1,10 @@
+//Options for the toast notifications
 toastr.options.closeButton = true;
 toastr.options.showMethod = 'slideDown'; 
 toastr.options.hideMethod = 'slideUp'; 
 toastr.options.positionClass = 'toast-bottom-left'
 
+//Chart generation function
 function respChart(selector, data) {
 
     var option = {
@@ -53,150 +55,203 @@ function respChart(selector, data) {
     generateChart();
 }
 
-function getSel () {
+//Get selection and display chart
+function getSelection () {
+
+	if (firstSelection) {
+		//Check if first date selected
+		error = true;
+		beforeDate.css("border", "3px solid rgb(255, 0, 0)");
+		toastr.error('Please fill out all required options.', 'Error');
+		return null
+	}
 
 	userMetricItems = $(".item");
 	tempUserMetric = null;
-	chartData = { labels: [], datasets: []};
-	selectedMetrics = [];
-	currentlyUsedColors = [];
 
-
+	//Add selected metrics
 	for(var i = 0; i < userMetricItems.length; i++) {
 		tempUserMetric = $(userMetricItems[i]);
 		if (tempUserMetric.attr('data-sel') == "true") {
 			selectedMetrics.push(tempUserMetric.attr('data-metric'));
 		}
 	}
-
-	if (firstSelection) {
-
-		error = true;
-		beforeDate.css("border", "3px solid rgb(255, 0, 0)");
-		toastr.error('Please fill out all required options.', 'Error');
-	} else {
-
-		beforePickedDate = eval(beforeDate.pickadate('picker').get('select', 'yyyymmdd'));
-		afterPickedDate = eval(afterDate.pickadate('picker').get('select', 'yyyymmdd'));
-
-
-		error = false;
-		if (afterPickedDate == undefined) {
-
-			error = true;
-			afterDate.css("border", "3px solid rgb(255, 0, 0)");
-		} 
-		if (beforePickedDate == undefined) {
-
-			error = true;
-			beforeDate.css("border", "3px solid rgb(255, 0, 0)");	
-		}
-		if (selectedMetrics.length == 0) {
-
-			error = true;
-			$(".item").css("border", "3px solid rgb(255, 0, 0)");
-		}
-		if (error == true) {
-
-			toastr.error('Please fill out all required options.', 'Error');
-		} else {
-
-			toastr.success("Generating graph.", "Success")
-			requestedDates = [];
-
-			requestedDates.push(beforePickedDate);
-			graphUserData = {};
-			dataRequestTempURL = "";
-
-			for (var i = 1; i < (afterPickedDate - beforePickedDate + 1); i++) {
-				requestedDates.push(beforePickedDate + i);
-				chartData.labels.push((beforePickedDate + i).toString());
-			}
-
-			for (var i = 0; i < selectedMetrics.length; i++) {
-
-				finalGraphValue = 0;
-				graphUserData[selectedMetrics[i]] = [];
-
-				for (var j = 0; j < requestedDates.length; j++) {
-
-					dataRequestTempURL = returnedDataTemplate[0] + selectedMetrics[i] + returnedDataTemplate[1] + requestedDates[j];
-					userMetricData = getJSON(dataRequestTempURL);
-					if (userMetricData['value'] != "null") {
-						
-						switch (requestedUser['metrics'][selectedMetrics[i]]['format'][0]) {
-							case 'percentage' :
-								finalGraphValue = userMetricData['value'];
-								break;
-							case 'graph':
-								for (var k = 0; k < userMetricData['value'].length; k++) {
-									finalGraphValue += eval(userMetricData['value'][k]);
-								}
-								finalGraphValue /= userMetricData['value'].length;
-
-						}
-					} else {
-						finalGraphValue = 0;
-					}
-
-					
-					graphUserData[selectedMetrics[i]].push(finalGraphValue);
-
-				}
-			}
-
-			$.each(graphUserData, function(tempUserMetric) {
-				var colors = ['rgba(72, 154, 247, 0.2)', 'rgba(215, 107, 44, 0.2)', 'rgba(215, 45, 204, 0.2)', ' rgba(101, 255, 105, 0.2)'];
-				color = colors[Math.floor(Math.random()*colors.length)];
-				if (currentlyUsedColors.indexOf(color) != -1) {
-					while(currentlyUsedColors.indexOf(color) != -1) {
-						color = colors[Math.floor(Math.random()*colors.length)];
-					}
-				} 
-				currentlyUsedColors.push(color);
-				currentlySelectedColors[tempUserMetric] = color;
-				chartData.datasets.push(
-					{
-						fillColor: color,
-						label: "My First dataset",
-						pointColor: color,
-						pointHighlightFill: "#fff",
-						pointHighlightStroke: color,
-						pointStrokeColor: "#fff",
-						strokeColor: "rgba(220,220,220,1)",
-						data : graphUserData[tempUserMetric]
-					}
-				);
-			});
-
-
-			$(".graph-legend-container").append('<div class="graph-legend"> <table class="graph-table"> </table> </div>');
-			$(".graph-table").html('<table class="graph-table"> </table>');
-			
-			$.each(currentlySelectedColors, function(legendKeyMetric) {
-				switch (requestedUserMetrics[legendKeyMetric]['format'][0]) {
-					case 'percentage' : 
-						legendUnit = requestedUserMetrics[legendKeyMetric]['format'][2];
-						break;
-					case 'graph' :
-						legendUnit = requestedUserMetrics[legendKeyMetric]['format'][1];
-						break;
-				}
-				currentLegendColor = currentlySelectedColors[legendKeyMetric].split("(")[1].slice(0, -6);
-				legendItem = legendTemplate[0] + "rgb(" + currentLegendColor +
-					")" + legendTemplate[1] + legendKeyMetric + 
-					" (" + legendUnit + legendTemplate[2];
-
-				$(".graph-table").append(legendItem);
-			})
-			
-
-			respChart($(".metchart"), chartData);
-		}
 	
+
+	beforePickedDate = eval(beforeDate.pickadate('picker').get('select', 'yyyymmdd'));
+	afterPickedDate = eval(afterDate.pickadate('picker').get('select', 'yyyymmdd'));
+
+
+	error = false;
+	if (afterPickedDate == undefined) {
+		
+		//Check if error condition has been met
+		error = true;
+
+		//Set color of item border
+		afterDate.css("border", "3px solid rgb(255, 0, 0)");
+	} 
+	if (beforePickedDate == undefined) {
+		
+		//Check if error condition has been met
+		error = true;
+
+		//Set color of item border
+		beforeDate.css("border", "3px solid rgb(255, 0, 0)");	
 	}
+	if (selectedMetrics.length == 0) {
+		
+		//Check if error condition has been met
+		error = true;
+
+		//Set color of item border
+		$(".item").css("border", "3px solid rgb(255, 0, 0)");
+	}
+
+	if (error == true) {
+		//send error
+		toastr.error('Please fill out all required options.', 'Error');
+		return null
+	} else {
+		//send success
+		toastr.success("Generating graph.", "Success")
+		return [beforePickedDate, afterPickedDate, selectedMetrics]
+	}
+	
 }
 
+function getGraphData(selectionInformation) {
+
+	beforePickedDate = selectionInformation[0];
+	afterPickedDate = selectionInformation[1];
+	selectedMetrics = selectionInformation[2];
+
+	requestedDates = [beforePickedDate];
+	graphUserData = {};
+	chartData = { labels: [], datasets: []};
+
+
+	//Add dates to labels
+	for (var i = 1; i < (afterPickedDate - beforePickedDate + 1); i++) {
+		requestedDates.push(beforePickedDate + i);
+		chartData.labels.push((beforePickedDate + i).toString());
+	}
+
+
+	//Add actual data to object
+	for (var i = 0; i < selectedMetrics.length; i++) {
+
+		finalGraphValue = 0;
+		graphUserData[selectedMetrics[i]] = [];
+
+		for (var j = 0; j < requestedDates.length; j++) {
+
+			dataRequestTempURL = returnedDataTemplate[0] + selectedMetrics[i] + returnedDataTemplate[1] + requestedDates[j];
+			userMetricData = getJSON(dataRequestTempURL);
+			if (userMetricData['value'] != "null") {
+
+				//Process data as necessary				
+				switch (requestedUser['metrics'][selectedMetrics[i]]['format'][0]) {
+					case 'percentage' :
+						finalGraphValue = userMetricData['value'];
+						break;
+					case 'graph':
+						for (var k = 0; k < userMetricData['value'].length; k++) {
+							finalGraphValue += eval(userMetricData['value'][k]);
+						}
+						finalGraphValue /= userMetricData['value'].length;
+
+				}
+			} else {
+
+				finalGraphValue = 0;
+			}
+
+			//Add data to object
+			graphUserData[selectedMetrics[i]].push(finalGraphValue);
+
+		}
+	}
+
+	return graphUserData
+
+}
+
+
+function drawGraph (graphUserData) {
+
+	requestedDates = [];
+	selectedMetrics = [];
+	currentlyUsedColors = [];
+	currentlySelectedColors = {};
+	colorIndex = 0; 
+
+	//Add data to chart and randomly pick a color
+	$.each(graphUserData, function(tempUserMetric) {
+
+		var colors = ['rgba(31, 162, 222, 0.5)', 
+						'rgba(224, 67, 67, 0.5)', 
+						'rgba(171, 75, 219, 0.5)', 
+						'rgba(75, 219, 113, 0.5)',
+						'rgba(255, 174, 82, 0.5)'];
+		color = colors[colorIndex];
+
+		if (currentlyUsedColors.indexOf(color) != -1) {
+			while(currentlyUsedColors.indexOf(color) != -1) {
+				colorIndex++;
+				color = colors[colorIndex];
+			}
+		} 
+
+		currentlyUsedColors.push(color);
+		currentlySelectedColors[tempUserMetric] = color;
+		chartData.datasets.push(
+			{
+				fillColor: color,
+				label: "My First dataset",
+				pointColor: color,
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: color,
+				pointStrokeColor: "#fff",
+				strokeColor: "rgba(220,220,220,1)",
+				data : graphUserData[tempUserMetric]
+			}
+		);
+	});
+
+	$(".graph-legend-container").append('<div class="graph-legend"> <table class="graph-table"> </table> </div>');
+	$(".graph-table").html('<table class="graph-table"> </table>');
+
+	$.each(currentlySelectedColors, function(legendKeyMetric) {
+
+		switch (requestedUserMetrics[legendKeyMetric]['format'][0]) {
+			case 'percentage' : 
+				legendUnit = requestedUserMetrics[legendKeyMetric]['format'][2];
+				break;
+			case 'graph' :
+				legendUnit = requestedUserMetrics[legendKeyMetric]['format'][1];
+				break;
+		}
+
+		currentLegendColor = currentlySelectedColors[legendKeyMetric].split("(")[1].slice(0, -6);
+		legendItem = legendTemplate[0] + "rgb(" + currentLegendColor +
+			")" + legendTemplate[1] + legendKeyMetric + 
+			" (" + legendUnit + legendTemplate[2];
+
+		$(".graph-table").append(legendItem);
+	})
+
+	respChart($(".metchart"), chartData);
+}
+
+
+function getQuery() {
+	selectionInformation = getSelection();
+	if (selectionInformation != null) {
+		graphUserData = getGraphData(selectionInformation);
+		drawGraph(graphUserData);
+	}
+}
 
 var metricMenuTemplate = ['<div class="item" data-sel="false" data-metric="', '">', '</div>']
 
@@ -234,6 +289,10 @@ var finalGraphValue = 0;
 
 var legendUnit = "";
 var currentLegendColor = "";
+
+var selectionInformation = [];
+
+var colorIndex = 0;
 
 $(".menbot").append('<br><p class="inst">Choose items to compare:</p class="inst"><br>');
 $.each(requestedUserMetrics, function(requestedUserMetric) {
