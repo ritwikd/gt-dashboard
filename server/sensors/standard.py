@@ -3,7 +3,7 @@ import requests
 
 class rawFileLib():
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = "../" + userFileDirectory
+		self.userFileDirectory = userFileDirectory
 
 	def getFileData(self):
 		userFilePath = listdir(self.userFileDirectory)[0]
@@ -13,7 +13,7 @@ class rawFileLib():
 
 class singleNumberLib:
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = "../" + userFileDirectory
+		self.userFileDirectory = userFileDirectory
 
 	def getFileData(self):
 		userFileData = ""; 
@@ -26,7 +26,7 @@ class singleNumberLib:
 
 class multipleNumberLib:
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = "../" + userFileDirectory
+		self.userFileDirectory = userFileDirectory
 
 	def getFileData(self):
 		userFileDataPoints = []
@@ -40,7 +40,7 @@ class multipleNumberLib:
 
 class pictureFileLib:
 	def __init__(self, userFileDirectory):
-		self.userFileDirectory = "../" + userFileDirectory
+		self.userFileDirectory = userFileDirectory
 
 	def getFileData(self):
 		userFilePaths = listdir(self.userFileDirectory)
