@@ -16,7 +16,8 @@ function setDashboardDate(selectedDate) {
 	//Reset content
 	$(".metrics.table").html(metricsTableMarkup);
 	percents = [];
-	overviewPercent(0);
+	setOverview(0);
+	
 
 	//Get user data
 	var loggedInUserData = getUserData(loggedInUserName, loggedInUserMetrics, selectedDate);
@@ -65,7 +66,7 @@ function setDashboardDate(selectedDate) {
 		}
 
 		//Set overview percentage
-		overviewPercent(arrayAverage(percents));
+		setOverview(arrayAverage(percents));
 
 	});
 }
