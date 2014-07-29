@@ -63,6 +63,7 @@
         '</a></li>'];
 
       var userCreateURLTemplate = 'http://vps.ritwikd.com:8081/winstonsmith?type=create&fullname=';
+      var userDeleteURLTemplate = ['http://vps.ritwikd.com:8081/', '?type=delete'];
 
       var userCreateURL = "";
       var userCreateUsername = "";
@@ -73,7 +74,7 @@
           async: false
       }).responseText);
 
-      var userDeletedURL = "";
+      var userDeleteURL = "";
       var userDeleteUsername = "";
       var deleteUserTemplate = ['<div class="selectbox"><select>','</div>'];
 
@@ -103,8 +104,7 @@
             return userCreateUsername = userCreateRequestName;
           },
           afterClose: function() {
-            userCreateURL = makeCreateUserRequest(userCreateUsername);
-            console.log(userCreateURL);
+            makeCreateUserRequest(userCreateUsername);
           }
         });
       };
@@ -114,11 +114,10 @@
           message: 'Select a user to delete:',
           input: deleteUserTemplate[0] + deleteUserTemplate[1],
           callback: function(data) {
-            return console.log($(".selectbox option:selected").attr('data-username'))
+            return userDeleteUsername = $(".selectbox option:selected").attr('data-username')
           }, 
           afterClose: function() {
-              userDeletesURL = makeDeleteUSerRequest(userCreateUsername);
-              console.log(userCreateURL);
+              makeDeleteUserRequest(userDeleteUsername);
           }
         });
 
@@ -132,19 +131,19 @@
         userCreateURL = userCreateURLTemplate +
             userCreateUsername;
 
-        var test = $.ajax({
+        var userCreateUserRequest = $.ajax({
           type: "GET", 
           url : userCreateURL, 
           async : false
         }).responseText;
 
-        $(".dropdown-menu").html('<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">');
-         var userList = $.parseJSON($.ajax({
+        var userList = $.parseJSON($.ajax({
             type: "GET",
             url: "http://vps.ritwikd.com:8081/winstonsmith?type=users",
             async: false
         }).responseText);
 
+        $(".dropdown-menu").html('<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">');
         deleteUserTemplate = ['<div class="selectbox"><select>','</div>'];
 
         $.each(userList, function(userName) {
@@ -152,13 +151,52 @@
               userName + userLinkTemplate[1] + 
               userList[userName] + userLinkTemplate[2]
             );
-
-
-            deleteUserTemplate[0] += '<option value="' +
-              userName + '">' +
-              userList[userName] + '</option>';
+          deleteUserTemplate[0] += '<option data-username="' +
+          userName + '">' +
+          userList[userName] + '</option>';
         });
 
+        $(".link").on('click', function()  {
+          localStorage.setItem('username', $(this).attr('data-user'));
+          window.location = "dash.html";
+        });
+
+      }
+
+      function makeDeleteUserRequest(userDeleteUsername) {
+        userDeleteURL = userDeleteURLTemplate[0] + 
+            userDeleteUsername + 
+            userDeleteURLTemplate[1];
+        
+        var userCreateDeleteRequest = $.ajax({
+          type: "GET", 
+          url : userDeleteURL, 
+          async : false
+        }).responseText;
+
+        var userList = $.parseJSON($.ajax({
+            type: "GET",
+            url: "http://vps.ritwikd.com:8081/winstonsmith?type=users",
+            async: false
+        }).responseText);
+
+        $(".dropdown-menu").html('<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">');
+        deleteUserTemplate = ['<div class="selectbox"><select>','</div>'];
+
+        $.each(userList, function(userName) {
+          $(".dropdown-menu").append( userLinkTemplate[0] + 
+              userName + userLinkTemplate[1] + 
+              userList[userName] + userLinkTemplate[2]
+            );
+          deleteUserTemplate[0] += '<option data-username="' +
+          userName + '">' +
+          userList[userName] + '</option>';
+        });
+
+        $(".link").on('click', function()  {
+          localStorage.setItem('username', $(this).attr('data-user'));
+          window.location = "dash.html";
+        });
 
       }
 
