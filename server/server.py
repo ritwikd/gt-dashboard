@@ -3,7 +3,7 @@ from functools import update_wrapper
 from time import strftime as gtime
 from pymongo import MongoClient
 from datetime import timedelta
-import requests, sensor_data, json, users
+import requests, sensor_data, json, user
 
 #Flask provided cross-domain request stuff
 def crossdomain(origin=None, methods=None, headers=None,
@@ -80,7 +80,7 @@ def getDate(userRequestUsername):
 		userReturnInfo[userRequestItem['username']] = userRequestItem['name']
         return json.dumps(userReturnInfo)
     elif request.args.get('type') == 'create':
-	createNewUserInstance = newUserLib(userRequestUsername, userDataBase)
+	createNewUserInstance = user.newUserLib(userRequestUsername, userDataBase)
 	createNewUserInstance.createUser()
     else:
         return 'Request type not recognized.'

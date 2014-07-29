@@ -1,7 +1,7 @@
 from calendar import timegm as epochTime
 from time import gmtime as epochFirst
 
-class newUserLib
+class newUserLib:
 	def __init__(self, newUserUsername, databaseUserCollection):
 		self.newUserUsername = newUserUsername + epochTime(epochFirst)
 
