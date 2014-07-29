@@ -81,9 +81,17 @@ def getDate(userRequestUsername):
 		userReturnInfo[userRequestItem['username']] = userRequestItem['name']
         return json.dumps(userReturnInfo)
     elif request.args.get('type') == 'create':
-	createNewUserInstance = user.newUserLib(userRequestUsername, unquote(request.args.get("fullname")), databaseUserCollection)
-	createNewUserInstance.createUser()
-	return "Created user successfully."
+	newUserFullname = unquote(request.args.get('fullname'))
+	newUserSleep = request.args.get('sleep')
+	newUserMotion = request.args.get('motion')
+	createNewUserInstance = user.newUserLib(userRequestUsername, newUserFullname, newUserSleep, newUserMotion, databaseUserCollection)
+	createdNewUser = createNewUserInstance.createUser()
+	sensor_data.writeData(createdNewUser, userDataBase)
+	return 'Created user successfully.'
+    elif request.args.get('type') == 'delete':
+	deleteUserInstance = user.deleteUserLib(userRequestUsername, databaseUserCollection)
+	deleteUserInstance.deleteUser()
+	return 'Deleted user successfully.'
     else:
         return 'Request type not recognized.'
 
@@ -91,5 +99,5 @@ if __name__ == '__main__':
     #Start automatically data
     autoWriteDataInstance = sensor_data.autoWriteDataLib(databaseUserCollection, userDataBase, 10)
     autoWriteDataInstance.runAutoLog()
-    print "Started automated data logging." 
+    print 'Started automated data logging.' 
     app.run(host='0.0.0.0', port=8081, debug=True)

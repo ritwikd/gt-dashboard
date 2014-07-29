@@ -63,7 +63,7 @@ def writeData(givenUser, userDataBase):
 def writeAllUserData(databaseUserCollection, userDataBase):
 	autoWriteDataLogHandler = open("auto.log", "a")
 	for currentUser in databaseUserCollection.find():
-		autoWriteDataLogHandler.write("Logging data for " + currentUser['username'] + " on " + getFormattedTime("%Y%m%d") + " at " + getFormattedTime("%H%M%S") + ".\n")
+		autoWriteDataLogHandler.write("Logging data for " + currentUser['username'] + " on " + getFormattedTime("%Y%m%d") + " at " + getFormattedTime("%H:%M:%S") + ".\n")
 		writeData(currentUser, userDataBase)
 	autoWriteDataLogHandler.close()
 

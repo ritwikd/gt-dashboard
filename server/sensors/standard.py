@@ -19,7 +19,7 @@ class singleNumberLib:
 		userFileData = ""; 
 		userFilePaths = listdir(self.userFileDirectory)
 		if len(userFilePaths) == 0:
-			return userFileData
+			return 'null'
 		userFilePath = userFilePaths[0]
 		userFileData = eval(open(self.userFileDirectory + "/" + userFilePath, "r").read().strip())
 		return userFileData
@@ -32,7 +32,7 @@ class multipleNumberLib:
 		userFileDataPoints = []
 		userFilePaths = listdir(self.userFileDirectory)
 		if len(userFilePaths) == 0:
-			return userFileDataPoints
+			return 'null'
 		userFilePath = userFilePaths[0]
 		userFileData = open(self.userFileDirectory + "/" + userFilePath, "r").read()
 		userFileDataPoints = [eval(number.strip()) for number in userFileData.splitlines()]
@@ -46,6 +46,8 @@ class pictureFileLib:
 		userFilePaths = listdir(self.userFileDirectory)
 		userFileData = []
 		userFileFileHandler = None;
+		if len(userFilePaths) == 0:
+			return 'null'
 		for userFilePath in userFilePaths:
 			userFileFileHandler = open(self.userFileDirectory + "/" + userFilePath, "r")
 			userFileData.append(userFileFileHandler.read().encode("base64"))
