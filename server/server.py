@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from datetime import timedelta
 import requests, sensor_data, json
 
+#Flask provided cross-domain request stuff
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
                 automatic_options=True):
@@ -49,6 +50,8 @@ app = Flask(__name__)
 userDataBase = MongoClient('localhost', 27017)['data']
 databaseUserCollection = userDataBase['users']
 
+
+#Main handler
 @app.errorhandler(404)
 @app.route('/<userRequestUsername>')
 @crossdomain(origin='*')
@@ -63,6 +66,7 @@ def getDate(userRequestUsername):
             return json.dumps(userRequestUser)
 
     elif request.args.get('type') == 'data':
+        #Get data from DB
         userRequestMetric = request.args.get('metric')
         currentServerDate = request.args.get('date')
         userRequestData = userDataBase[userRequestMetric].find_one({'metric' : userRequestMetric, 'username' : userRequestUsername, 'date': eval(currentServerDate)})
@@ -79,6 +83,7 @@ def getDate(userRequestUsername):
         return 'Request type not recognized.'
 
 if __name__ == '__main__':
+    #Start automatically data
     autoWriteDataInstance = sensor_data.autoWriteDataLib(databaseUserCollection, userDataBase, 10)
     autoWriteDataInstance.runAutoLog()
     print "Started automated data logging." 
