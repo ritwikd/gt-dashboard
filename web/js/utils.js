@@ -90,14 +90,9 @@ function respChart(selector, data) {
 }
 
 function setOverview(percent) {
-    console.log(percent);
-    $(".overview.progress.fill").css("width", percent.toString() + "%");
-    
-    if (percent > 0 && percent < 101) {
-        $(".overview.progress.number").text(percent.toString() + "%");
-    }  else {
-        $(".overview.progress.number").text("");
-    }
+    $(".overview.progress.fill").css("width", (percent > 100) ? "100%" : percent.toString() + "%");
+
+    $(".overview.progress.number").text( (percent > 0) ?  percent.toString() + "%"  : "" );
     
 }
 

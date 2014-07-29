@@ -1,6 +1,7 @@
 var loggedInUserName = localStorage.getItem('username');
 var loggedInUser = getUser(loggedInUserName);
-var loggedInUserMetrics = loggedInUser.metrics;
+var loggedInUserFullname = loggedInUser['name'];
+var loggedInUserMetrics = loggedInUser['metrics'];
 
 var metricsTableMarkup = '<table class="metrics table"> <tr class="metrics section title container"> <td> <div class="metrics section title">Metrics</div> </td> </tr> </table>';
 
@@ -89,3 +90,5 @@ $(".date.element").on('click', function() {
 //Set first date as selected date
 $('*[data-date="' + currentDateString + '"]').attr("class", "date element selected");
 setDashboardDate(currentDateString);
+
+$(".name").text(loggedInUserFullname);

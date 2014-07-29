@@ -21,6 +21,7 @@ function addPercentMetric(metricName, metricDescription, metricPercent) {
 
     function setPercent(metricName, metricPercent) {
         $(".metrics.element.percent." + metricName).text(metricPercent.toString() + "%");
+        metricPercent = (metricPercent > 100) ? 100 : metricPercent;
         $(".metrics.element.fill." + metricName).animate({
             "width": metricPercent.toString() + "%"
         }, 250);
