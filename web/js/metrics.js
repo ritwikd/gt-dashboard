@@ -68,7 +68,6 @@ function addGraphMetric(metricName, metricDescription, metricArray) {
                         data : metricArray
                     }
         chartData['datasets'].push(graphData);
-        console.log(chartData);
         respChart($(".ctx." + metricName), chartData);
     }
 

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -62,7 +61,7 @@
         '" role="menuitem" tabindex="-1" href="#" onclick="javascript: dash(this);">',
         '</a></li>'];
 
-      var userCreateURLTemplate = 'http://vps.ritwikd.com:8081/winstonsmith?type=create&fullname=';
+      var userCreateURLTemplate = ['http://vps.ritwikd.com:8081/winstonsmith?type=create&fullname=', '&sleep=', '&motion='];
       var userDeleteURLTemplate = ['http://vps.ritwikd.com:8081/', '?type=delete'];
 
       var userCreateURL = "";
@@ -77,6 +76,8 @@
       var userDeleteURL = "";
       var userDeleteUsername = "";
       var deleteUserTemplate = ['<div class="selectbox"><select>','</div>'];
+
+      var addUserResponses = ['', '', ''];
 
 
       $.each(userList, function(userName) {
@@ -97,24 +98,60 @@
       vex.defaultOptions.className = 'vex-theme-os';
 
       function addUser() {
+
         vex.dialog.prompt({
-          message: 'Enter full name for new user:',
+          message: 'Enter name for new user:',
           placeholder: 'Winston Smith',
-          callback: function(userCreateRequestName) {
-            return userCreateUsername = userCreateRequestName;
-          },
-          afterClose: function() {
-            makeCreateUserRequest(userCreateUsername);
+          callback: function(userNameData) {
+            if (userNameData === false) {
+              return null
+            } else {
+
+              vex.dialog.prompt({
+                message: 'Enter target for sleep (hours):',
+                placeholder: '8',
+                callback: function(userSleepData) {
+                  if (userSleepData === false) {
+                    return null
+                  } else {
+
+                    vex.dialog.prompt({
+                      message: 'Enter target for motion (steps):',
+                      placeholder: '500',
+                      callback: function(userMotionData) {
+                        if (userMotionData === false) {
+                          return null
+                        } else {
+                          return addUserResponses[2] = userMotionData;
+                        }
+                      },
+                      afterClose : function() {
+                        makeCreateUserRequest(addUserResponses)
+                      }
+                    });
+
+                    return addUserResponses[1] = userSleepData;
+                  }
+                }
+              });
+
+              return addUserResponses[0] = userNameData;
+            }
           }
         });
-      };
+           
+      }
 
       function deleteUser() {
         vex.dialog.open({
           message: 'Select a user to delete:',
           input: deleteUserTemplate[0] + deleteUserTemplate[1],
           callback: function(data) {
-            return userDeleteUsername = $(".selectbox option:selected").attr('data-username')
+            if (data === false) {
+              return null
+            } else {
+              return userDeleteUsername = $(".selectbox option:selected").attr('data-username')
+            }
           }, 
           afterClose: function() {
               makeDeleteUserRequest(userDeleteUsername);
@@ -125,11 +162,13 @@
 
       }
 
-      function makeCreateUserRequest(userCreateUsername) {
-        userCreateUsername = userCreateUsername.replace(" ", "%20").replace(".", "%2E");
-        userCreateUsername = userCreateUsername.replace("-", "%2D");
-        userCreateURL = userCreateURLTemplate +
-            userCreateUsername;
+      function makeCreateUserRequest(userCreateResponses) {
+        userCreateResponses[0] = userCreateResponses[0].replace(" ", "%20").replace(".", "%2E");
+        userCreateResponses[0] = userCreateResponses[0].replace("-", "%2D");
+        userCreateURL = userCreateURLTemplate[0] +
+            userCreateResponses[0] + userCreateURLTemplate[1] +
+            userCreateResponses[1] + userCreateURLTemplate[2] +
+            userCreateResponses[2];
 
         var userCreateUserRequest = $.ajax({
           type: "GET", 

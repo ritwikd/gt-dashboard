@@ -20,15 +20,31 @@ function setDashboardDate(selectedDate) {
 	setOverview(0);
 	
 
+
 	//Get user data
 	var loggedInUserData = getUserData(loggedInUserName, loggedInUserMetrics, selectedDate);
 
-	//Iterate through data
-	$.each(loggedInUserMetrics, function(requestedMetric) {
-		var tempDescription = "";
-		var requestedMetricFormat = loggedInUserMetrics[requestedMetric]['format'];
+	var userMetricsArray = [];
+	var tempMetricObj =  {};
+	var requestedMetric  = "";
 
-		//Check if data is available
+	$.each(loggedInUserMetrics, function (currentMetric) {
+		tempMetricObj = loggedInUserMetrics[currentMetric];
+		tempMetricObj['metric'] = currentMetric;
+		userMetricsArray.push(tempMetricObj);
+	});
+
+	userMetricsArray = userMetricsArray.sort(function (a,b) { return (a.order - b.order); });
+
+	//Iterate through data
+
+	for (var i = 0; i < userMetricsArray.length; i++) {
+
+		requestedMetric = userMetricsArray[i]['metric'];
+		console.log(requestedMetric);
+		var tempDescription = "";
+		var requestedMetricFormat = userMetricsArray[i]['format'];
+
 		if (loggedInUserData[requestedMetric] == 'null')  {
 			//Display error fallback
 			addRawMetric(requestedMetric, "Data not available.", "");
@@ -43,8 +59,8 @@ function setDashboardDate(selectedDate) {
 						' out of ' + requestedMetricFormat[1] + ' ' + 
 						requestedMetricFormat[2] + '.';
 
-					requestedMetricPercent = 100 * loggedInUserData[requestedMetric] /
-						requestedMetricFormat[1];
+					requestedMetricPercent = Math.round(100 * loggedInUserData[requestedMetric] /
+						requestedMetricFormat[1]);
 
 					//Add to array to determine final percentage
 					percents.push(requestedMetricPercent);
@@ -75,7 +91,7 @@ function setDashboardDate(selectedDate) {
 		//Set overview percentage
 		setOverview(arrayAverage(percents));
 
-	});
+	}
 }
 
 //Getting current date for first initialization
