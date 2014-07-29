@@ -32,6 +32,51 @@ function addPercentMetric(metricName, metricDescription, metricPercent) {
     setPercent(metricName, metricPercent);
 }
 
+function addGraphMetric(metricName, metricDescription, metricArray) {
+    function genGraphMarkup(metricName, metricDescription) {
+        var metricMarkupTemplate = ['<tr class="metrics element container" data-metric="',
+            '"><td class="metrics element info"><div class="metrics element title">',
+            '</div> <div class="metrics element description">',
+            '</div></td><td class="metrics element graph"><canvas class="metrics element ctx ',
+            '"></canvas></td></tr>'];
+
+        var metString = metricMarkupTemplate[0] + metricName +
+            metricMarkupTemplate[1] + metricName + metricMarkupTemplate[2] +
+            metricDescription + metricMarkupTemplate[3] +
+            metricName + metricMarkupTemplate[4];
+        return metString;
+    }
+
+    function setGraph(metricName, metricArray) {
+
+        var chartData = { labels : [], datasets : []};
+        metricArrayNum = [];
+
+        for (var i = 0; i < metricArray.length; i++) {
+            metricArrayNum = parseFloat(metricArray[i]);
+            chartData['labels'].push("");
+        }
+
+        graphData =  {
+                        fillColor: 'rgba(31, 162, 222, 0.2)',
+                        label: "My First dataset",
+                        pointColor: 'rgba(31, 162, 222, 0.2)',
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: 'rgba(31, 162, 222, 0.2)',
+                        pointStrokeColor: "#fff",
+                        strokeColor: "rgba(220,220,220,1)",
+                        data : metricArray
+                    }
+        chartData['datasets'].push(graphData);
+        console.log(chartData);
+        respChart($(".ctx." + metricName), chartData);
+    }
+
+    var generatedMetric = genGraphMarkup(metricName, metricDescription);
+    $(".metrics.table").append(generatedMetric);
+    setGraph(metricName, metricArray);
+}
+
 function addPhotoMetric(metricName, metricDescription, metricPhotos) {
 
     function genPhotoMarkup(metricName, metricDescription) {
@@ -46,7 +91,7 @@ function addPhotoMetric(metricName, metricDescription, metricPhotos) {
             metricDescription + metricMarkupTemplate[3] +
             metricName + metricMarkupTemplate[4];
         return metString;
-    };
+    }
 
     function setImages(metricName, metricPhotos) {
         var imageMarkupTemplate = ['<a class="element fancybox" rel="group" href="data:image/png;base64,',
@@ -84,12 +129,14 @@ function addRawMetric(metricName, metricDescription, metricData) {
             '">',
             '</div></td></tr>'
         ];
+
         var metString = metricMarkupTemplate[0] + metricName +
             metricMarkupTemplate[1] + metricName + metricMarkupTemplate[2] +
             metricDescription + metricMarkupTemplate[3] +
             metricName + metricMarkupTemplate[4] + metricData + metricMarkupTemplate[5];
         return metString;
-    };
+    }
+
     var generatedMetric = genRawMarkup(metricName, metricDescription, metricData);
     $(".metrics.table").append(generatedMetric);
 }

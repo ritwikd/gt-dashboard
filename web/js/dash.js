@@ -63,6 +63,12 @@ function setDashboardDate(selectedDate) {
 				case "raw":
 					addRawMetric(requestedMetric, "", loggedInUserData[requestedMetric]);
 					break;
+
+				case "graph":
+					addGraphMetric(requestedMetric, 
+						(requestedMetric == "weather") ? "Hourly Temperatures (&deg;C)." : "",
+						loggedInUserData[requestedMetric]);
+					break;
 			}
 		}
 

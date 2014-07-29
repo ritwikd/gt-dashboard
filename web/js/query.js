@@ -244,6 +244,7 @@ function drawGraph (graphUserData) {
 	})
 
 	//Render chart
+	console.log(chartData);
 	respChart($(".metchart"), chartData);
 }
 
