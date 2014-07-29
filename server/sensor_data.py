@@ -22,22 +22,18 @@ def writeData(givenUser, userDataBase):
 		fileData = ""
 
 		if userMetricsList[metric]['format'][0] == 'percentage':
-			print "Inserting percentage."
 			fileDataObject = standard.singleNumberLib(filePath)
 			fileData = fileDataObject.getFileData()				
 
 		elif userMetricsList[metric]['format'][0] == 'graph':
-			print "Inserting graph."
 			fileDataObject = standard.multipleNumberLib(filePath)
 			fileData = fileDataObject.getFileData()				
 
 		elif userMetricsList[metric]['format'][0] == 'raw':
-			print "Inserting raw."
 			fileDataObject = standard.rawFileLib(filePath)
 			fileData = fileDataObject.getFileData()				
 
 		elif userMetricsList[metric]['format'][0] == 'picture':
-			print "Inserting pictures."
 			fileDataObject = standard.pictureFileLib(filePath)
 			fileData = fileDataObject.getFileData()				
 		
