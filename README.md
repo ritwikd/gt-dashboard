@@ -25,14 +25,14 @@ All of these are started and stopped by the **"run"** file in the root directory
 
 To start the various applications, type:
 
-```zsh
-user :: ~/gt-dashboard <master)> >> ./run start
+```shell
+user@machine:~/gt-dashboard# ./run start
 ```
 
 To stop everything (additional checking may be required), type:
 
-```zsh
-user :: ~/gt-dashboard <master)> >> ./run stop
+```shell
+user@machine:~/gt-dashboard# ./run stop
 ```
 Documentation
 ------------
