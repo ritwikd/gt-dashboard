@@ -8,12 +8,10 @@
     <meta name="author" content="">
 
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.css">
     <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="web/css/index.css">
     <link rel="stylesheet" type="text/css" href="web/css/vex.css">
     <link rel="stylesheet" type="text/css" href="web/css/vex-theme-os.css">
-    <link rel="stylesheet" type="text/css" href="web/css/select-theme-default.css">
     <style type="text/css">
 
     </style>   
@@ -27,14 +25,10 @@
     </div>
     
     <div class = "sel">
-      <div class="inst">
+      <div class="inst" onclick="javascript: openLoginPrompt();">
         Login
       </div>
       <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-          Choose user
-          <span class="caret"></span>
-        </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         </ul>
       </div>
@@ -52,14 +46,16 @@
     </div>
     
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="web/js/vex.combined.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
     <script src="web/js/select.min.js"></script>
+    <script src="web/js/vex.combined.min.js"></script>
     <script type="text/javascript">
 
-      var userLinkTemplate = ['<li role="presentation"><a class = "link" data-user="',
-        '" role="menuitem" tabindex="-1" href="#" onclick="javascript: dash(this);">',
-        '</a></li>'];
+      var userLinkTemplate = [' <div class="user item" data-username="',
+          '">',
+          '</div>'];
+
+      var userSelectionTemplate = ['<div class="user select">', '</div>'];
 
       var userCreateURLTemplate = ['http://vps.ritwikd.com:8081/winstonsmith?type=create&fullname=', '&sleep=', '&motion='];
       var userDeleteURLTemplate = ['http://vps.ritwikd.com:8081/', '?type=delete'];
@@ -75,27 +71,68 @@
 
       var userDeleteURL = "";
       var userDeleteUsername = "";
-      var deleteUserTemplate = ['<div class="selectbox"><select>','</div>'];
+      var deleteUserTemplate = ['<div class="delete-select-box">','</div>'];
 
       var addUserResponses = ['', '', ''];
 
+      var currentLoginUsername = "";
+      var currentDeleteUsername = "";
+
+      vex.defaultOptions.className = 'vex-theme-os';
 
       $.each(userList, function(userName) {
-        $(".dropdown-menu").append( userLinkTemplate[0] + 
+        userSelectionTemplate[0] += ( userLinkTemplate[0] + 
             userName + userLinkTemplate[1] + 
             userList[userName] + userLinkTemplate[2]
           );
-        deleteUserTemplate[0] += '<option data-username="' +
+        deleteUserTemplate[0] += '<div class="delete item" data-username="' +
           userName + '">' +
-          userList[userName] + '</option>';
+          userList[userName] + '</div>';
       });
 
-      $(".link").on('click', function()  {
-          localStorage.setItem('username', $(this).attr('data-user'));
-          window.location = "dash.html";
+
+      function openLoginPrompt() {
+
+        var okToLogin = false;
+
+        vex.dialog.open({
+            overlayClosesOnClick : false,
+            escapeButtonCloses : false,
+            message: 'Select user:',
+            input: userSelectionTemplate[0] + userSelectionTemplate[1],
+              buttons: [
+                $.extend({}, vex.dialog.buttons.YES, {
+                  text: 'Login'
+                })
+              ],
+            callback: function(data) {
+              if (data === false) {
+                return null
+              } else {
+                return okToLogin = true;
+              }
+            }, 
+            afterClose: function() {
+                if (okToLogin) {
+                  localStorage.setItem('username',currentLoginUsername);
+                  window.location = "dash.html";
+                }
+            }
+          });
+
+        $(".user.item").on('click', function() {
+          $(".user.item").css("border", "3px solid #CCC");
+          $(this).css("border", "3px solid #489AF7");
+          $(".user.item").attr("class", "user item");
+          $(this).attr("class", "user item selected");
+          currentLoginUsername = $(this).attr("data-username");
         });
 
-      vex.defaultOptions.className = 'vex-theme-os';
+        $($(".user.item")[0]).css("border", "3px solid #489AF7");
+        $($(".user.item")[0]).attr("class", "user item selected");
+        currentLoginUsername = $($(".user.item")[0]).attr("data-username");
+
+      }
 
       function addUser() {
 
@@ -143,22 +180,47 @@
       }
 
       function deleteUser() {
+
+        var okToDelete = false;
+
         vex.dialog.open({
-          message: 'Select a user to delete:',
-          input: deleteUserTemplate[0] + deleteUserTemplate[1],
-          callback: function(data) {
-            if (data === false) {
-              return null
-            } else {
-              return userDeleteUsername = $(".selectbox option:selected").attr('data-username')
+            overlayClosesOnClick : false,
+            escapeButtonCloses : false,
+            message: 'Select a user to delete:',
+            input: userSelectionTemplate[0] + userSelectionTemplate[1],
+              buttons: [
+                $.extend({}, vex.dialog.buttons.YES, {
+                  text: 'Delete'
+                })
+              ],
+            callback: function(data) {
+              if (data === false) {
+                return null
+              } else {
+                return okToDelete = true;
+              }
+            }, 
+            afterClose: function() {
+              if (okToDelete) {
+                makeDeleteUserRequest(currentDeleteUsername);
+              }  else {
+                $(".user.item").css("border", "3px solid #CCC");
+                $(".user.item").attr("class", "user item");
+              }
             }
-          }, 
-          afterClose: function() {
-              makeDeleteUserRequest(userDeleteUsername);
-          }
+          });
+
+        $(".user.item").on('click', function() {
+          $(".user.item").css("border", "3px solid #CCC");
+          $(this).css("border", "3px solid #489AF7");
+          $(".user.item").attr("class", "user item");
+          $(this).attr("class", "user item selected");
+          currentDeleteUsername = $(this).attr("data-username");
         });
 
-        Select.init();
+        $($(".user.item")[0]).css("border", "3px solid #489AF7");
+        $($(".user.item")[0]).attr("class", "user item selected");
+        currentDeleteUsername = $($(".user.item")[0]).attr("data-username");
 
       }
 
@@ -182,22 +244,18 @@
             async: false
         }).responseText);
 
-        $(".dropdown-menu").html('<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">');
-        deleteUserTemplate = ['<div class="selectbox"><select>','</div>'];
+        $(".dropdown-menu").remove("*");
+
+        userSelectionTemplate = ['<div class="user select">', '</div>'];
 
         $.each(userList, function(userName) {
-          $(".dropdown-menu").append( userLinkTemplate[0] + 
+          userSelectionTemplate[0] += ( userLinkTemplate[0] + 
               userName + userLinkTemplate[1] + 
               userList[userName] + userLinkTemplate[2]
             );
-          deleteUserTemplate[0] += '<option data-username="' +
-          userName + '">' +
-          userList[userName] + '</option>';
-        });
-
-        $(".link").on('click', function()  {
-          localStorage.setItem('username', $(this).attr('data-user'));
-          window.location = "dash.html";
+          deleteUserTemplate[0] += '<div class="delete item" data-username="' +
+            userName + '">' +
+            userList[userName] + '</div>';
         });
 
       }
@@ -219,22 +277,16 @@
             async: false
         }).responseText);
 
-        $(".dropdown-menu").html('<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">');
-        deleteUserTemplate = ['<div class="selectbox"><select>','</div>'];
+        userSelectionTemplate = ['<div class="user select">', '</div>'];
 
         $.each(userList, function(userName) {
-          $(".dropdown-menu").append( userLinkTemplate[0] + 
+          userSelectionTemplate[0] += ( userLinkTemplate[0] + 
               userName + userLinkTemplate[1] + 
               userList[userName] + userLinkTemplate[2]
             );
-          deleteUserTemplate[0] += '<option data-username="' +
-          userName + '">' +
-          userList[userName] + '</option>';
-        });
-
-        $(".link").on('click', function()  {
-          localStorage.setItem('username', $(this).attr('data-user'));
-          window.location = "dash.html";
+          deleteUserTemplate[0] += '<div class="delete item" data-username="' +
+            userName + '">' +
+            userList[userName] + '</div>';
         });
 
       }
