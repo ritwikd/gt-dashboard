@@ -25,13 +25,13 @@ All of these are started and stopped by the **"run"** file in the root directory
 
 To start the various applications, type:
 
-```shell
+```bash
 user@machine:~/gt-dashboard# ./run start
 ```
 
 To stop everything (additional checking may be required), type:
 
-```shell
+```bash
 user@machine:~/gt-dashboard# ./run stop
 ```
 Documentation
