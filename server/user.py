@@ -29,4 +29,3 @@ class deleteUserLib:
 		deleteKey = { 'username' : self.deleteUserUsername }
 		if (self.dataBaseUserCollection.find_one(deleteKey) != None):
 			self.dataBaseUserCollection.remove(deleteKey)
-
