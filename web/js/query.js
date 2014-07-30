@@ -48,7 +48,6 @@ function respChart(selector, data) {
 	function generateChart() {
 
         var ww = selector.attr('width', $(container).width());
-        var hh = selector.attr('height', $(container).height());
         new Chart(ctx).Line(data, option);
     };
 
@@ -120,141 +119,96 @@ function getSelection () {
 	
 }
 
-function getGraphData(selectionInformation) {
+function makeGraph(selectionInformation) {
+
 
 	beforePickedDate = selectionInformation[0];
 	afterPickedDate = selectionInformation[1];
 	selectedMetrics = selectionInformation[2];
+	var metDesc = "";
+	var graphTemplate = ['<div class="metholder ',
+		'"><div  class="mettitle ',
+		'">',
+		'</div><div class="metdesc ',
+		'">',
+		'</div><br><canvas class="metchart ',
+		'"></canvas></div>'];
 
 	requestedDates = [beforePickedDate];
-	graphUserData = {};
-	chartData = { labels: [], datasets: []};
+	graphArr = [];
+	chartArr = [];
+
 
 
 	//Add dates to labels
 	for (var i = 1; i < (afterPickedDate - beforePickedDate + 1); i++) {
 		requestedDates.push(beforePickedDate + i);
-		chartData.labels.push((beforePickedDate + i).toString());
 	}
 
-
-	//Add actual data to object
 	for (var i = 0; i < selectedMetrics.length; i++) {
-
-		finalGraphValue = 0;
-		graphUserData[selectedMetrics[i]] = [];
+		var chartData =  { 
+			labels : [],
+            datasets : [ {
+            	fillColor: 'rgba(31, 162, 222, 0.5)',
+                label: "My First dataset",
+                pointColor: 'rgba(31, 162, 222, 0.5)',
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: 'rgba(31, 162, 222, 0.5)',
+                pointStrokeColor: "#fff",
+                strokeColor: "rgba(220,220,220,1)",
+                data : []
+            }]
+        };
 
 		for (var j = 0; j < requestedDates.length; j++) {
-
-			dataRequestTempURL = returnedDataTemplate[0] + selectedMetrics[i] + returnedDataTemplate[1] + requestedDates[j];
-			userMetricData = getJSON(dataRequestTempURL);
-			if (userMetricData['value'] != "null") {
-
-				//Process data as necessary				
-				switch (requestedUser['metrics'][selectedMetrics[i]]['format'][0]) {
-					case 'percentage' :
-						finalGraphValue = userMetricData['value'];
-						break;
-					case 'graph':
-						for (var k = 0; k < userMetricData['value'].length; k++) {
-							finalGraphValue += eval(userMetricData['value'][k]);
+			chartData['labels'].push(requestedDates[j]);
+			var dataTemplate =  "http://vps.ritwikd.com:8081/" + requestedUserName + '?type=data&date=' + requestedDates[j] + '&metric='  + selectedMetrics[i];
+			var returnedValue = getJSON(dataTemplate)['value'];
+			switch (requestedUserMetrics[selectedMetrics[i]]['format'][0]) {
+				case 'percentage':
+					if (returnedValue === 'null') {
+						chartData['datasets'][0]['data'].push(0);
+					} else {
+						chartData['datasets'][0]['data'].push(eval(returnedValue));
+					}
+					metDesc = requestedUserMetrics[selectedMetrics[i]]['format']['2'];
+					break;
+				case 'graph':
+					if (returnedValue === 'null') {
+						chartData['datasets'][0]['data'].push(0);
+					} else {
+						var finalNum = 0;
+						for (var k = 0; k < returnedValue.length; k++) {
+							finalNum += eval(returnedValue[k]);
 						}
-						finalGraphValue /= userMetricData['value'].length;
-
-				}
-			} else {
-
-				finalGraphValue = 0;
+						finalNum /= returnedValue.length;
+						chartData['datasets'][0]['data'].push(finalNum);
+					}	
+					metDesc = requestedUserMetrics[selectedMetrics[i]]['format']['1'];
 			}
-
-			//Add data to object
-			graphUserData[selectedMetrics[i]].push(finalGraphValue);
-
 		}
+
+		$(".graph-container").append(graphTemplate[0] + selectedMetrics[i] + 
+			graphTemplate[1] + selectedMetrics[i] + 
+			graphTemplate[2] + selectedMetrics[i] + 
+			graphTemplate[3] + selectedMetrics[i] + 
+			graphTemplate[4] + metDesc + 
+			graphTemplate[5] + selectedMetrics[i] + 
+			graphTemplate[6]);
+
+		respChart($(".metchart." + selectedMetrics[i]), chartData);
 	}
 
-	return graphUserData
-
 }
-
-
-function drawGraph (graphUserData) {
-
-	requestedDates = [];
-	selectedMetrics = [];
-	currentlyUsedColors = [];
-	currentlySelectedColors = {};
-	colorIndex = 0; 
-
-	//Add data to chart and randomly pick a color
-	$.each(graphUserData, function(tempUserMetric) {
-
-		var colors = ['rgba(31, 162, 222, 0.5)', 
-						'rgba(224, 67, 67, 0.5)', 
-						'rgba(171, 75, 219, 0.5)', 
-						'rgba(75, 219, 113, 0.5)',
-						'rgba(255, 174, 82, 0.5)'];
-		color = colors[colorIndex];
-
-		if (currentlyUsedColors.indexOf(color) != -1) {
-			while(currentlyUsedColors.indexOf(color) != -1) {
-				colorIndex++;
-				color = colors[colorIndex];
-			}
-		} 
-
-		currentlyUsedColors.push(color);
-		currentlySelectedColors[tempUserMetric] = color;
-		chartData.datasets.push(
-			{
-				fillColor: color,
-				label: "My First dataset",
-				pointColor: color,
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: color,
-				pointStrokeColor: "#fff",
-				strokeColor: "rgba(220,220,220,1)",
-				data : graphUserData[tempUserMetric]
-			}
-		);
-	});
-
-	//Add legend info 
-	$(".graph-legend-container").append('<div class="graph-legend"> <table class="graph-table"> </table> </div>');
-	$(".graph-table").html('<table class="graph-table"> </table>');
-
-	$.each(currentlySelectedColors, function(legendKeyMetric) {
-
-		switch (requestedUserMetrics[legendKeyMetric]['format'][0]) {
-			case 'percentage' : 
-				legendUnit = requestedUserMetrics[legendKeyMetric]['format'][2];
-				break;
-			case 'graph' :
-				legendUnit = requestedUserMetrics[legendKeyMetric]['format'][1];
-				break;
-		}
-
-		//Add item to legen
-		currentLegendColor = currentlySelectedColors[legendKeyMetric].split("(")[1].slice(0, -6);
-		legendItem = legendTemplate[0] + "rgb(" + currentLegendColor +
-			")" + legendTemplate[1] + legendKeyMetric + 
-			" (" + legendUnit + legendTemplate[2];
-
-		$(".graph-table").append(legendItem);
-	})
-
-	//Render chart
-	console.log(chartData);
-	respChart($(".metchart"), chartData);
-}
-
 
 function getQuery() {
+	Pace.restart();
 	//Run all components
+	$(".graph-container").html('');
+	selectedMetrics = [];
 	selectionInformation = getSelection();
 	if (selectionInformation != null) {
-		graphUserData = getGraphData(selectionInformation);
-		drawGraph(graphUserData);
+		makeGraph(selectionInformation);
 	}
 }
 
@@ -318,13 +272,17 @@ var afterDate = $("#afterDate");
 var beforeDate = $("#beforeDate").pickadate(  {
 	max : currentDateObject,
 	onSet : function() {
+		$("#beforeDate").attr("class", $("#beforeDate").attr("class") + " used");
 		if (firstSelection) {
 			//Create second datepicker on selection
 			$(".menbot").append('<br><p class="inst">Choose an ending date:</p class="inst"><br>');
 			$(".menbot").append('<input id="afterDate" class="pickbox pickadate">');
 			afterDate = $("#afterDate").pickadate({
 				min : this.get('select'),
-				max : currentDateObject
+				max : currentDateObject,
+				onSet : function() {
+					$("#afterDate").css("border", "3px solid rgb(72, 154, 247) !important");
+				}
 			});
 			firstSelection = false;
 		} else {
