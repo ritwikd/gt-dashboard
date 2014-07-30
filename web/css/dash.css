@@ -1,7 +1,8 @@
-@import url(http://fonts.googleapis.com/css?family=Cabin);
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 
 body {
-    font-family: 'Cabin';
+    font-family: 'Lato';
+    font-weight: 400;
     padding: 0px;
     margin: 0px;
 }
@@ -138,6 +139,7 @@ body {
 }
 
 .overview.title.container {
+    font-weight: 300;
     font-size: 48px;
     padding-bottom: 30px;
 }
@@ -179,6 +181,7 @@ body {
 }
 
 .metrics.section.title {
+    font-weight: 300;
     font-size: 48px;
     padding-bottom: 30px;
 }
@@ -202,6 +205,7 @@ body {
 }
 
 .metrics.element.title {
+    font-weight: 300;
     font-size: 32px;
     padding-top: 20px;
     padding-bottom: 10px;

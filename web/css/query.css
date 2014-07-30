@@ -4,7 +4,7 @@ body {
 	padding: 0px;
 	margin: 0px;
 	font-family: 'Lato', sans-serif;
-	font-weight: 400;
+	font-weight: 300;
 }
 #left {
 	margin: 0px;
@@ -69,6 +69,7 @@ body {
 	-o-transition: all 150ms ease-in-out;
 	transition: all 150ms ease-in-out;
 	color: rgb(72, 154, 247) !important;
+	border: 3px solid rgb(72, 154, 247);
 }
 
 .icon {
@@ -135,7 +136,7 @@ input:hover {
 .inst {
 	font-size: 30px;
 	font-weight: 100;
-	padding: 0px;
+	padding: 20px;
 	margin: 0px;
 }
 
@@ -147,6 +148,8 @@ input:hover {
 }
 
 .overlink {
+	position: relative;
+  	top: 7px;
 	margin-left: 20px;
 	font-size: 36px;
 	z-index: 1;
@@ -172,11 +175,14 @@ input:hover {
 }
 
 .button {
-	font-family: 'Lato';
-	color: rgb(72, 154, 247) !important;
+	font-family: 'Lato', sans-serif;
+	background-color: rgb(72, 154, 247) !important;
+	color: #FFF;
 	text-align: center;
 	font-size: 42px;
-	width: 80%;
+	width: 60%;
+	margin-left: 10%;
+	margin-right: auto;
 	height: 54px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -192,17 +198,15 @@ input:hover {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	border: 3px solid #CCC;
-	background-color: rgb(245, 245, 245);
 }
 
 .button:hover {
+	background-color: #1C86FF !important;
 	-webkit-transition: all 150ms ease-in-out;
 	-moz-transition: all 150ms ease-in-out;
 	-ms-transition: all 150ms ease-in-out;
 	-o-transition: all 150ms ease-in-out;
 	transition: all 150ms ease-in-out;
-	border: 3px solid rgb(72, 154, 247) !important;
 }
 
 .graph-container{

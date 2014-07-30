@@ -36,12 +36,12 @@
 
     <img class="logo" src="web/assets/back.png">
     <div class="controls container">
-      <div class="controls add" onclick="javascript: addUser();">
-        <i class="fa fa-plus"></i><i class="fa fa-user"></i>  
+      <div class="controls mini add" onclick="javascript: addUser();">
+        <span class="user label"> Add User</span> <span class="user action"><i class="fa fa-plus"></i><i class="fa fa-user"></i></span>
       </div>
 
-      <div class="controls delete" onclick="javascript: deleteUser();">
-        <i class="fa fa-times"></i><i class="fa fa-user"></i>  
+      <div class="controls mini delete" onclick="javascript: deleteUser();">
+        <span class="user label"> Delete User</span> <span class="user action"><i class="fa fa-times"></i><i class="fa fa-user"></i></span>
       </div>
     </div>
     
@@ -69,7 +69,6 @@
 
       var userDeleteURL = "";
       var userDeleteUsername = "";
-      var deleteUserTemplate = ['<div class="delete-select-box">','</div>'];
 
       var addUserResponses = ['', '', ''];
 
@@ -83,9 +82,6 @@
             userName + userLinkTemplate[1] + 
             userList[userName] + userLinkTemplate[2]
           );
-        deleteUserTemplate[0] += '<div class="delete item" data-username="' +
-          userName + '">' +
-          userList[userName] + '</div>';
       });
 
 
@@ -96,7 +92,7 @@
         vex.dialog.open({
             overlayClosesOnClick : true,
             escapeButtonCloses : true,
-            message: 'Select user:',
+            message: 'Select user',
             input: userSelectionTemplate[0] + userSelectionTemplate[1],
               buttons: [
                 $.extend({}, vex.dialog.buttons.YES, {
@@ -138,7 +134,7 @@
       function addUser() {
 
         vex.dialog.prompt({
-          message: 'Enter name for new user:',
+          message: 'Enter name for new user',
           placeholder: 'Winston Smith',
           callback: function(userNameData) {
             if (userNameData === false) {
@@ -146,7 +142,7 @@
             } else {
 
               vex.dialog.prompt({
-                message: 'Enter target for sleep (hours):',
+                message: 'Enter target for sleep (hours)',
                 placeholder: '8',
                 callback: function(userSleepData) {
                   if (userSleepData === false) {
@@ -154,7 +150,7 @@
                   } else {
 
                     vex.dialog.prompt({
-                      message: 'Enter target for motion (steps):',
+                      message: 'Enter target for motion (steps)',
                       placeholder: '500',
                       callback: function(userMotionData) {
                         if (userMotionData === false) {
@@ -187,7 +183,7 @@
         vex.dialog.open({
             overlayClosesOnClick : true,
             escapeButtonCloses : true,
-            message: 'Select a user to delete:',
+            message: 'Select a user to delete',
             input: userSelectionTemplate[0] + userSelectionTemplate[1],
               buttons: [
                 $.extend({}, vex.dialog.buttons.YES, {

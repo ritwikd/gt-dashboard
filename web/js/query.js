@@ -7,7 +7,7 @@ toastr.options.positionClass = 'toast-bottom-left'
 //Chart generation function
 function respChart(selector, data) {
 
-    var option = {
+    var options = {
         scaleOverlay: false,
         scaleOverride: false,
         scaleSteps: null,
@@ -24,7 +24,7 @@ function respChart(selector, data) {
         scaleShowGridLines: true,
         scaleGridLineColor: "rgba(0,0,0,.05)",
         scaleGridLineWidth: 1,
-        bezierCurve: true,
+        bezierCurve: false,
         pointDot: true,
         pointDotRadius: 3,
         pointDotStrokeWidth: 1,
@@ -48,7 +48,7 @@ function respChart(selector, data) {
 	function generateChart() {
 
         var ww = selector.attr('width', $(container).width());
-        new Chart(ctx).Line(data, option);
+        new Chart(ctx).Line(data, options);
     };
 
     generateChart();
