@@ -41,7 +41,7 @@ The documentation for the project can be found [at the wiki].
 
 If you have any questions, feel free to submit an issue **tagged with "question"** (or I will close it), or email me at [ritzymail@gmail.com]. 
 
-[at the wiki]:https://github.com/ritwikd/gt-dashboard/wiki
+[at the wiki]:https://github.com/ritwikd/gt-dashboard/wiki/Overview
 [ritzymail@gmail.com]:mailto:ritzymail@gmail.com
 [here]:https://github.com/ritwikd/gt-dashboard/releases/latest
 [htop]:http://hisham.hm/htop/
