@@ -10,9 +10,9 @@ class newUserLib:
 		self.databaseUserCollection = databaseUserCollection
 
 	def createUser(self):
-		userTemplateJSON = { 'name' : self.newUserFullname, 'username' : self.newUserUsername, 'metrics' : { 'sleep' : { 'order' : 2, 'source' : 'file', 'format' : ['percentage', self.newUserTargets[0], 'hours'], 'path' : ['mongo/data/db/', 'sleep'], }, 'weather' : { 'order' : 3, 'source' : 'custom', 'format' : ['graph', '&deg; C'], 'type' : 'weather', 'location' : 'ksfo', }, 'pictures' : { 'order' : 4, 'source' : 'file', 'format' : ['picture'], 'path' : ['mongo/data/db/', 'pictures'], }, 'motion' : { 'order' : 1, 'source' : 'custom', 'format' : ['percentage', self.newUserTargets[1], 'steps'], 'type' : 'jawbone', 'auth' : 'b6_3pfGGwEjReOXSnWIyQO0-Al13wvvmyZNaiuNHtPrR6_kAcLtg_W1PaWiav9FR8EvaJSumcI0GoYT-V9UbpVECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP' } } }
+		userTemplateJSON = { 'name' : self.newUserFullname, 'username' : self.newUserUsername, 'metrics' : { 'sleep' : { 'order' : 2, 'source' : 'file', 'format' : ['percentage', self.newUserTargets[0], 'hours'], 'path' : ['mongo/data/db/user/', 'sleep'], }, 'weather' : { 'order' : 3, 'source' : 'custom', 'format' : ['graph', '&deg; C'], 'type' : 'weather', 'location' : 'ksfo', }, 'pictures' : { 'order' : 4, 'source' : 'file', 'format' : ['picture'], 'path' : ['mongo/data/db/user/', 'pictures'], }, 'motion' : { 'order' : 1, 'source' : 'custom', 'format' : ['percentage', self.newUserTargets[1], 'steps'], 'type' : 'jawbone', 'auth' : 'b6_3pfGGwEjReOXSnWIyQO0-Al13wvvmyZNaiuNHtPrR6_kAcLtg_W1PaWiav9FR8EvaJSumcI0GoYT-V9UbpVECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP' } } }
 		self.databaseUserCollection.insert(userTemplateJSON)
-		makeDirectory('mongo/data/db/' +  self.newUserUsername + '/')
+		makeDirectory('mongo/data/db/user/' +  self.newUserUsername + '/')
 		for metric in userTemplateJSON['metrics']:
 			tempMetric = userTemplateJSON['metrics'][metric]
 			if (tempMetric['source'] == 'file'):
