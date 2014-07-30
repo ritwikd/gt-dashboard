@@ -1,6 +1,3 @@
-Georgia Tech Health Dashboard.
-============
-
 Welcome to the project page for the Georgia Tech Health Dashboard!
 
 You can download a release copy of the project or its source code [here]. 
