@@ -46,9 +46,7 @@
     </div>
     
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
-    <script src="web/js/select.min.js"></script>
-    <script src="web/js/vex.combined.min.js"></script>
+    <script src="web/js/vex.js"></script>
     <script type="text/javascript">
 
       var userLinkTemplate = [' <div class="user item" data-username="',
@@ -96,13 +94,16 @@
         var okToLogin = false;
 
         vex.dialog.open({
-            overlayClosesOnClick : false,
-            escapeButtonCloses : false,
+            overlayClosesOnClick : true,
+            escapeButtonCloses : true,
             message: 'Select user:',
             input: userSelectionTemplate[0] + userSelectionTemplate[1],
               buttons: [
                 $.extend({}, vex.dialog.buttons.YES, {
                   text: 'Login'
+                }),
+                $.extend({}, vex.dialog.buttons.NO, { 
+                  text: 'Cancel' 
                 })
               ],
             callback: function(data) {
@@ -184,13 +185,16 @@
         var okToDelete = false;
 
         vex.dialog.open({
-            overlayClosesOnClick : false,
-            escapeButtonCloses : false,
+            overlayClosesOnClick : true,
+            escapeButtonCloses : true,
             message: 'Select a user to delete:',
             input: userSelectionTemplate[0] + userSelectionTemplate[1],
               buttons: [
                 $.extend({}, vex.dialog.buttons.YES, {
                   text: 'Delete'
+                }),
+                $.extend({}, vex.dialog.buttons.NO, { 
+                  text: 'Cancel' 
                 })
               ],
             callback: function(data) {
