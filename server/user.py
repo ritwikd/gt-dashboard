@@ -1,6 +1,7 @@
 from calendar import timegm as epochTime
 from time import gmtime as epochFirst
 from os import makedirs as makeDirectory
+from shutil import rmtree as removeDirectory
 
 class newUserLib:
 	def __init__(self, newUserUsername, newUserFullname, newUserSleep, newUserMotion, databaseUserCollection):
@@ -26,5 +27,8 @@ class deleteUserLib:
 
 	def deleteUser(self):
 		deleteKey = { 'username' : self.deleteUserUsername }
-		if (self.dataBaseUserCollection.find_one(deleteKey) != None):
+		deleteUser = self.dataBaseUserCollection.find_one(deleteKey)
+		if (deleteUser != None):
+			removeDirectory('mongo/data/db/user/' + self.deleteUserUsername + '/')
 			self.dataBaseUserCollection.remove(deleteKey)
+		
