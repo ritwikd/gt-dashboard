@@ -1,7 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 body {
   font-family: 'Lato';
-  font-weight: 300;
+  font-weight: 400;
   margin: 0px;
   padding: 0px;
 
@@ -53,7 +53,7 @@ body {
   color: #FFF;
   width: 50%;
   text-align: center;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 56px;
   margin-top: 150px;
   margin-left: auto;
@@ -87,6 +87,7 @@ body {
   width: auto;
 }
 
+
 .controls {
   padding: 10px;
 }
@@ -99,20 +100,20 @@ body {
 
 .fa-plus {
   position: relative;
-  top: -5px;
-  padding-right: 3px;
-  font-size: 32px;
+  top: -2px;
+  padding-right: 5px;
+  font-size: 24px;
 }
 
 .fa-times {
   position: relative;
-  top: -5px;
-  padding-right: 3px;
-  font-size: 32px;
+  top: -2px;
+  padding-right: 5px;
+  font-size: 24px;
 }
 
 .fa-user {
-  font-size: 48px;
+  font-size: 32px;
 }
 
 .controls.add {
@@ -172,7 +173,7 @@ body {
 }
 
 .user.label {
-  font-weight: 300;
+  font-weight: 400;
   font-size: 32px;
   padding-left: 5px;
   padding: 20px;
@@ -181,7 +182,6 @@ body {
 
 .user.action {
   position: relative;
-  bottom: 7px;
   float: right;
 }
 
@@ -190,7 +190,8 @@ body {
   background-color: rgb(72, 154, 247);
   color: #FFF;
   width: 300px;
-  margin: 20px;
+  margin: 0px;
+  margin-top: 20px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
