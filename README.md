@@ -1,3 +1,6 @@
+Georgia Tech Health Dashboard
+============
+
 Welcome to the project page for the Georgia Tech Health Dashboard!
 
 You can download a release copy of the project or its source code [here]. 
@@ -22,14 +25,14 @@ All of these are started and stopped by the **"run"** file in the root directory
 
 To start the various applications, type:
 
-```bash
-user@machine:~/gt-dashboard# ./run start
+```zsh
+user :: ~/gt-dashboard <master)> >> ./run start
 ```
 
 To stop everything (additional checking may be required), type:
 
-```bash
-user@machine:~/gt-dashboard# ./run stop
+```zsh
+user :: ~/gt-dashboard <master)> >> ./run stop
 ```
 Documentation
 ------------
