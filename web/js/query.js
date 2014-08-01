@@ -136,7 +136,7 @@ function makeGraph(selectionInformation) {
 		'</div><br><canvas class="metchart ',
 		'"></canvas></div>'];
 
-	requestedDates = [beforePickedDate];
+	requestedDates = [];
 	graphArr = [];
 	chartArr = [];
 
