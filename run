@@ -1,12 +1,13 @@
 case "$1" in
 	start) 
 		nohup python server/server.py&
-		./nginx/nginx-portable start 
+		nohup python -m SimpleHTTPServer 80&
 		nohup ./mongo/bin/mongod --dbpath mongo/data/db/&
 		;;
 	stop)
 		pkill python
-		pkill nginx
+		pkill python
+		pkill python 
 		pkill mongod
 		;;
 esac
