@@ -25,12 +25,10 @@ class jawboneLib:
         apiAuthorizationHeaders = {'Authorization' : 'Bearer ' +  self.userAuthorizationToken.encode('ascii', 'ignore') }        
         userJawboneData = requests.get('https://jawbone.com/nudge/api/v.1.1/users/@me/moves', headers = apiAuthorizationHeaders)
         userJawboneDay = json.loads(userJawboneData.text)['data']['items'][0]
-        userJawboneDaySteps = 0
+        userJawboneSteps = 0
 	currentDate = getFormattedTime("%Y%m%d")
 
         if (str(userJawboneDay['date']) == currentDate):
-            userJawboneDay = userJawboneDay['details']['hourly_totals']
-            for userJawboneHour in userJawboneDay.keys():
-                userJawboneDaySteps += userJawboneDay[userJawboneHour]['steps'] 
+	    userJawboneSteps = userJawboneSteps + userJawboneDay['details']['steps']
 
-        return userJawboneDaySteps
+        return userJawboneSteps
