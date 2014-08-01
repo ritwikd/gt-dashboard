@@ -136,14 +136,11 @@ function makeGraph(selectionInformation) {
 		'</div><br><canvas class="metchart ',
 		'"></canvas></div>'];
 
-	requestedDates = [beforePickedDate];
+	requestedDates = [];
 	graphArr = [];
 	chartArr = [];
 
-
-
 	//Add dates to labels
-
 	var beforeDateObj = moment(beforePickedDate, "YYYYMMDD");
 	var afterDateObj = moment(afterPickedDate, "YYYYMMDD");
 	var dateRange = moment().range(beforeDateObj, afterDateObj);
@@ -281,7 +278,7 @@ var beforeDate = $("#beforeDate").pickadate(  {
 	onSet : function() {
 		$("#beforeDate").attr("class", $("#beforeDate").attr("class") + " used");
 		if (firstSelection) {
-			//Create second datepicker on selection
+			//Create second datepicker on selection of first date
 			$(".menbot").append('<br><p class="inst">Choose an ending date:</p class="inst"><br>');
 			$(".menbot").append('<input id="afterDate" class="pickbox pickadate">');
 			afterDate = $("#afterDate").pickadate({
