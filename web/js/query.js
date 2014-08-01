@@ -1,3 +1,5 @@
+(function(e,t){if(typeof exports==="object"){module.exports=t(require("moment"))}else if(typeof define==="function"&&define.amd){define("moment-range",["moment"],t)}else{e.moment=t(e.moment)}})(this,function(e){var t,n;n={year:true,month:true,week:true,day:true,hour:true,minute:true,second:true};t=function(){function t(t,n){this.start=e(t);this.end=e(n)}t.prototype.contains=function(e){if(e instanceof t){return this.start<=e.start&&this.end>=e.end}else{return this.start<=e&&e<=this.end}};t.prototype._by_string=function(t,n){var r,i;r=e(this.start);i=[];while(this.contains(r)){n.call(this,r.clone());i.push(r.add(t,1))}return i};t.prototype._by_range=function(t,n){var r,i,s,o;i=Math.round(this/t);if(i===Infinity){return this}o=[];for(r=s=0;0<=i?s<=i:s>=i;r=0<=i?++s:--s){o.push(n.call(this,e(this.start.valueOf()+t.valueOf()*r)))}return o};t.prototype.overlaps=function(e){return this.intersect(e)!==null};t.prototype.intersect=function(e){var n,r,i,s,o,u,a,f;if(this.start<=(r=e.start)&&r<(n=this.end)&&n<e.end){return new t(e.start,this.end)}else if(e.start<(s=this.start)&&s<(i=e.end)&&i<=this.end){return new t(this.start,e.end)}else if(e.start<(u=this.start)&&u<(o=this.end)&&o<e.end){return this}else if(this.start<=(f=e.start)&&f<(a=e.end)&&a<=this.end){return e}else{return null}};t.prototype.subtract=function(e){var n,r,i,s,o,u,a,f;if(this.intersect(e)===null){return[this]}else if(e.start<=(r=this.start)&&r<(n=this.end)&&n<=e.end){return[]}else if(e.start<=(s=this.start)&&s<(i=e.end)&&i<this.end){return[new t(e.end,this.end)]}else if(this.start<(u=e.start)&&u<(o=this.end)&&o<=e.end){return[new t(this.start,e.start)]}else if(this.start<(f=e.start)&&f<(a=e.end)&&a<this.end){return[new t(this.start,e.start),new t(e.end,this.end)]}};t.prototype.by=function(e,t){if(typeof e==="string"){this._by_string(e,t)}else{this._by_range(e,t)}return this};t.prototype.valueOf=function(){return this.end-this.start};t.prototype.toDate=function(){return[this.start.toDate(),this.end.toDate()]};t.prototype.isSame=function(e){return this.start.isSame(e.start)&&this.end.isSame(e.end)};t.prototype.diff=function(e){if(e==null){e=void 0}return this.end.diff(this.start,e)};return t}();e.fn.range=function(r,i){if(r in n){return new t(e(this).startOf(r),e(this).endOf(r))}else{return new t(r,i)}};e.range=function(e,n){return new t(e,n)};e.fn.within=function(e){return e.contains(this._d)};return e})
+
 //Options for the toast notifications
 toastr.options.closeButton = true;
 toastr.options.showMethod = 'slideDown'; 
@@ -141,9 +143,14 @@ function makeGraph(selectionInformation) {
 
 
 	//Add dates to labels
-	for (var i = 1; i < (afterPickedDate - beforePickedDate + 1); i++) {
-		requestedDates.push(beforePickedDate + i);
-	}
+
+	var beforeDateObj = moment(beforePickedDate, "YYYYMMDD");
+	var afterDateObj = moment(afterPickedDate, "YYYYMMDD");
+	var dateRange = moment().range(beforeDateObj, afterDateObj);
+
+	dateRange.by('days', function(moment) {
+	  requestedDates.push(moment.format("YYYYMMDD"));
+	});
 
 	for (var i = 0; i < selectedMetrics.length; i++) {
 		var chartData =  { 
