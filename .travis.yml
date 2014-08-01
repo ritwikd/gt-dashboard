@@ -1,7 +1,6 @@
 script: 
  - rm -Rf .git
  - rm -Rf wiki
- - rm -Rf release
  - cd ..
  - tar -cvzf  gt-dashboard.tar.gz gt-dashboard/ 
 
