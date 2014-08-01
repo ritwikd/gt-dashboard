@@ -140,8 +140,6 @@ function makeGraph(selectionInformation) {
 	graphArr = [];
 	chartArr = [];
 
-
-
 	//Add dates to labels
 
 	var beforeDateObj = moment(beforePickedDate, "YYYYMMDD");
