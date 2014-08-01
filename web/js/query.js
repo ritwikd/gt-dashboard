@@ -278,7 +278,7 @@ var beforeDate = $("#beforeDate").pickadate(  {
 	onSet : function() {
 		$("#beforeDate").attr("class", $("#beforeDate").attr("class") + " used");
 		if (firstSelection) {
-			//Create second datepicker on selection
+			//Create second datepicker on selection of first date
 			$(".menbot").append('<br><p class="inst">Choose an ending date:</p class="inst"><br>');
 			$(".menbot").append('<input id="afterDate" class="pickbox pickadate">');
 			afterDate = $("#afterDate").pickadate({
