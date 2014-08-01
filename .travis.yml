@@ -11,5 +11,4 @@ deploy:
   file: "gt-dashboard.tar.gz"
   skip_cleanup: true
   on:
-    tags: true
     all_branches: true
