@@ -10,4 +10,4 @@ fileHandler.close()
 
 runCommand("rm -Rf .git")
 runCommand("rm -Rf wiki")
-runCommand("cd .. && tar -cvzf gt-dashboard." + buildVersion + ".tar.gz gt-dashboard/") 
+runCommand("cd .. && tar -czf gt-dashboard." + buildVersion + ".tar.gz gt-dashboard/") 
