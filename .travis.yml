@@ -1,5 +1,7 @@
-script: 
-  - python build.py
+script:
+  - cd ..
+  - tar -czf gt-dashboard.tar.gz gt-dashboard
+  - cd gt-dashboard
 
 before_deploy: 
   - git fetch --tags
@@ -7,7 +9,7 @@ before_deploy:
 deploy:
   provider: releases
   api-key: "2291bcfba41488b6597037b248d7426b039c0b20"
-  file: "../*tar.gz"
+  file: "../gt-dashboard.tar.gz"
   skip_cleanup: true
   on:
     tags: true
