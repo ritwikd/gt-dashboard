@@ -2,6 +2,7 @@ script:
   - python build.py
 
 before_deploy: 
+  - cd gt-dashboard
   - git fetch --tags
     
 deploy:
