@@ -1,0 +1,18 @@
+branches:
+  only:
+    - build
+
+script: 
+  - python build.py
+
+before_deploy: 
+  - git fetch --tags
+    
+deploy:
+  provider: releases
+  api-key: "2291bcfba41488b6597037b248d7426b039c0b20"
+  file: "../*tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
