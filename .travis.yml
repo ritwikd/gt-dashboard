@@ -1,11 +1,9 @@
-branches:
-  only:
-    - build
-
 script: 
   - python build.py
 
 before_deploy: 
+  - pwd 
+  - cd gt-dashboard
   - git fetch --tags
     
 deploy:
