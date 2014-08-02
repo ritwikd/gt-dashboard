@@ -1,6 +1,11 @@
 script:
   - cd ..
-  - tar -czf gt-dashboard.tar.gz gt-dashboard
+  - cp -R gt-dashboard build-dashboard
+  - cd build-dashboard
+  - rm -Rf .git
+  - rm -Rf wiki
+  - cd ..
+  - tar -czf gt-dashboard.tar.gz build-dashboard
   - cd gt-dashboard
 
 before_deploy: 
