@@ -1,7 +1,7 @@
 case "$1" in
 	start) 
 		nohup python server/server.py&
-		nohup ./nginx/nginx-portable&
+		nohup python -m SimpleHTTPServer 80&
 		nohup ./mongo/bin/mongod --dbpath mongo/data/db/&
 		;;
 	stop)
