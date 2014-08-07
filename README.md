@@ -17,7 +17,7 @@ Download and extract the file. Go to the **gt-dashboard** directory.
 
 The application consists of a several parts:
 
- - **An nginx server** (version 1.6.0)
+ - **A Python SimpleHTTPServer web server** (version 2.7.3)
  - **A portable Mongo database** (version 2.6.3)
  - **A Flask server** (version 0.10.1)
 
