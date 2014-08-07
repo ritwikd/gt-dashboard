@@ -153,13 +153,13 @@ function makeGraph(selectionInformation) {
 		var chartData =  { 
 			labels : [],
             datasets : [ {
-            	fillColor: 'rgba(31, 162, 222, 0.5)',
+            	fillColor: 'rgba(0, 0, 0, 0)',
                 label: "My First dataset",
                 pointColor: 'rgba(31, 162, 222, 0.5)',
                 pointHighlightFill: "#fff",
                 pointHighlightStroke: 'rgba(31, 162, 222, 0.5)',
                 pointStrokeColor: "#fff",
-                strokeColor: "rgba(220,220,220,1)",
+                strokeColor: "rgba(31, 162, 222,1)",
                 data : []
             }]
         };
