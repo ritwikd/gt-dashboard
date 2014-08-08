@@ -37,6 +37,8 @@ user :: ~/gt-dashboard <master)> >> ./run stop
 Documentation
 ------------
 
+This project is distributed under the MIT license. 
+
 The documentation for the project can be found [at the wiki]. 
 
 If you have any questions, feel free to submit an issue **tagged with "question"** (or I will close it), or email me at [ritzymail@gmail.com]. 
